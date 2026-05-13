@@ -1,0 +1,351 @@
+﻿namespace ClientApp
+{
+    partial class CheckoutScreen
+    {
+        /// <summary>
+        /// Required designer variable.
+        /// </summary>
+        private System.ComponentModel.IContainer components = null;
+
+        private Label labelTitle;
+        private Label labelOrderSummary;
+        private DataGridView dataGridViewItems;
+        private DataGridViewCheckBoxColumn colSelect;
+        private DataGridViewTextBoxColumn colProductName;
+        private DataGridViewTextBoxColumn colUnitPrice;
+        private DataGridViewTextBoxColumn colQuantity;
+        private DataGridViewTextBoxColumn colSubTotal;
+        private Label labelShippingCost;
+        private ComboBox comboBoxShipping;
+        private TextBox textBoxShippingCost;
+        private Label labelPaymentMethod;
+        private ComboBox comboBoxPaymentMethod;
+        private Label labelSubtotal;
+        private TextBox textBoxSubtotal;
+        private Label labelTax;
+        private TextBox textBoxTax;
+        private Label labelTotal;
+        private TextBox textBoxTotal;
+        private Button btnBack;
+        private Button btnPay;
+        private Panel panelOrderSummary;
+
+        /// <summary>
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && (components != null))
+            {
+                components.Dispose();
+            }
+            base.Dispose(disposing);
+        }
+
+        #region Windows Form Designer generated code
+
+        /// <summary>
+        /// Required method for Designer support - do not modify
+        /// the contents of this method with the code editor.
+        /// </summary>
+        private void InitializeComponent()
+        {
+            labelTitle = new Label();
+            labelOrderSummary = new Label();
+            dataGridViewItems = new DataGridView();
+            colSelect = new DataGridViewCheckBoxColumn();
+            colProductName = new DataGridViewTextBoxColumn();
+            colUnitPrice = new DataGridViewTextBoxColumn();
+            colQuantity = new DataGridViewTextBoxColumn();
+            colSubTotal = new DataGridViewTextBoxColumn();
+            labelShippingCost = new Label();
+            comboBoxShipping = new ComboBox();
+            textBoxShippingCost = new TextBox();
+            labelPaymentMethod = new Label();
+            comboBoxPaymentMethod = new ComboBox();
+            labelSubtotal = new Label();
+            textBoxSubtotal = new TextBox();
+            labelTax = new Label();
+            textBoxTax = new TextBox();
+            labelTotal = new Label();
+            textBoxTotal = new TextBox();
+            btnBack = new Button();
+            btnPay = new Button();
+            panelOrderSummary = new Panel();
+            ((System.ComponentModel.ISupportInitialize)dataGridViewItems).BeginInit();
+            panelOrderSummary.SuspendLayout();
+            SuspendLayout();
+            // 
+            // labelTitle
+            // 
+            labelTitle.AutoSize = true;
+            labelTitle.Font = new Font("Segoe UI", 16F, FontStyle.Bold);
+            labelTitle.ForeColor = Color.FromArgb(51, 51, 51);
+            labelTitle.Location = new Point(25, 15);
+            labelTitle.Name = "labelTitle";
+            labelTitle.Size = new Size(137, 37);
+            labelTitle.TabIndex = 0;
+            labelTitle.Text = "Checkout";
+            // 
+            // labelOrderSummary
+            // 
+            labelOrderSummary.AutoSize = true;
+            labelOrderSummary.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
+            labelOrderSummary.ForeColor = Color.FromArgb(51, 51, 51);
+            labelOrderSummary.Location = new Point(25, 50);
+            labelOrderSummary.Name = "labelOrderSummary";
+            labelOrderSummary.Size = new Size(162, 28);
+            labelOrderSummary.TabIndex = 1;
+            labelOrderSummary.Text = "Order Summary";
+            // 
+            // dataGridViewItems
+            // 
+            dataGridViewItems.AllowUserToAddRows = false;
+            dataGridViewItems.AllowUserToDeleteRows = false;
+            dataGridViewItems.BackgroundColor = Color.White;
+            dataGridViewItems.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridViewItems.Columns.AddRange(new DataGridViewColumn[] { colSelect, colProductName, colUnitPrice, colQuantity, colSubTotal });
+            dataGridViewItems.Location = new Point(25, 75);
+            dataGridViewItems.Name = "dataGridViewItems";
+            dataGridViewItems.RowHeadersVisible = false;
+            dataGridViewItems.RowHeadersWidth = 51;
+            dataGridViewItems.Size = new Size(677, 220);
+            dataGridViewItems.TabIndex = 2;
+            // 
+            // colSelect
+            // 
+            colSelect.DataPropertyName = "Selected";
+            colSelect.HeaderText = "Select";
+            colSelect.MinimumWidth = 60;
+            colSelect.Name = "colSelect";
+            colSelect.Width = 60;
+            // 
+            // colProductName
+            // 
+            colProductName.DataPropertyName = "ProductName";
+            colProductName.HeaderText = "Product";
+            colProductName.MinimumWidth = 150;
+            colProductName.Name = "colProductName";
+            colProductName.ReadOnly = true;
+            colProductName.Width = 200;
+            // 
+            // colUnitPrice
+            // 
+            colUnitPrice.DataPropertyName = "UnitPrice";
+            colUnitPrice.HeaderText = "Unit Price";
+            colUnitPrice.MinimumWidth = 100;
+            colUnitPrice.Name = "colUnitPrice";
+            colUnitPrice.ReadOnly = true;
+            // 
+            // colQuantity
+            // 
+            colQuantity.DataPropertyName = "Quantity";
+            colQuantity.HeaderText = "Quantity";
+            colQuantity.MinimumWidth = 80;
+            colQuantity.Name = "colQuantity";
+            colQuantity.Width = 80;
+            // 
+            // colSubTotal
+            // 
+            colSubTotal.DataPropertyName = "SubTotal";
+            colSubTotal.HeaderText = "Subtotal";
+            colSubTotal.MinimumWidth = 100;
+            colSubTotal.Name = "colSubTotal";
+            colSubTotal.ReadOnly = true;
+            // 
+            // labelShippingCost
+            // 
+            labelShippingCost.AutoSize = true;
+            labelShippingCost.Font = new Font("Segoe UI", 10F);
+            labelShippingCost.ForeColor = Color.FromArgb(51, 51, 51);
+            labelShippingCost.Location = new Point(25, 310);
+            labelShippingCost.Name = "labelShippingCost";
+            labelShippingCost.Size = new Size(116, 23);
+            labelShippingCost.TabIndex = 3;
+            labelShippingCost.Text = "Shipping Cost";
+            // 
+            // comboBoxShipping
+            // 
+            comboBoxShipping.DropDownStyle = ComboBoxStyle.DropDownList;
+            comboBoxShipping.FormattingEnabled = true;
+            comboBoxShipping.Items.AddRange(new object[] { "Standard ($5.00)", "Express ($15.00)", "Overnight ($25.00)" });
+            comboBoxShipping.Location = new Point(160, 306);
+            comboBoxShipping.Name = "comboBoxShipping";
+            comboBoxShipping.Size = new Size(180, 28);
+            comboBoxShipping.TabIndex = 4;
+            comboBoxShipping.SelectedIndexChanged += ComboBoxShipping_SelectedIndexChanged;
+            // 
+            // textBoxShippingCost
+            // 
+            textBoxShippingCost.BackColor = Color.FromArgb(240, 240, 240);
+            textBoxShippingCost.Font = new Font("Segoe UI", 10F);
+            textBoxShippingCost.Location = new Point(365, 306);
+            textBoxShippingCost.Name = "textBoxShippingCost";
+            textBoxShippingCost.ReadOnly = true;
+            textBoxShippingCost.Size = new Size(80, 30);
+            textBoxShippingCost.TabIndex = 5;
+            textBoxShippingCost.Text = "$5.00";
+            textBoxShippingCost.TextAlign = HorizontalAlignment.Right;
+            // 
+            // labelPaymentMethod
+            // 
+            labelPaymentMethod.AutoSize = true;
+            labelPaymentMethod.Font = new Font("Segoe UI", 10F);
+            labelPaymentMethod.ForeColor = Color.FromArgb(51, 51, 51);
+            labelPaymentMethod.Location = new Point(25, 345);
+            labelPaymentMethod.Name = "labelPaymentMethod";
+            labelPaymentMethod.Size = new Size(141, 23);
+            labelPaymentMethod.TabIndex = 6;
+            labelPaymentMethod.Text = "Payment Method";
+            // 
+            // comboBoxPaymentMethod
+            // 
+            comboBoxPaymentMethod.DropDownStyle = ComboBoxStyle.DropDownList;
+            comboBoxPaymentMethod.FormattingEnabled = true;
+            comboBoxPaymentMethod.Items.AddRange(new object[] { "Credit Card", "Debit Card", "Bank Transfer", "Cash on Delivery" });
+            comboBoxPaymentMethod.Location = new Point(160, 341);
+            comboBoxPaymentMethod.Name = "comboBoxPaymentMethod";
+            comboBoxPaymentMethod.Size = new Size(180, 28);
+            comboBoxPaymentMethod.TabIndex = 7;
+            comboBoxPaymentMethod.SelectedIndexChanged += comboBoxPaymentMethod_SelectedIndexChanged;
+            // 
+            // labelSubtotal
+            // 
+            labelSubtotal.AutoSize = true;
+            labelSubtotal.Font = new Font("Segoe UI", 9F);
+            labelSubtotal.Location = new Point(5, 8);
+            labelSubtotal.Name = "labelSubtotal";
+            labelSubtotal.Size = new Size(68, 20);
+            labelSubtotal.TabIndex = 0;
+            labelSubtotal.Text = "Subtotal:";
+            // 
+            // textBoxSubtotal
+            // 
+            textBoxSubtotal.BackColor = Color.White;
+            textBoxSubtotal.Font = new Font("Segoe UI", 9F);
+            textBoxSubtotal.Location = new Point(95, 8);
+            textBoxSubtotal.Name = "textBoxSubtotal";
+            textBoxSubtotal.ReadOnly = true;
+            textBoxSubtotal.Size = new Size(82, 27);
+            textBoxSubtotal.TabIndex = 1;
+            textBoxSubtotal.Text = "$0.00";
+            textBoxSubtotal.TextAlign = HorizontalAlignment.Right;
+            // 
+            // labelTax
+            // 
+            labelTax.AutoSize = true;
+            labelTax.Font = new Font("Segoe UI", 9F);
+            labelTax.Location = new Point(5, 35);
+            labelTax.Name = "labelTax";
+            labelTax.Size = new Size(33, 20);
+            labelTax.TabIndex = 2;
+            labelTax.Text = "Tax:";
+            // 
+            // textBoxTax
+            // 
+            textBoxTax.BackColor = Color.White;
+            textBoxTax.Font = new Font("Segoe UI", 9F);
+            textBoxTax.Location = new Point(95, 35);
+            textBoxTax.Name = "textBoxTax";
+            textBoxTax.ReadOnly = true;
+            textBoxTax.Size = new Size(82, 27);
+            textBoxTax.TabIndex = 3;
+            textBoxTax.Text = "$0.00";
+            textBoxTax.TextAlign = HorizontalAlignment.Right;
+            // 
+            // labelTotal
+            // 
+            labelTotal.AutoSize = true;
+            labelTotal.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
+            labelTotal.Location = new Point(5, 62);
+            labelTotal.Name = "labelTotal";
+            labelTotal.Size = new Size(60, 25);
+            labelTotal.TabIndex = 4;
+            labelTotal.Text = "Total:";
+            // 
+            // textBoxTotal
+            // 
+            textBoxTotal.BackColor = Color.FromArgb(70, 130, 180);
+            textBoxTotal.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
+            textBoxTotal.ForeColor = Color.White;
+            textBoxTotal.Location = new Point(60, 62);
+            textBoxTotal.Name = "textBoxTotal";
+            textBoxTotal.ReadOnly = true;
+            textBoxTotal.Size = new Size(117, 32);
+            textBoxTotal.TabIndex = 5;
+            textBoxTotal.Text = "$0.00";
+            textBoxTotal.TextAlign = HorizontalAlignment.Right;
+            // 
+            // btnBack
+            // 
+            btnBack.BackColor = Color.FromArgb(200, 200, 200);
+            btnBack.FlatStyle = FlatStyle.Flat;
+            btnBack.Font = new Font("Segoe UI", 10F);
+            btnBack.ForeColor = Color.White;
+            btnBack.Location = new Point(25, 410);
+            btnBack.Name = "btnBack";
+            btnBack.Size = new Size(100, 35);
+            btnBack.TabIndex = 9;
+            btnBack.Text = "← Back";
+            btnBack.UseVisualStyleBackColor = false;
+            btnBack.Click += BtnBack_Click;
+            // 
+            // btnPay
+            // 
+            btnPay.BackColor = Color.FromArgb(70, 130, 180);
+            btnPay.FlatStyle = FlatStyle.Flat;
+            btnPay.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
+            btnPay.ForeColor = Color.White;
+            btnPay.Location = new Point(602, 410);
+            btnPay.Name = "btnPay";
+            btnPay.Size = new Size(100, 35);
+            btnPay.TabIndex = 10;
+            btnPay.Text = "Pay Now";
+            btnPay.UseVisualStyleBackColor = false;
+            btnPay.Click += BtnPay_Click;
+            // 
+            // panelOrderSummary
+            // 
+            panelOrderSummary.BackColor = Color.FromArgb(240, 240, 240);
+            panelOrderSummary.BorderStyle = BorderStyle.FixedSingle;
+            panelOrderSummary.Controls.Add(labelSubtotal);
+            panelOrderSummary.Controls.Add(textBoxSubtotal);
+            panelOrderSummary.Controls.Add(labelTax);
+            panelOrderSummary.Controls.Add(textBoxTax);
+            panelOrderSummary.Controls.Add(labelTotal);
+            panelOrderSummary.Controls.Add(textBoxTotal);
+            panelOrderSummary.Location = new Point(520, 306);
+            panelOrderSummary.Name = "panelOrderSummary";
+            panelOrderSummary.Size = new Size(182, 95);
+            panelOrderSummary.TabIndex = 8;
+            // 
+            // CheckoutScreen
+            // 
+            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleMode = AutoScaleMode.Font;
+            ClientSize = new Size(724, 460);
+            Controls.Add(labelTitle);
+            Controls.Add(labelOrderSummary);
+            Controls.Add(dataGridViewItems);
+            Controls.Add(labelShippingCost);
+            Controls.Add(comboBoxShipping);
+            Controls.Add(textBoxShippingCost);
+            Controls.Add(labelPaymentMethod);
+            Controls.Add(comboBoxPaymentMethod);
+            Controls.Add(panelOrderSummary);
+            Controls.Add(btnBack);
+            Controls.Add(btnPay);
+            Name = "CheckoutScreen";
+            StartPosition = FormStartPosition.CenterScreen;
+            Text = "Checkout";
+            ((System.ComponentModel.ISupportInitialize)dataGridViewItems).EndInit();
+            panelOrderSummary.ResumeLayout(false);
+            panelOrderSummary.PerformLayout();
+            ResumeLayout(false);
+            PerformLayout();
+        }
+
+        #endregion
+    }
+}
