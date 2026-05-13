@@ -16,8 +16,6 @@
         private DataGridViewTextBoxColumn colUnitPrice;
         private DataGridViewTextBoxColumn colQuantity;
         private DataGridViewTextBoxColumn colSubTotal;
-        private Panel panelPriceSummary;
-        private Label labelSubtotalText;
         private TextBox textBoxSubtotal;
         private Label labelShippingText;
         private TextBox textBoxShipping;
@@ -32,7 +30,6 @@
         private TextBox textBoxPaidDate;
         private Button btnPrint;
         private Button btnDownload;
-        private Button btnClose;
 
         /// <summary>
         /// Clean up any resources being used.
@@ -64,8 +61,6 @@
             colUnitPrice = new DataGridViewTextBoxColumn();
             colQuantity = new DataGridViewTextBoxColumn();
             colSubTotal = new DataGridViewTextBoxColumn();
-            panelPriceSummary = new Panel();
-            labelSubtotalText = new Label();
             textBoxSubtotal = new TextBox();
             labelShippingText = new Label();
             textBoxShipping = new TextBox();
@@ -80,310 +75,381 @@
             textBoxPaidDate = new TextBox();
             btnPrint = new Button();
             btnDownload = new Button();
+            panel1 = new Panel();
+            btnBack = new Button();
             btnClose = new Button();
-
             ((System.ComponentModel.ISupportInitialize)dataGridViewItems).BeginInit();
-            panelPriceSummary.SuspendLayout();
             panelPaymentInfo.SuspendLayout();
+            panel1.SuspendLayout();
             SuspendLayout();
-
+            // 
             // labelTitle
+            // 
+            labelTitle.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             labelTitle.AutoSize = true;
-            labelTitle.Font = new Font("Segoe UI", 18F, FontStyle.Bold, GraphicsUnit.Point);
+            labelTitle.Font = new Font("Segoe UI", 18F, FontStyle.Bold);
             labelTitle.ForeColor = Color.FromArgb(51, 51, 51);
-            labelTitle.Location = new Point(25, 15);
+            labelTitle.Location = new Point(22, 11);
             labelTitle.Name = "labelTitle";
-            labelTitle.Size = new Size(180, 32);
+            labelTitle.Size = new Size(171, 32);
             labelTitle.TabIndex = 0;
             labelTitle.Text = "Order Receipt";
-
+            // 
             // labelReceiptNumber
+            // 
+            labelReceiptNumber.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             labelReceiptNumber.AutoSize = true;
-            labelReceiptNumber.Font = new Font("Segoe UI", 10F, GraphicsUnit.Point);
+            labelReceiptNumber.Font = new Font("Segoe UI", 10F);
             labelReceiptNumber.ForeColor = Color.FromArgb(100, 100, 100);
-            labelReceiptNumber.Location = new Point(25, 50);
+            labelReceiptNumber.Location = new Point(22, 38);
             labelReceiptNumber.Name = "labelReceiptNumber";
-            labelReceiptNumber.Size = new Size(150, 19);
+            labelReceiptNumber.Size = new Size(229, 19);
             labelReceiptNumber.TabIndex = 1;
             labelReceiptNumber.Text = "Order #12345 | Invoice ID: INV-001";
-
+            // 
             // labelReceiptDate
+            // 
+            labelReceiptDate.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             labelReceiptDate.AutoSize = true;
-            labelReceiptDate.Font = new Font("Segoe UI", 10F, GraphicsUnit.Point);
+            labelReceiptDate.Font = new Font("Segoe UI", 10F);
             labelReceiptDate.ForeColor = Color.FromArgb(100, 100, 100);
-            labelReceiptDate.Location = new Point(25, 72);
+            labelReceiptDate.Location = new Point(22, 54);
             labelReceiptDate.Name = "labelReceiptDate";
-            labelReceiptDate.Size = new Size(140, 19);
+            labelReceiptDate.Size = new Size(161, 19);
             labelReceiptDate.TabIndex = 2;
             labelReceiptDate.Text = "May 13, 2026 - 2:45 PM";
-
+            // 
             // labelOrderDetails
+            // 
+            labelOrderDetails.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             labelOrderDetails.AutoSize = true;
-            labelOrderDetails.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point);
+            labelOrderDetails.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
             labelOrderDetails.ForeColor = Color.FromArgb(51, 51, 51);
-            labelOrderDetails.Location = new Point(25, 105);
+            labelOrderDetails.Location = new Point(22, 79);
             labelOrderDetails.Name = "labelOrderDetails";
-            labelOrderDetails.Size = new Size(120, 21);
+            labelOrderDetails.Size = new Size(99, 21);
             labelOrderDetails.TabIndex = 3;
             labelOrderDetails.Text = "Order Items";
-
+            // 
             // dataGridViewItems
+            // 
             dataGridViewItems.AllowUserToAddRows = false;
             dataGridViewItems.AllowUserToDeleteRows = false;
+            dataGridViewItems.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             dataGridViewItems.BackgroundColor = Color.White;
             dataGridViewItems.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dataGridViewItems.Columns.AddRange(new DataGridViewColumn[] { colProductName, colUnitPrice, colQuantity, colSubTotal });
-            dataGridViewItems.Location = new Point(25, 130);
+            dataGridViewItems.Location = new Point(22, 98);
+            dataGridViewItems.Margin = new Padding(3, 2, 3, 2);
             dataGridViewItems.Name = "dataGridViewItems";
-            dataGridViewItems.RowHeadersVisible = false;
             dataGridViewItems.ReadOnly = true;
-            dataGridViewItems.Size = new Size(730, 180);
+            dataGridViewItems.RowHeadersVisible = false;
+            dataGridViewItems.Size = new Size(760, 250);
             dataGridViewItems.TabIndex = 4;
-
+            // 
             // colProductName
+            // 
             colProductName.DataPropertyName = "ProductName";
             colProductName.HeaderText = "Product";
             colProductName.MinimumWidth = 150;
             colProductName.Name = "colProductName";
-            colProductName.Width = 250;
             colProductName.ReadOnly = true;
-
+            colProductName.Width = 250;
+            // 
             // colUnitPrice
+            // 
             colUnitPrice.DataPropertyName = "UnitPrice";
             colUnitPrice.HeaderText = "Unit Price";
             colUnitPrice.MinimumWidth = 100;
             colUnitPrice.Name = "colUnitPrice";
-            colUnitPrice.Width = 120;
             colUnitPrice.ReadOnly = true;
-
+            colUnitPrice.Width = 120;
+            // 
             // colQuantity
+            // 
             colQuantity.DataPropertyName = "Quantity";
             colQuantity.HeaderText = "Qty";
             colQuantity.MinimumWidth = 60;
             colQuantity.Name = "colQuantity";
-            colQuantity.Width = 60;
             colQuantity.ReadOnly = true;
-
+            colQuantity.Width = 60;
+            // 
             // colSubTotal
+            // 
             colSubTotal.DataPropertyName = "SubTotal";
             colSubTotal.HeaderText = "Subtotal";
             colSubTotal.MinimumWidth = 100;
             colSubTotal.Name = "colSubTotal";
-            colSubTotal.Width = 120;
             colSubTotal.ReadOnly = true;
-
-            // panelPaymentInfo - Left side
+            colSubTotal.Width = 120;
+            // 
+            // textBoxSubtotal
+            // 
+            textBoxSubtotal.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            textBoxSubtotal.BackColor = Color.White;
+            textBoxSubtotal.Font = new Font("Segoe UI", 9F);
+            textBoxSubtotal.Location = new Point(57, 2);
+            textBoxSubtotal.Margin = new Padding(3, 2, 3, 2);
+            textBoxSubtotal.Name = "textBoxSubtotal";
+            textBoxSubtotal.ReadOnly = true;
+            textBoxSubtotal.Size = new Size(172, 23);
+            textBoxSubtotal.TabIndex = 1;
+            textBoxSubtotal.Text = "$0.00";
+            textBoxSubtotal.TextAlign = HorizontalAlignment.Right;
+            // 
+            // labelShippingText
+            // 
+            labelShippingText.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            labelShippingText.AutoSize = true;
+            labelShippingText.Font = new Font("Segoe UI", 9F);
+            labelShippingText.Location = new Point(3, 5);
+            labelShippingText.Name = "labelShippingText";
+            labelShippingText.Size = new Size(57, 15);
+            labelShippingText.TabIndex = 2;
+            labelShippingText.Text = "Shipping:";
+            labelShippingText.Click += labelShippingText_Click;
+            // 
+            // textBoxShipping
+            // 
+            textBoxShipping.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            textBoxShipping.BackColor = Color.White;
+            textBoxShipping.Font = new Font("Segoe UI", 9F);
+            textBoxShipping.Location = new Point(57, 29);
+            textBoxShipping.Margin = new Padding(3, 2, 3, 2);
+            textBoxShipping.Name = "textBoxShipping";
+            textBoxShipping.ReadOnly = true;
+            textBoxShipping.Size = new Size(172, 23);
+            textBoxShipping.TabIndex = 3;
+            textBoxShipping.Text = "$0.00";
+            textBoxShipping.TextAlign = HorizontalAlignment.Right;
+            // 
+            // labelTaxText
+            // 
+            labelTaxText.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            labelTaxText.AutoSize = true;
+            labelTaxText.Font = new Font("Segoe UI", 9F);
+            labelTaxText.Location = new Point(3, 31);
+            labelTaxText.Name = "labelTaxText";
+            labelTaxText.Size = new Size(27, 15);
+            labelTaxText.TabIndex = 4;
+            labelTaxText.Text = "Tax:";
+            // 
+            // textBoxTax
+            // 
+            textBoxTax.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            textBoxTax.BackColor = Color.White;
+            textBoxTax.Font = new Font("Segoe UI", 9F);
+            textBoxTax.Location = new Point(57, 56);
+            textBoxTax.Margin = new Padding(3, 2, 3, 2);
+            textBoxTax.Name = "textBoxTax";
+            textBoxTax.ReadOnly = true;
+            textBoxTax.Size = new Size(172, 23);
+            textBoxTax.TabIndex = 5;
+            textBoxTax.Text = "$0.00";
+            textBoxTax.TextAlign = HorizontalAlignment.Right;
+            // 
+            // labelTotalText
+            // 
+            labelTotalText.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            labelTotalText.AutoSize = true;
+            labelTotalText.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
+            labelTotalText.Location = new Point(3, 56);
+            labelTotalText.Name = "labelTotalText";
+            labelTotalText.Size = new Size(48, 20);
+            labelTotalText.TabIndex = 6;
+            labelTotalText.Text = "Total:";
+            // 
+            // textBoxTotal
+            // 
+            textBoxTotal.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            textBoxTotal.BackColor = Color.FromArgb(70, 130, 180);
+            textBoxTotal.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
+            textBoxTotal.ForeColor = Color.White;
+            textBoxTotal.Location = new Point(57, 81);
+            textBoxTotal.Margin = new Padding(3, 2, 3, 2);
+            textBoxTotal.Name = "textBoxTotal";
+            textBoxTotal.ReadOnly = true;
+            textBoxTotal.Size = new Size(172, 29);
+            textBoxTotal.TabIndex = 7;
+            textBoxTotal.Text = "$0.00";
+            textBoxTotal.TextAlign = HorizontalAlignment.Right;
+            // 
+            // panelPaymentInfo
+            // 
+            panelPaymentInfo.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             panelPaymentInfo.BackColor = Color.FromArgb(240, 240, 240);
             panelPaymentInfo.BorderStyle = BorderStyle.FixedSingle;
             panelPaymentInfo.Controls.Add(labelPaymentMethodText);
             panelPaymentInfo.Controls.Add(textBoxPaymentMethod);
             panelPaymentInfo.Controls.Add(labelPaidDateText);
             panelPaymentInfo.Controls.Add(textBoxPaidDate);
-            panelPaymentInfo.Location = new Point(25, 320);
+            panelPaymentInfo.Location = new Point(22, 351);
+            panelPaymentInfo.Margin = new Padding(3, 2, 3, 2);
             panelPaymentInfo.Name = "panelPaymentInfo";
-            panelPaymentInfo.Size = new Size(450, 75);
+            panelPaymentInfo.Size = new Size(509, 61);
             panelPaymentInfo.TabIndex = 6;
-
+            // 
             // labelPaymentMethodText
+            // 
+            labelPaymentMethodText.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             labelPaymentMethodText.AutoSize = true;
-            labelPaymentMethodText.Font = new Font("Segoe UI", 9F, GraphicsUnit.Point);
-            labelPaymentMethodText.Location = new Point(8, 10);
+            labelPaymentMethodText.Font = new Font("Segoe UI", 9F);
+            labelPaymentMethodText.Location = new Point(7, 8);
             labelPaymentMethodText.Name = "labelPaymentMethodText";
-            labelPaymentMethodText.Size = new Size(110, 15);
+            labelPaymentMethodText.Size = new Size(102, 15);
             labelPaymentMethodText.TabIndex = 0;
             labelPaymentMethodText.Text = "Payment Method:";
-
+            // 
             // textBoxPaymentMethod
+            // 
+            textBoxPaymentMethod.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             textBoxPaymentMethod.BackColor = Color.White;
-            textBoxPaymentMethod.Font = new Font("Segoe UI", 9F, GraphicsUnit.Point);
-            textBoxPaymentMethod.Location = new Point(140, 10);
+            textBoxPaymentMethod.Font = new Font("Segoe UI", 9F);
+            textBoxPaymentMethod.Location = new Point(122, 8);
+            textBoxPaymentMethod.Margin = new Padding(3, 2, 3, 2);
             textBoxPaymentMethod.Name = "textBoxPaymentMethod";
             textBoxPaymentMethod.ReadOnly = true;
-            textBoxPaymentMethod.Size = new Size(300, 23);
+            textBoxPaymentMethod.Size = new Size(370, 23);
             textBoxPaymentMethod.TabIndex = 1;
             textBoxPaymentMethod.Text = "Credit Card";
-
+            // 
             // labelPaidDateText
+            // 
+            labelPaidDateText.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             labelPaidDateText.AutoSize = true;
-            labelPaidDateText.Font = new Font("Segoe UI", 9F, GraphicsUnit.Point);
-            labelPaidDateText.Location = new Point(8, 40);
+            labelPaidDateText.Font = new Font("Segoe UI", 9F);
+            labelPaidDateText.Location = new Point(7, 30);
             labelPaidDateText.Name = "labelPaidDateText";
-            labelPaidDateText.Size = new Size(70, 15);
+            labelPaidDateText.Size = new Size(60, 15);
             labelPaidDateText.TabIndex = 2;
             labelPaidDateText.Text = "Paid Date:";
-
+            // 
             // textBoxPaidDate
+            // 
+            textBoxPaidDate.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             textBoxPaidDate.BackColor = Color.White;
-            textBoxPaidDate.Font = new Font("Segoe UI", 9F, GraphicsUnit.Point);
-            textBoxPaidDate.Location = new Point(140, 40);
+            textBoxPaidDate.Font = new Font("Segoe UI", 9F);
+            textBoxPaidDate.Location = new Point(122, 30);
+            textBoxPaidDate.Margin = new Padding(3, 2, 3, 2);
             textBoxPaidDate.Name = "textBoxPaidDate";
             textBoxPaidDate.ReadOnly = true;
-            textBoxPaidDate.Size = new Size(300, 23);
+            textBoxPaidDate.Size = new Size(370, 23);
             textBoxPaidDate.TabIndex = 3;
             textBoxPaidDate.Text = "May 13, 2026 - 2:45 PM";
-
-            // panelPriceSummary - Right side
-            panelPriceSummary.BackColor = Color.FromArgb(240, 240, 240);
-            panelPriceSummary.BorderStyle = BorderStyle.FixedSingle;
-            panelPriceSummary.Controls.Add(labelSubtotalText);
-            panelPriceSummary.Controls.Add(textBoxSubtotal);
-            panelPriceSummary.Controls.Add(labelShippingText);
-            panelPriceSummary.Controls.Add(textBoxShipping);
-            panelPriceSummary.Controls.Add(labelTaxText);
-            panelPriceSummary.Controls.Add(textBoxTax);
-            panelPriceSummary.Controls.Add(labelTotalText);
-            panelPriceSummary.Controls.Add(textBoxTotal);
-            panelPriceSummary.Location = new Point(485, 320);
-            panelPriceSummary.Name = "panelPriceSummary";
-            panelPriceSummary.Size = new Size(270, 130);
-            panelPriceSummary.TabIndex = 5;
-
-            // labelSubtotalText
-            labelSubtotalText.AutoSize = true;
-            labelSubtotalText.Font = new Font("Segoe UI", 9F, GraphicsUnit.Point);
-            labelSubtotalText.Location = new Point(8, 10);
-            labelSubtotalText.Name = "labelSubtotalText";
-            labelSubtotalText.Size = new Size(60, 15);
-            labelSubtotalText.TabIndex = 0;
-            labelSubtotalText.Text = "Subtotal:";
-
-            // textBoxSubtotal
-            textBoxSubtotal.BackColor = Color.White;
-            textBoxSubtotal.Font = new Font("Segoe UI", 9F, GraphicsUnit.Point);
-            textBoxSubtotal.Location = new Point(120, 10);
-            textBoxSubtotal.Name = "textBoxSubtotal";
-            textBoxSubtotal.ReadOnly = true;
-            textBoxSubtotal.Size = new Size(140, 23);
-            textBoxSubtotal.TabIndex = 1;
-            textBoxSubtotal.Text = "$0.00";
-            textBoxSubtotal.TextAlign = HorizontalAlignment.Right;
-
-            // labelShippingText
-            labelShippingText.AutoSize = true;
-            labelShippingText.Font = new Font("Segoe UI", 9F, GraphicsUnit.Point);
-            labelShippingText.Location = new Point(8, 35);
-            labelShippingText.Name = "labelShippingText";
-            labelShippingText.Size = new Size(59, 15);
-            labelShippingText.TabIndex = 2;
-            labelShippingText.Text = "Shipping:";
-
-            // textBoxShipping
-            textBoxShipping.BackColor = Color.White;
-            textBoxShipping.Font = new Font("Segoe UI", 9F, GraphicsUnit.Point);
-            textBoxShipping.Location = new Point(120, 35);
-            textBoxShipping.Name = "textBoxShipping";
-            textBoxShipping.ReadOnly = true;
-            textBoxShipping.Size = new Size(140, 23);
-            textBoxShipping.TabIndex = 3;
-            textBoxShipping.Text = "$0.00";
-            textBoxShipping.TextAlign = HorizontalAlignment.Right;
-
-            // labelTaxText
-            labelTaxText.AutoSize = true;
-            labelTaxText.Font = new Font("Segoe UI", 9F, GraphicsUnit.Point);
-            labelTaxText.Location = new Point(8, 60);
-            labelTaxText.Name = "labelTaxText";
-            labelTaxText.Size = new Size(32, 15);
-            labelTaxText.TabIndex = 4;
-            labelTaxText.Text = "Tax:";
-
-            // textBoxTax
-            textBoxTax.BackColor = Color.White;
-            textBoxTax.Font = new Font("Segoe UI", 9F, GraphicsUnit.Point);
-            textBoxTax.Location = new Point(120, 60);
-            textBoxTax.Name = "textBoxTax";
-            textBoxTax.ReadOnly = true;
-            textBoxTax.Size = new Size(140, 23);
-            textBoxTax.TabIndex = 5;
-            textBoxTax.Text = "$0.00";
-            textBoxTax.TextAlign = HorizontalAlignment.Right;
-
-            // labelTotalText
-            labelTotalText.AutoSize = true;
-            labelTotalText.Font = new Font("Segoe UI", 11F, FontStyle.Bold, GraphicsUnit.Point);
-            labelTotalText.Location = new Point(8, 90);
-            labelTotalText.Name = "labelTotalText";
-            labelTotalText.Size = new Size(50, 20);
-            labelTotalText.TabIndex = 6;
-            labelTotalText.Text = "Total:";
-
-            // textBoxTotal
-            textBoxTotal.BackColor = Color.FromArgb(70, 130, 180);
-            textBoxTotal.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point);
-            textBoxTotal.ForeColor = Color.White;
-            textBoxTotal.Location = new Point(70, 90);
-            textBoxTotal.Name = "textBoxTotal";
-            textBoxTotal.ReadOnly = true;
-            textBoxTotal.Size = new Size(190, 27);
-            textBoxTotal.TabIndex = 7;
-            textBoxTotal.Text = "$0.00";
-            textBoxTotal.TextAlign = HorizontalAlignment.Right;
-
+            // 
             // btnPrint
+            // 
+            btnPrint.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
             btnPrint.BackColor = Color.FromArgb(70, 130, 180);
             btnPrint.FlatStyle = FlatStyle.Flat;
-            btnPrint.Font = new Font("Segoe UI", 10F, FontStyle.Regular, GraphicsUnit.Point);
+            btnPrint.Font = new Font("Segoe UI", 10F);
             btnPrint.ForeColor = Color.White;
-            btnPrint.Location = new Point(25, 410);
+            btnPrint.Location = new Point(22, 417);
+            btnPrint.Margin = new Padding(3, 2, 3, 2);
             btnPrint.Name = "btnPrint";
-            btnPrint.Size = new Size(100, 35);
+            btnPrint.Size = new Size(95, 32);
             btnPrint.TabIndex = 7;
             btnPrint.Text = "🖨 Print";
             btnPrint.UseVisualStyleBackColor = false;
             btnPrint.Click += BtnPrint_Click;
-
+            // 
             // btnDownload
+            // 
+            btnDownload.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
             btnDownload.BackColor = Color.FromArgb(70, 130, 180);
             btnDownload.FlatStyle = FlatStyle.Flat;
-            btnDownload.Font = new Font("Segoe UI", 10F, FontStyle.Regular, GraphicsUnit.Point);
+            btnDownload.Font = new Font("Segoe UI", 10F);
             btnDownload.ForeColor = Color.White;
-            btnDownload.Location = new Point(135, 410);
+            btnDownload.Location = new Point(123, 417);
+            btnDownload.Margin = new Padding(3, 2, 3, 2);
             btnDownload.Name = "btnDownload";
-            btnDownload.Size = new Size(110, 35);
+            btnDownload.Size = new Size(103, 32);
             btnDownload.TabIndex = 8;
             btnDownload.Text = "⬇ Download PDF";
             btnDownload.UseVisualStyleBackColor = false;
             btnDownload.Click += BtnDownload_Click;
-
+            // 
+            // panel1
+            // 
+            panel1.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            panel1.Controls.Add(textBoxTotal);
+            panel1.Controls.Add(labelTotalText);
+            panel1.Controls.Add(textBoxSubtotal);
+            panel1.Controls.Add(textBoxTax);
+            panel1.Controls.Add(textBoxShipping);
+            panel1.Controls.Add(labelTaxText);
+            panel1.Controls.Add(labelShippingText);
+            panel1.Location = new Point(550, 351);
+            panel1.Name = "panel1";
+            panel1.Size = new Size(232, 112);
+            panel1.TabIndex = 11;
+            // 
+            // btnBack
+            // 
+            btnBack.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+            btnBack.BackColor = Color.FromArgb(200, 200, 200);
+            btnBack.FlatStyle = FlatStyle.Flat;
+            btnBack.Font = new Font("Segoe UI", 10F);
+            btnBack.ForeColor = Color.White;
+            btnBack.Location = new Point(325, 418);
+            btnBack.Margin = new Padding(3, 2, 3, 2);
+            btnBack.Name = "btnBack";
+            btnBack.Size = new Size(91, 31);
+            btnBack.TabIndex = 12;
+            btnBack.Text = "← Back";
+            btnBack.UseVisualStyleBackColor = false;
+            btnBack.Click += BtnBack_Click;
+            // 
             // btnClose
-            btnClose.BackColor = Color.FromArgb(200, 200, 200);
-            btnClose.FlatStyle = FlatStyle.Flat;
-            btnClose.Font = new Font("Segoe UI", 10F, FontStyle.Regular, GraphicsUnit.Point);
-            btnClose.ForeColor = Color.White;
-            btnClose.Location = new Point(655, 410);
-            btnClose.Name = "btnClose";
-            btnClose.Size = new Size(100, 35);
-            btnClose.TabIndex = 9;
-            btnClose.Text = "Close";
-            btnClose.UseVisualStyleBackColor = false;
-            btnClose.Click += BtnClose_Click;
-
+            // 
+            //btnClose.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+            //btnClose.BackColor = Color.Brown;
+            //btnClose.FlatStyle = FlatStyle.Flat;
+            //btnClose.Font = new Font("Segoe UI", 10F);
+            //btnClose.ForeColor = Color.White;
+            //btnClose.Location = new Point(232, 417);
+            //btnClose.Margin = new Padding(3, 2, 3, 2);
+            //btnClose.Name = "btnClose";
+            //btnClose.Size = new Size(87, 32);
+            //btnClose.TabIndex = 9;
+            //btnClose.Text = "Close";
+            //btnClose.UseVisualStyleBackColor = false;
+            //btnClose.Click += BtnClose_Click;
+            // 
             // ReceiptScreen
-            AutoScaleDimensions = new SizeF(8F, 20F);
+            // 
+            AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(780, 470);
+            ClientSize = new Size(803, 467);
+            Controls.Add(btnBack);
+            Controls.Add(panel1);
             Controls.Add(labelTitle);
             Controls.Add(labelReceiptNumber);
             Controls.Add(labelReceiptDate);
             Controls.Add(labelOrderDetails);
             Controls.Add(dataGridViewItems);
             Controls.Add(panelPaymentInfo);
-            Controls.Add(panelPriceSummary);
             Controls.Add(btnPrint);
             Controls.Add(btnDownload);
             Controls.Add(btnClose);
+            Margin = new Padding(3, 2, 3, 2);
+            MinimumSize = new Size(800, 500);
             Name = "ReceiptScreen";
-            Text = "Receipt";
             StartPosition = FormStartPosition.CenterScreen;
+            Text = "Receipt";
             ((System.ComponentModel.ISupportInitialize)dataGridViewItems).EndInit();
             panelPaymentInfo.ResumeLayout(false);
             panelPaymentInfo.PerformLayout();
-            panelPriceSummary.ResumeLayout(false);
-            panelPriceSummary.PerformLayout();
+            panel1.ResumeLayout(false);
+            panel1.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
 
         #endregion
+        private Panel panel1;
+        private Button btnBack;
+        private Button btnClose;
     }
 }
+//how to use btnBack to PorductScreen

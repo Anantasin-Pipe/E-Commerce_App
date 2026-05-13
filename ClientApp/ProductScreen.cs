@@ -141,7 +141,7 @@ namespace ClientApp
                 _selectedProduct = product;
                 numericUpDownQty.Value = 1;
                 btnAddToCart.Focus();
-                
+
                 // Highlight selected card
                 foreach (Panel p in flowLayoutPanelProducts.Controls.OfType<Panel>())
                 {
@@ -207,6 +207,11 @@ namespace ClientApp
         private void UpdateCartBadge()
         {
             labelCartCount.Text = _cartCount.ToString();
+        }
+
+        private void panelProductSelector_Paint(object sender, PaintEventArgs e)
+        {
+
         }
     }
 }
