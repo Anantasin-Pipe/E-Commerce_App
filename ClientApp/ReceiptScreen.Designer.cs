@@ -172,7 +172,57 @@
             colSubTotal.Width = 120;
             colSubTotal.ReadOnly = true;
 
-            // panelPriceSummary
+            // panelPaymentInfo - Left side
+            panelPaymentInfo.BackColor = Color.FromArgb(240, 240, 240);
+            panelPaymentInfo.BorderStyle = BorderStyle.FixedSingle;
+            panelPaymentInfo.Controls.Add(labelPaymentMethodText);
+            panelPaymentInfo.Controls.Add(textBoxPaymentMethod);
+            panelPaymentInfo.Controls.Add(labelPaidDateText);
+            panelPaymentInfo.Controls.Add(textBoxPaidDate);
+            panelPaymentInfo.Location = new Point(25, 320);
+            panelPaymentInfo.Name = "panelPaymentInfo";
+            panelPaymentInfo.Size = new Size(450, 75);
+            panelPaymentInfo.TabIndex = 6;
+
+            // labelPaymentMethodText
+            labelPaymentMethodText.AutoSize = true;
+            labelPaymentMethodText.Font = new Font("Segoe UI", 9F, GraphicsUnit.Point);
+            labelPaymentMethodText.Location = new Point(8, 10);
+            labelPaymentMethodText.Name = "labelPaymentMethodText";
+            labelPaymentMethodText.Size = new Size(110, 15);
+            labelPaymentMethodText.TabIndex = 0;
+            labelPaymentMethodText.Text = "Payment Method:";
+
+            // textBoxPaymentMethod
+            textBoxPaymentMethod.BackColor = Color.White;
+            textBoxPaymentMethod.Font = new Font("Segoe UI", 9F, GraphicsUnit.Point);
+            textBoxPaymentMethod.Location = new Point(140, 10);
+            textBoxPaymentMethod.Name = "textBoxPaymentMethod";
+            textBoxPaymentMethod.ReadOnly = true;
+            textBoxPaymentMethod.Size = new Size(300, 23);
+            textBoxPaymentMethod.TabIndex = 1;
+            textBoxPaymentMethod.Text = "Credit Card";
+
+            // labelPaidDateText
+            labelPaidDateText.AutoSize = true;
+            labelPaidDateText.Font = new Font("Segoe UI", 9F, GraphicsUnit.Point);
+            labelPaidDateText.Location = new Point(8, 40);
+            labelPaidDateText.Name = "labelPaidDateText";
+            labelPaidDateText.Size = new Size(70, 15);
+            labelPaidDateText.TabIndex = 2;
+            labelPaidDateText.Text = "Paid Date:";
+
+            // textBoxPaidDate
+            textBoxPaidDate.BackColor = Color.White;
+            textBoxPaidDate.Font = new Font("Segoe UI", 9F, GraphicsUnit.Point);
+            textBoxPaidDate.Location = new Point(140, 40);
+            textBoxPaidDate.Name = "textBoxPaidDate";
+            textBoxPaidDate.ReadOnly = true;
+            textBoxPaidDate.Size = new Size(300, 23);
+            textBoxPaidDate.TabIndex = 3;
+            textBoxPaidDate.Text = "May 13, 2026 - 2:45 PM";
+
+            // panelPriceSummary - Right side
             panelPriceSummary.BackColor = Color.FromArgb(240, 240, 240);
             panelPriceSummary.BorderStyle = BorderStyle.FixedSingle;
             panelPriceSummary.Controls.Add(labelSubtotalText);
@@ -183,9 +233,9 @@
             panelPriceSummary.Controls.Add(textBoxTax);
             panelPriceSummary.Controls.Add(labelTotalText);
             panelPriceSummary.Controls.Add(textBoxTotal);
-            panelPriceSummary.Location = new Point(520, 320);
+            panelPriceSummary.Location = new Point(485, 320);
             panelPriceSummary.Name = "panelPriceSummary";
-            panelPriceSummary.Size = new Size(235, 130);
+            panelPriceSummary.Size = new Size(270, 130);
             panelPriceSummary.TabIndex = 5;
 
             // labelSubtotalText
@@ -200,10 +250,10 @@
             // textBoxSubtotal
             textBoxSubtotal.BackColor = Color.White;
             textBoxSubtotal.Font = new Font("Segoe UI", 9F, GraphicsUnit.Point);
-            textBoxSubtotal.Location = new Point(140, 10);
+            textBoxSubtotal.Location = new Point(120, 10);
             textBoxSubtotal.Name = "textBoxSubtotal";
             textBoxSubtotal.ReadOnly = true;
-            textBoxSubtotal.Size = new Size(85, 23);
+            textBoxSubtotal.Size = new Size(140, 23);
             textBoxSubtotal.TabIndex = 1;
             textBoxSubtotal.Text = "$0.00";
             textBoxSubtotal.TextAlign = HorizontalAlignment.Right;
@@ -220,10 +270,10 @@
             // textBoxShipping
             textBoxShipping.BackColor = Color.White;
             textBoxShipping.Font = new Font("Segoe UI", 9F, GraphicsUnit.Point);
-            textBoxShipping.Location = new Point(140, 35);
+            textBoxShipping.Location = new Point(120, 35);
             textBoxShipping.Name = "textBoxShipping";
             textBoxShipping.ReadOnly = true;
-            textBoxShipping.Size = new Size(85, 23);
+            textBoxShipping.Size = new Size(140, 23);
             textBoxShipping.TabIndex = 3;
             textBoxShipping.Text = "$0.00";
             textBoxShipping.TextAlign = HorizontalAlignment.Right;
@@ -240,10 +290,10 @@
             // textBoxTax
             textBoxTax.BackColor = Color.White;
             textBoxTax.Font = new Font("Segoe UI", 9F, GraphicsUnit.Point);
-            textBoxTax.Location = new Point(140, 60);
+            textBoxTax.Location = new Point(120, 60);
             textBoxTax.Name = "textBoxTax";
             textBoxTax.ReadOnly = true;
-            textBoxTax.Size = new Size(85, 23);
+            textBoxTax.Size = new Size(140, 23);
             textBoxTax.TabIndex = 5;
             textBoxTax.Text = "$0.00";
             textBoxTax.TextAlign = HorizontalAlignment.Right;
@@ -261,63 +311,13 @@
             textBoxTotal.BackColor = Color.FromArgb(70, 130, 180);
             textBoxTotal.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point);
             textBoxTotal.ForeColor = Color.White;
-            textBoxTotal.Location = new Point(98, 90);
+            textBoxTotal.Location = new Point(70, 90);
             textBoxTotal.Name = "textBoxTotal";
             textBoxTotal.ReadOnly = true;
-            textBoxTotal.Size = new Size(127, 27);
+            textBoxTotal.Size = new Size(190, 27);
             textBoxTotal.TabIndex = 7;
             textBoxTotal.Text = "$0.00";
             textBoxTotal.TextAlign = HorizontalAlignment.Right;
-
-            // panelPaymentInfo
-            panelPaymentInfo.BackColor = Color.FromArgb(240, 240, 240);
-            panelPaymentInfo.BorderStyle = BorderStyle.FixedSingle;
-            panelPaymentInfo.Controls.Add(labelPaymentMethodText);
-            panelPaymentInfo.Controls.Add(textBoxPaymentMethod);
-            panelPaymentInfo.Controls.Add(labelPaidDateText);
-            panelPaymentInfo.Controls.Add(textBoxPaidDate);
-            panelPaymentInfo.Location = new Point(25, 320);
-            panelPaymentInfo.Name = "panelPaymentInfo";
-            panelPaymentInfo.Size = new Size(480, 75);
-            panelPaymentInfo.TabIndex = 6;
-
-            // labelPaymentMethodText
-            labelPaymentMethodText.AutoSize = true;
-            labelPaymentMethodText.Font = new Font("Segoe UI", 9F, GraphicsUnit.Point);
-            labelPaymentMethodText.Location = new Point(8, 10);
-            labelPaymentMethodText.Name = "labelPaymentMethodText";
-            labelPaymentMethodText.Size = new Size(100, 15);
-            labelPaymentMethodText.TabIndex = 0;
-            labelPaymentMethodText.Text = "Payment Method:";
-
-            // textBoxPaymentMethod
-            textBoxPaymentMethod.BackColor = Color.White;
-            textBoxPaymentMethod.Font = new Font("Segoe UI", 9F, GraphicsUnit.Point);
-            textBoxPaymentMethod.Location = new Point(120, 10);
-            textBoxPaymentMethod.Name = "textBoxPaymentMethod";
-            textBoxPaymentMethod.ReadOnly = true;
-            textBoxPaymentMethod.Size = new Size(350, 23);
-            textBoxPaymentMethod.TabIndex = 1;
-            textBoxPaymentMethod.Text = "Credit Card";
-
-            // labelPaidDateText
-            labelPaidDateText.AutoSize = true;
-            labelPaidDateText.Font = new Font("Segoe UI", 9F, GraphicsUnit.Point);
-            labelPaidDateText.Location = new Point(8, 40);
-            labelPaidDateText.Name = "labelPaidDateText";
-            labelPaidDateText.Size = new Size(67, 15);
-            labelPaidDateText.TabIndex = 2;
-            labelPaidDateText.Text = "Paid Date:";
-
-            // textBoxPaidDate
-            textBoxPaidDate.BackColor = Color.White;
-            textBoxPaidDate.Font = new Font("Segoe UI", 9F, GraphicsUnit.Point);
-            textBoxPaidDate.Location = new Point(120, 40);
-            textBoxPaidDate.Name = "textBoxPaidDate";
-            textBoxPaidDate.ReadOnly = true;
-            textBoxPaidDate.Size = new Size(350, 23);
-            textBoxPaidDate.TabIndex = 3;
-            textBoxPaidDate.Text = "May 13, 2026 - 2:45 PM";
 
             // btnPrint
             btnPrint.BackColor = Color.FromArgb(70, 130, 180);

@@ -156,12 +156,12 @@
             // 
             // labelShippingCost
             // 
-            labelShippingCost.AutoSize = true;
-            labelShippingCost.Font = new Font("Segoe UI", 10F);
+            labelShippingCost.AutoSize = false;
+            labelShippingCost.Font = new Font("Segoe UI", 10F, GraphicsUnit.Point);
             labelShippingCost.ForeColor = Color.FromArgb(51, 51, 51);
             labelShippingCost.Location = new Point(25, 310);
             labelShippingCost.Name = "labelShippingCost";
-            labelShippingCost.Size = new Size(116, 23);
+            labelShippingCost.Size = new Size(130, 23);
             labelShippingCost.TabIndex = 3;
             labelShippingCost.Text = "Shipping Cost";
             // 
@@ -172,30 +172,31 @@
             comboBoxShipping.Items.AddRange(new object[] { "Standard ($5.00)", "Express ($15.00)", "Overnight ($25.00)" });
             comboBoxShipping.Location = new Point(160, 306);
             comboBoxShipping.Name = "comboBoxShipping";
-            comboBoxShipping.Size = new Size(180, 28);
+            comboBoxShipping.Size = new Size(200, 28);
             comboBoxShipping.TabIndex = 4;
+            comboBoxShipping.SelectedIndex = 0;
             comboBoxShipping.SelectedIndexChanged += ComboBoxShipping_SelectedIndexChanged;
             // 
             // textBoxShippingCost
             // 
             textBoxShippingCost.BackColor = Color.FromArgb(240, 240, 240);
-            textBoxShippingCost.Font = new Font("Segoe UI", 10F);
-            textBoxShippingCost.Location = new Point(365, 306);
+            textBoxShippingCost.Font = new Font("Segoe UI", 10F, GraphicsUnit.Point);
+            textBoxShippingCost.Location = new Point(375, 306);
             textBoxShippingCost.Name = "textBoxShippingCost";
             textBoxShippingCost.ReadOnly = true;
-            textBoxShippingCost.Size = new Size(80, 30);
+            textBoxShippingCost.Size = new Size(80, 25);
             textBoxShippingCost.TabIndex = 5;
             textBoxShippingCost.Text = "$5.00";
             textBoxShippingCost.TextAlign = HorizontalAlignment.Right;
             // 
             // labelPaymentMethod
             // 
-            labelPaymentMethod.AutoSize = true;
-            labelPaymentMethod.Font = new Font("Segoe UI", 10F);
+            labelPaymentMethod.AutoSize = false;
+            labelPaymentMethod.Font = new Font("Segoe UI", 10F, GraphicsUnit.Point);
             labelPaymentMethod.ForeColor = Color.FromArgb(51, 51, 51);
             labelPaymentMethod.Location = new Point(25, 345);
             labelPaymentMethod.Name = "labelPaymentMethod";
-            labelPaymentMethod.Size = new Size(141, 23);
+            labelPaymentMethod.Size = new Size(130, 23);
             labelPaymentMethod.TabIndex = 6;
             labelPaymentMethod.Text = "Payment Method";
             // 
@@ -206,8 +207,9 @@
             comboBoxPaymentMethod.Items.AddRange(new object[] { "Credit Card", "Debit Card", "Bank Transfer", "Cash on Delivery" });
             comboBoxPaymentMethod.Location = new Point(160, 341);
             comboBoxPaymentMethod.Name = "comboBoxPaymentMethod";
-            comboBoxPaymentMethod.Size = new Size(180, 28);
+            comboBoxPaymentMethod.Size = new Size(200, 28);
             comboBoxPaymentMethod.TabIndex = 7;
+            comboBoxPaymentMethod.SelectedIndex = 0;
             comboBoxPaymentMethod.SelectedIndexChanged += comboBoxPaymentMethod_SelectedIndexChanged;
             // 
             // labelSubtotal
@@ -293,7 +295,7 @@
             // 
             // btnPay
             // 
-            btnPay.BackColor = Color.FromArgb(70, 130, 180);
+            btnPay.BackColor = Color.FromArgb(76, 175, 80);
             btnPay.FlatStyle = FlatStyle.Flat;
             btnPay.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
             btnPay.ForeColor = Color.White;

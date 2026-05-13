@@ -155,7 +155,10 @@ namespace ClientApp
 
         private void BtnBack_Click(object sender, EventArgs e)
         {
-            this.Close();
+            // Navigate back to CartScreen instead of closing
+            CartScreen cart = new CartScreen();
+            cart.Show();
+            this.Hide();
         }
 
         private void comboBoxPaymentMethod_SelectedIndexChanged(object sender, EventArgs e)
