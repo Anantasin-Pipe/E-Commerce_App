@@ -94,7 +94,7 @@ namespace ClientApp
             }
         }
 
-        private void BtnContinueShopping_Click(object sender, EventArgs e)
+        private void BtnBack_Click(object sender, EventArgs e)
         {
             ProductScreen product = new ProductScreen();
             product.Show();

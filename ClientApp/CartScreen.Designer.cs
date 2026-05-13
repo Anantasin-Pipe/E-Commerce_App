@@ -16,7 +16,7 @@
         private DataGridViewTextBoxColumn colQuantity;
         private DataGridViewTextBoxColumn colSubTotal;
         private Button btnRemove;
-        private Button btnContinueShopping;
+        private Button btnBack;
         private Panel panelCartSummary;
         private Label labelSubtotalText;
         private TextBox textBoxSubtotal;
@@ -54,7 +54,7 @@
             colQuantity = new DataGridViewTextBoxColumn();
             colSubTotal = new DataGridViewTextBoxColumn();
             btnRemove = new Button();
-            btnContinueShopping = new Button();
+            btnBack = new Button();
             panelCartSummary = new Panel();
             labelSubtotalText = new Label();
             textBoxSubtotal = new TextBox();
@@ -95,7 +95,7 @@
             dataGridViewCart.Location = new Point(25, 75);
             dataGridViewCart.Name = "dataGridViewCart";
             dataGridViewCart.RowHeadersVisible = false;
-            dataGridViewCart.Size = new Size(730, 220);
+            dataGridViewCart.Size = new Size(730, 200);
             dataGridViewCart.TabIndex = 2;
 
             // colSelect
@@ -141,7 +141,7 @@
             btnRemove.FlatStyle = FlatStyle.Flat;
             btnRemove.Font = new Font("Segoe UI", 10F, FontStyle.Regular, GraphicsUnit.Point);
             btnRemove.ForeColor = Color.White;
-            btnRemove.Location = new Point(25, 310);
+            btnRemove.Location = new Point(25, 295);
             btnRemove.Name = "btnRemove";
             btnRemove.Size = new Size(120, 35);
             btnRemove.TabIndex = 3;
@@ -149,18 +149,18 @@
             btnRemove.UseVisualStyleBackColor = false;
             btnRemove.Click += BtnRemove_Click;
 
-            // btnContinueShopping
-            btnContinueShopping.BackColor = Color.FromArgb(200, 200, 200);
-            btnContinueShopping.FlatStyle = FlatStyle.Flat;
-            btnContinueShopping.Font = new Font("Segoe UI", 10F, FontStyle.Regular, GraphicsUnit.Point);
-            btnContinueShopping.ForeColor = Color.White;
-            btnContinueShopping.Location = new Point(155, 310);
-            btnContinueShopping.Name = "btnContinueShopping";
-            btnContinueShopping.Size = new Size(140, 35);
-            btnContinueShopping.TabIndex = 4;
-            btnContinueShopping.Text = "← Continue Shopping";
-            btnContinueShopping.UseVisualStyleBackColor = false;
-            btnContinueShopping.Click += BtnContinueShopping_Click;
+            // btnBack
+            btnBack.BackColor = Color.FromArgb(200, 200, 200);
+            btnBack.FlatStyle = FlatStyle.Flat;
+            btnBack.Font = new Font("Segoe UI", 10F, FontStyle.Regular, GraphicsUnit.Point);
+            btnBack.ForeColor = Color.White;
+            btnBack.Location = new Point(155, 295);
+            btnBack.Name = "btnBack";
+            btnBack.Size = new Size(100, 35);
+            btnBack.TabIndex = 4;
+            btnBack.Text = "← Back";
+            btnBack.UseVisualStyleBackColor = false;
+            btnBack.Click += BtnBack_Click;
 
             // panelCartSummary
             panelCartSummary.BackColor = Color.FromArgb(240, 240, 240);
@@ -169,7 +169,7 @@
             panelCartSummary.Controls.Add(textBoxSubtotal);
             panelCartSummary.Controls.Add(labelTotalText);
             panelCartSummary.Controls.Add(textBoxTotal);
-            panelCartSummary.Location = new Point(545, 305);
+            panelCartSummary.Location = new Point(545, 285);
             panelCartSummary.Name = "panelCartSummary";
             panelCartSummary.Size = new Size(210, 85);
             panelCartSummary.TabIndex = 5;
@@ -216,27 +216,28 @@
             textBoxTotal.TextAlign = HorizontalAlignment.Right;
 
             // btnCheckout
+            btnCheckout.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             btnCheckout.BackColor = Color.FromArgb(76, 175, 80);
             btnCheckout.FlatStyle = FlatStyle.Flat;
             btnCheckout.Font = new Font("Segoe UI", 11F, FontStyle.Bold, GraphicsUnit.Point);
             btnCheckout.ForeColor = Color.White;
-            btnCheckout.Location = new Point(625, 360);
+            btnCheckout.Location = new Point(545, 380);
             btnCheckout.Name = "btnCheckout";
-            btnCheckout.Size = new Size(130, 40);
+            btnCheckout.Size = new Size(210, 40);
             btnCheckout.TabIndex = 6;
-            btnCheckout.Text = "Proceed to Checkout";
+            btnCheckout.Text = "Proceed to Checkout →";
             btnCheckout.UseVisualStyleBackColor = false;
             btnCheckout.Click += BtnCheckout_Click;
 
             // CartScreen
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(780, 420);
+            ClientSize = new Size(780, 450);
             Controls.Add(labelTitle);
             Controls.Add(labelSubtitle);
             Controls.Add(dataGridViewCart);
             Controls.Add(btnRemove);
-            Controls.Add(btnContinueShopping);
+            Controls.Add(btnBack);
             Controls.Add(panelCartSummary);
             Controls.Add(btnCheckout);
             Name = "CartScreen";
