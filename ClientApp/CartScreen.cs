@@ -2,16 +2,20 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Net.Http.Json;
 using System.Windows.Forms;
+using ClientApp.Services;
 
 namespace ClientApp
 {
     public partial class CartScreen : Form
     {
         private BindingList<CartItem> _items = new BindingList<CartItem>();
+        private readonly CartApiService _cartApiService;
 
         public class CartItem
         {
+            public int CartId { get; set; }
             public bool Selected { get; set; } = true;
             public int ProductId { get; set; }
             public string ProductName { get; set; } = string.Empty;
@@ -23,32 +27,98 @@ namespace ClientApp
         public CartScreen()
         {
             InitializeComponent();
+            _cartApiService = new CartApiService();
             InitializeDataGrid();
-            LoadSampleItems();
+            //_ = LoadCartFromDatabaseAsync();
             UpdateTotals();
+            LoadCartFromDatabase();
         }
 
         private void InitializeDataGrid()
         {
             dataGridViewCart.DataSource = _items;
+            dataGridViewCart.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dataGridViewCart.CellEndEdit += DataGridViewCart_CellEndEdit;
             dataGridViewCart.CurrentCellDirtyStateChanged += DataGridViewCart_CurrentCellDirtyStateChanged;
+            dataGridViewCart.CellValueChanged += DataGridViewCart_CellValueChanged;
             _items.ListChanged += Items_ListChanged;
         }
 
-        private void LoadSampleItems()
+        private async void LoadCartFromDatabase()
         {
-            // Sample cart items - replace with real cart data
-            _items.Add(new CartItem { ProductId = 1, ProductName = "Blue T-Shirt", UnitPrice = 19.99m, Quantity = 2 });
-            _items.Add(new CartItem { ProductId = 2, ProductName = "Red Mug", UnitPrice = 8.50m, Quantity = 1 });
-            _items.Add(new CartItem { ProductId = 3, ProductName = "Notebook Set", UnitPrice = 12.75m, Quantity = 3 });
+            try
+            {
+                // ดึงข้อมูลผ่าน API Service
+                var cartItemsFromApi = await _cartApiService.GetCartItemsAsync();
+
+                _items.Clear();
+                foreach (var dto in cartItemsFromApi)
+                {
+                    // แปลง DTO จาก API ให้เป็น CartItem ของหน้าจอ
+                    _items.Add(new CartItem
+                    {
+                        CartId = dto.CartId,
+                        ProductId = dto.ProductId,
+                        ProductName = dto.ProductName,
+                        UnitPrice = dto.UnitPrice,
+                        Quantity = dto.Quantity
+                    });
+                }
+                UpdateTotals();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
+
+        //private async Task LoadCartFromDatabaseAsync()
+
+        //{
+        //    try
+        //    {
+        //        using (HttpClient client = new HttpClient())
+        //        {
+        //            // เปลี่ยน URL ให้ตรงกับพอร์ต API ของคุณ
+        //            client.BaseAddress = new Uri("https://localhost:7241/");
+
+        //            // ยิง GET ไปที่ CartsController ที่เราเพิ่งสร้าง
+        //            var cartItemsFromApi = await client.GetFromJsonAsync<List<CartItem>>("api/Carts");
+
+        //            if (cartItemsFromApi != null)
+        //            {
+        //                _items.Clear();
+        //                foreach (var item in cartItemsFromApi)
+        //                {
+        //                    // ตั้งค่าเริ่มต้นให้ทุกชิ้นถูก Selected (ติ๊กถูก)
+        //                    item.Selected = true;
+        //                    _items.Add(item);
+        //                }
+        //                UpdateTotals();
+        //            }
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        MessageBox.Show($"Error loading cart: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        //    }
+        //}
 
         private void DataGridViewCart_CurrentCellDirtyStateChanged(object sender, EventArgs e)
         {
             if (dataGridViewCart.IsCurrentCellDirty)
             {
                 dataGridViewCart.CommitEdit(DataGridViewDataErrorContexts.Commit);
+            }
+        }
+
+        private void DataGridViewCart_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        {
+            // เช็กว่าไม่ใช่การคลิกที่หัวตาราง
+            if (e.RowIndex >= 0)
+            {
+                // เมื่อมีการติ๊ก CheckBox หรือแก้ตัวเลข ให้คำนวณยอดเงินใหม่ทันที
+                UpdateTotals();
             }
         }
 
@@ -78,19 +148,58 @@ namespace ClientApp
             textBoxTotal.Text = subtotal.ToString("C2");
         }
 
-        private void BtnRemove_Click(object sender, EventArgs e)
+        private async void BtnRemove_Click(object sender, EventArgs e)
         {
-            if (dataGridViewCart.SelectedRows.Count == 0)
+            // 🌟 1. ดึงรายการสินค้าทั้งหมดที่ถูก "ติ๊กถูก" (Selected == true) มาเก็บไว้ใน List
+            var itemsToRemove = _items.Where(i => i.Selected).ToList();
+
+            if (itemsToRemove.Count == 0)
             {
-                MessageBox.Show("Please select an item to remove.", "No item selected", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("Please check at least one item to remove.", "No items selected", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
 
-            var selectedRow = dataGridViewCart.SelectedRows[0];
-            if (selectedRow.Index >= 0 && selectedRow.Index < _items.Count)
+            // ถามเพื่อความแน่ใจก่อนลบ (บอกจำนวนชิ้นที่จะลบด้วย)
+            var confirmResult = MessageBox.Show($"Are you sure you want to remove {itemsToRemove.Count} selected item(s)?",
+                                                "Confirm Delete", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+            if (confirmResult == DialogResult.Yes)
             {
-                _items.RemoveAt(selectedRow.Index);
-                MessageBox.Show("Item removed from cart.", "Removed", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                int successCount = 0;
+
+                // 🌟 2. วนลูปทีละชิ้น เพื่อสั่ง API ให้ลบออกจาก Database
+                foreach (var item in itemsToRemove)
+                {
+                    try
+                    {
+                        // สั่ง API ลบข้อมูล
+                        bool isSuccess = await _cartApiService.RemoveFromCartAsync(item.CartId);
+
+                        if (isSuccess)
+                        {
+                            // ถ้า Database ลบสำเร็จ ให้เอาออกจากตารางบนหน้าจอด้วย
+                            _items.Remove(item);
+                            successCount++;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        // ถ้าชิ้นไหนลบ Error ก็ข้ามไปก่อน (อาจจะขึ้นแจ้งเตือนไว้)
+                        Console.WriteLine($"Error removing cart item {item.CartId}: {ex.Message}");
+                    }
+                }
+
+                // 🌟 3. อัปเดตยอดเงินและสรุปผลหลังจากลบเสร็จสิ้น
+                UpdateTotals();
+
+                if (successCount > 0)
+                {
+                    MessageBox.Show($"Successfully removed {successCount} item(s) from cart.", "Removed", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                else
+                {
+                    MessageBox.Show("Failed to remove items.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
             }
         }
 

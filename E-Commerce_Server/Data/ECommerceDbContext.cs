@@ -35,9 +35,7 @@ namespace E_Commerce_Server.Data
             {
                 entity.HasKey(e => e.Id);
                 entity.Property(e => e.ProductId).IsRequired();
-                entity.Property(e => e.CustomerId).IsRequired();
                 entity.Property(e => e.Quantity).IsRequired();
-                entity.Property(e => e.TotalPrice).IsRequired();
             });
 
             // Payment configuration

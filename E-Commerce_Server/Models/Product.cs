@@ -11,6 +11,9 @@ namespace E_Commerce_Server.Models
         [Column("seller_id")]
         public int SellerId { get; set; }
 
+        [Column("image_url")]
+        public string ImageUrl { get; set; } = string.Empty;
+
         [Column("name")]
         public string Name { get; set; } = string.Empty;
 

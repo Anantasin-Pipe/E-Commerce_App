@@ -14,10 +14,12 @@ namespace ClientApp
         private List<ProductDto> _products = new List<ProductDto>();
         private readonly IProductApiService _productApiService;
 
+        private readonly CartApiService _cartApiService;
         public ProductScreen()
         {
             InitializeComponent();
             _productApiService = new ProductApiService();
+            _cartApiService = new CartApiService();
             LoadProductsFromDatabase();
             UpdateCartBadge();
         }
@@ -85,17 +87,20 @@ namespace ClientApp
                 Size = new Size(200, 120),
                 Location = new Point(10, 10),
                 SizeMode = PictureBoxSizeMode.Zoom,
-                BackColor = Color.FromArgb(240, 240, 240),
+                BackColor = Color.White,
                 BorderStyle = BorderStyle.FixedSingle
             };
 
-            try
+            if (!string.IsNullOrEmpty(product.ImageUrl))
             {
-                pictureBox.Image = GetPlaceholderImage();
-            }
-            catch
-            {
-                pictureBox.Image = GetPlaceholderImage();
+                try
+                {
+                    pictureBox.LoadAsync(product.ImageUrl); // โหลดแบบ Async จะได้ไม่ทำให้หน้าจอกระตุก
+                }
+                catch
+                {
+                    // ถ้า Link เสีย หรือโหลดไม่ได้ ปล่อยว่างไว้ หรือจะใส่รูป Default ก็ได้
+                }
             }
 
             card.Controls.Add(pictureBox);
@@ -115,7 +120,7 @@ namespace ClientApp
             // Price
             var lblPrice = new Label
             {
-                Text = $"${(product.Price / 100m):F2}",
+                Text = $"฿{product.Price:N0}",
                 Location = new Point(10, 165),
                 Size = new Size(100, 20),
                 Font = new Font("Segoe UI", 11F, FontStyle.Bold),
@@ -180,7 +185,7 @@ namespace ClientApp
             return bitmap;
         }
 
-        private void BtnAddToCart_Click(object sender, EventArgs e)
+        private async void BtnAddToCart_Click(object sender, EventArgs e)
         {
             if (_selectedProduct == null)
             {
@@ -192,10 +197,19 @@ namespace ClientApp
 
             try
             {
-                _cartCount++;
-                UpdateCartBadge();
-                MessageBox.Show($"Added {quantity} x {_selectedProduct.Name} to cart.", "Added to Cart", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                numericUpDownQty.Value = 1;
+                bool isSuccess = await _cartApiService.AddToCartAsync(_selectedProduct.Id, quantity);
+
+                if (isSuccess)
+                {
+                    _cartCount += quantity;
+                    UpdateCartBadge();
+                    MessageBox.Show($"Added {quantity} x {_selectedProduct.Name} to cart.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    numericUpDownQty.Value = 1;
+                }
+                else
+                {
+                    MessageBox.Show("Failed to add product to cart.", "API Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
             }
             catch (Exception ex)
             {

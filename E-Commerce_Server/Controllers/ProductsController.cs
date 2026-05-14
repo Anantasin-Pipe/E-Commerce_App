@@ -20,7 +20,10 @@ namespace E_Commerce_Server.Controllers
         {
             try
             {
-                var products = await _productService.GetAllProductsAsync();
+                var products = (await _productService.GetAllProductsAsync())
+                               .OrderBy(p => p.Id)
+                               .ToList();
+
                 return Ok(products);
             }
             catch (Exception ex)
