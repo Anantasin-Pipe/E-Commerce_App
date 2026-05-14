@@ -22,6 +22,7 @@ namespace ClientApp
             _cartApiService = new CartApiService();
             LoadProductsFromDatabase();
             UpdateCartBadge();
+            LoadInitialCartCount();
         }
 
         /// <summary>
@@ -95,12 +96,18 @@ namespace ClientApp
             {
                 try
                 {
-                    pictureBox.LoadAsync(product.ImageUrl); // โหลดแบบ Async จะได้ไม่ทำให้หน้าจอกระตุก
+                    pictureBox.LoadAsync(product.ImageUrl);
                 }
                 catch
                 {
-                    // ถ้า Link เสีย หรือโหลดไม่ได้ ปล่อยว่างไว้ หรือจะใส่รูป Default ก็ได้
+                    // 🌟 ถ้าโหลด URL ไม่สำเร็จ ให้ใช้รูป Placeholder ของคุณแทน
+                    pictureBox.Image = GetPlaceholderImage();
                 }
+            }
+            else
+            {
+                // 🌟 ถ้าไม่มี URL เลย ก็ให้ใช้รูป Placeholder ของคุณเช่นกัน
+                pictureBox.Image = GetPlaceholderImage();
             }
 
             card.Controls.Add(pictureBox);
@@ -222,6 +229,25 @@ namespace ClientApp
             CartScreen cart = new CartScreen();
             cart.Show();
             this.Hide();
+        }
+
+        // 🌟 เพิ่มฟังก์ชันนี้เข้าไป เพื่อให้ Constructor เรียกใช้งานได้
+        private async void LoadInitialCartCount()
+        {
+            try
+            {
+                var cartItems = await _cartApiService.GetCartItemsAsync();
+
+                // นับรวมจำนวนสินค้าทั้งหมดในตะกร้า
+                _cartCount = cartItems.Sum(item => item.Quantity);
+                UpdateCartBadge();
+            }
+            catch
+            {
+                // ถ้าดึงไม่ได้ ให้แสดงเป็น 0 ไปก่อน
+                _cartCount = 0;
+                UpdateCartBadge();
+            }
         }
 
         private void UpdateCartBadge()
