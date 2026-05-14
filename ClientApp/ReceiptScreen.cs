@@ -19,11 +19,29 @@ namespace ClientApp
             public decimal SubTotal => UnitPrice * Quantity;
         }
 
-        public ReceiptScreen()
+        // Constructor ใหม่รับข้อมูลจริงจาก CheckoutScreen
+        public ReceiptScreen(List<ReceiptItem> items, decimal subtotal,
+                             decimal shippingCost, string paymentMethod, DateTime paidDate)
         {
             InitializeComponent();
             InitializeDataGrid();
-            LoadSampleData();
+
+            // โหลดข้อมูลจริงแทน Sample
+            foreach (var item in items)
+                _items.Add(item);
+
+            decimal tax = subtotal * TAX_RATE;
+            decimal total = subtotal + shippingCost + tax;
+
+            textBoxSubtotal.Text = subtotal.ToString("C2");
+            textBoxShipping.Text = shippingCost.ToString("C2");
+            textBoxTax.Text = tax.ToString("C2");
+            textBoxTotal.Text = total.ToString("C2");
+            textBoxPaymentMethod.Text = paymentMethod;
+            textBoxPaidDate.Text = paidDate.ToString("MMMM dd, yyyy - h:mm tt");
+
+            labelReceiptNumber.Text = $"Order #{GenerateOrderNumber()} | Invoice ID: INV-{GenerateInvoiceNumber()}";
+            labelReceiptDate.Text = paidDate.ToString("MMMM dd, yyyy - h:mm tt");
         }
 
         public void SetReceiptData(List<ReceiptItem> items, decimal subtotal, decimal shippingCost, string paymentMethod, DateTime paidDate)
@@ -86,9 +104,9 @@ namespace ClientApp
         {
             try
             {
-                MessageBox.Show("Print functionality will integrate with PrintDocument.\nThis is a placeholder for the print receipt action.", 
+                MessageBox.Show("Print functionality will integrate with PrintDocument.\nThis is a placeholder for the print receipt action.",
                     "Print Receipt", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                
+
                 // TODO: Implement actual print functionality
                 // using (PrintDocument pd = new PrintDocument())
                 // {
@@ -107,9 +125,9 @@ namespace ClientApp
         {
             try
             {
-                MessageBox.Show("Download PDF functionality will generate and save receipt as PDF.\nThis is a placeholder for the download action.", 
+                MessageBox.Show("Download PDF functionality will generate and save receipt as PDF.\nThis is a placeholder for the download action.",
                     "Download PDF", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                
+
                 // TODO: Implement PDF generation (use iTextSharp, PdfSharp, or similar)
                 // SaveFileDialog sfd = new SaveFileDialog { Filter = "PDF Files|*.pdf", DefaultExt = "pdf" };
                 // if (sfd.ShowDialog() == DialogResult.OK)
@@ -126,6 +144,22 @@ namespace ClientApp
         private void BtnClose_Click(object sender, EventArgs e)
         {
             this.Close();
+        }
+
+        private void labelShippingText_Click(object sender, EventArgs e)
+        {
+
+        }
+        private void BtnBack_Click(object sender, EventArgs e)
+        {
+            ProductScreen product = new ProductScreen();
+            product.Show();
+            this.Hide();
+        }
+
+        private void dataGridViewItems_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
         }
     }
 }

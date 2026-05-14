@@ -3,43 +3,58 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
+using ClientApp.Services;
 
 namespace ClientApp
 {
     public partial class ProductScreen : Form
     {
         private int _cartCount = 0;
-        private Product _selectedProduct = null;
-        private List<Product> _products = new List<Product>();
+        private ProductDto? _selectedProduct = null;
+        private List<ProductDto> _products = new List<ProductDto>();
+        private readonly IProductApiService _productApiService;
 
-        public class Product
-        {
-            public int ProductId { get; set; }
-            public string ProductName { get; set; } = string.Empty;
-            public string Description { get; set; } = string.Empty;
-            public decimal Price { get; set; }
-            public int Stock { get; set; }
-        }
-
+        private readonly CartApiService _cartApiService;
         public ProductScreen()
         {
             InitializeComponent();
-            LoadSampleProducts();
+            _productApiService = new ProductApiService();
+            _cartApiService = new CartApiService();
+            LoadProductsFromDatabase();
             UpdateCartBadge();
+            LoadInitialCartCount();
         }
 
         /// <summary>
-        /// Load sample products for display
+        /// Load products from database via API
+        /// </summary>
+        private async void LoadProductsFromDatabase()
+        {
+            try
+            {
+                _products = await _productApiService.GetAllProductsAsync();
+                DisplayProductCards();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error loading products: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                // Fallback to sample products if database is unavailable
+                LoadSampleProducts();
+            }
+        }
+
+        /// <summary>
+        /// Load sample products as fallback
         /// </summary>
         private void LoadSampleProducts()
         {
-            _products = new List<Product>
+            _products = new List<ProductDto>
             {
-                new Product { ProductId = 1, ProductName = "Blue T-Shirt", Description = "Premium cotton blue shirt", Price = 19.99m, Stock = 50 },
-                new Product { ProductId = 2, ProductName = "Red Mug", Description = "Ceramic coffee mug", Price = 8.50m, Stock = 100 },
-                new Product { ProductId = 3, ProductName = "Notebook Set", Description = "3-pack lined notebooks", Price = 12.75m, Stock = 75 },
-                new Product { ProductId = 4, ProductName = "Laptop Bag", Description = "Professional 15-inch laptop bag", Price = 45.00m, Stock = 30 },
-                new Product { ProductId = 5, ProductName = "Wireless Mouse", Description = "Bluetooth mouse with USB adapter", Price = 24.99m, Stock = 120 }
+                new ProductDto { Id = 1, SellerId = 1, Name = "Blue T-Shirt", Description = "Premium cotton blue shirt", Price = 1999 },
+                new ProductDto { Id = 2, SellerId = 1, Name = "Red Mug", Description = "Ceramic coffee mug", Price = 850 },
+                new ProductDto { Id = 3, SellerId = 2, Name = "Notebook Set", Description = "3-pack lined notebooks", Price = 1275 },
+                new ProductDto { Id = 4, SellerId = 2, Name = "Laptop Bag", Description = "Professional 15-inch laptop bag", Price = 4500 },
+                new ProductDto { Id = 5, SellerId = 3, Name = "Wireless Mouse", Description = "Bluetooth mouse with USB adapter", Price = 2499 }
             };
 
             DisplayProductCards();
@@ -56,7 +71,7 @@ namespace ClientApp
             }
         }
 
-        private Panel CreateProductCard(Product product)
+        private Panel CreateProductCard(ProductDto product)
         {
             var card = new Panel
             {
@@ -64,7 +79,7 @@ namespace ClientApp
                 BorderStyle = BorderStyle.FixedSingle,
                 BackColor = Color.White,
                 Margin = new Padding(10),
-                Tag = product.ProductId
+                Tag = product.Id
             };
 
             // Product Image
@@ -73,16 +88,25 @@ namespace ClientApp
                 Size = new Size(200, 120),
                 Location = new Point(10, 10),
                 SizeMode = PictureBoxSizeMode.Zoom,
-                BackColor = Color.FromArgb(240, 240, 240),
+                BackColor = Color.White,
                 BorderStyle = BorderStyle.FixedSingle
             };
 
-            try
+            if (!string.IsNullOrEmpty(product.ImageUrl))
             {
-                pictureBox.Image = GetPlaceholderImage();
+                try
+                {
+                    pictureBox.LoadAsync(product.ImageUrl);
+                }
+                catch
+                {
+                    // 🌟 ถ้าโหลด URL ไม่สำเร็จ ให้ใช้รูป Placeholder ของคุณแทน
+                    pictureBox.Image = GetPlaceholderImage();
+                }
             }
-            catch
+            else
             {
+                // 🌟 ถ้าไม่มี URL เลย ก็ให้ใช้รูป Placeholder ของคุณเช่นกัน
                 pictureBox.Image = GetPlaceholderImage();
             }
 
@@ -91,7 +115,7 @@ namespace ClientApp
             // Product Name
             var lblName = new Label
             {
-                Text = product.ProductName,
+                Text = product.Name,
                 Location = new Point(10, 135),
                 Size = new Size(200, 30),
                 Font = new Font("Segoe UI", 10F, FontStyle.Bold),
@@ -103,7 +127,7 @@ namespace ClientApp
             // Price
             var lblPrice = new Label
             {
-                Text = $"${product.Price:F2}",
+                Text = $"฿{product.Price:N0}",
                 Location = new Point(10, 165),
                 Size = new Size(100, 20),
                 Font = new Font("Segoe UI", 11F, FontStyle.Bold),
@@ -111,17 +135,17 @@ namespace ClientApp
             };
             card.Controls.Add(lblPrice);
 
-            // Stock Status
-            var stockColor = product.Stock > 10 ? Color.Green : product.Stock > 0 ? Color.Orange : Color.Red;
-            var lblStock = new Label
+            // Description
+            var lblDescription = new Label
             {
-                Text = $"Stock: {product.Stock}",
+                Text = product.Description,
                 Location = new Point(10, 190),
                 Size = new Size(200, 20),
-                Font = new Font("Segoe UI", 9F),
-                ForeColor = stockColor
+                Font = new Font("Segoe UI", 8F),
+                ForeColor = Color.Gray,
+                AutoEllipsis = true
             };
-            card.Controls.Add(lblStock);
+            card.Controls.Add(lblDescription);
 
             // Select Button
             var btnSelect = new Button
@@ -141,7 +165,7 @@ namespace ClientApp
                 _selectedProduct = product;
                 numericUpDownQty.Value = 1;
                 btnAddToCart.Focus();
-                
+
                 // Highlight selected card
                 foreach (Panel p in flowLayoutPanelProducts.Controls.OfType<Panel>())
                 {
@@ -168,7 +192,7 @@ namespace ClientApp
             return bitmap;
         }
 
-        private void BtnAddToCart_Click(object sender, EventArgs e)
+        private async void BtnAddToCart_Click(object sender, EventArgs e)
         {
             if (_selectedProduct == null)
             {
@@ -178,18 +202,21 @@ namespace ClientApp
 
             int quantity = (int)numericUpDownQty.Value;
 
-            if (_selectedProduct.Stock < quantity)
-            {
-                MessageBox.Show($"Insufficient stock. Only {_selectedProduct.Stock} items available.", "Stock unavailable", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
             try
             {
-                _cartCount++;
-                UpdateCartBadge();
-                MessageBox.Show($"Added {quantity} x {_selectedProduct.ProductName} to cart.", "Added to Cart", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                numericUpDownQty.Value = 1;
+                bool isSuccess = await _cartApiService.AddToCartAsync(_selectedProduct.Id, quantity);
+
+                if (isSuccess)
+                {
+                    _cartCount += quantity;
+                    UpdateCartBadge();
+                    MessageBox.Show($"Added {quantity} x {_selectedProduct.Name} to cart.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    numericUpDownQty.Value = 1;
+                }
+                else
+                {
+                    MessageBox.Show("Failed to add product to cart.", "API Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
             }
             catch (Exception ex)
             {
@@ -202,6 +229,25 @@ namespace ClientApp
             CartScreen cart = new CartScreen();
             cart.Show();
             this.Hide();
+        }
+
+        // 🌟 เพิ่มฟังก์ชันนี้เข้าไป เพื่อให้ Constructor เรียกใช้งานได้
+        private async void LoadInitialCartCount()
+        {
+            try
+            {
+                var cartItems = await _cartApiService.GetCartItemsAsync();
+
+                // นับรวมจำนวนสินค้าทั้งหมดในตะกร้า
+                _cartCount = cartItems.Sum(item => item.Quantity);
+                UpdateCartBadge();
+            }
+            catch
+            {
+                // ถ้าดึงไม่ได้ ให้แสดงเป็น 0 ไปก่อน
+                _cartCount = 0;
+                UpdateCartBadge();
+            }
         }
 
         private void UpdateCartBadge()

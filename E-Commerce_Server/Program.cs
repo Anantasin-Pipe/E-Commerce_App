@@ -1,3 +1,6 @@
+using E_Commerce_Server.Data;
+using E_Commerce_Server.Services;
+using Microsoft.EntityFrameworkCore;
 
 namespace E_Commerce_Server
 {
@@ -7,16 +10,34 @@ namespace E_Commerce_Server
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
-
+            // Add services to the container
             builder.Services.AddControllers();
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
+            // Add DbContext
+            var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? "Host=localhost;Database=ecommerce;Username=postgres;Password=1234";
+            builder.Services.AddDbContext<ECommerceDbContext>(options =>
+                options.UseNpgsql(connectionString)
+            );
+
+            // Add services
+            builder.Services.AddScoped<IProductService, ProductService>();
+
+            // Add CORS
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowClientApp", policy =>
+                {
+                    policy.AllowAnyOrigin()
+                          .AllowAnyMethod()
+                          .AllowAnyHeader();
+                });
+            });
+
             var app = builder.Build();
 
-            // Configure the HTTP request pipeline.
+            // Configure the HTTP request pipeline
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
@@ -24,10 +45,8 @@ namespace E_Commerce_Server
             }
 
             app.UseHttpsRedirection();
-
+            app.UseCors("AllowClientApp");
             app.UseAuthorization();
-
-
             app.MapControllers();
 
             app.Run();
