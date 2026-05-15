@@ -13,11 +13,17 @@ namespace ClientApp
         private BindingList<CartItem> _items = new BindingList<CartItem>();
         private readonly CartApiService _cartApiService;
 
+        // 🌟 นี่คือคลาสที่ DataGridView เอาไปสร้างตาราง ต้องมาซ่อนตรงนี้ครับ
         public class CartItem
         {
+            [Browsable(false)] // 🌟 สั่งซ่อน CartId
             public int CartId { get; set; }
+
             public bool Selected { get; set; } = true;
+
+            [Browsable(false)] // 🌟 สั่งซ่อน ProductId
             public int ProductId { get; set; }
+
             public string ProductName { get; set; } = string.Empty;
             public decimal UnitPrice { get; set; }
             public int Quantity { get; set; } = 1;
@@ -30,7 +36,6 @@ namespace ClientApp
             InitializeComponent();
             _cartApiService = new CartApiService();
             InitializeDataGrid();
-            //_ = LoadCartFromDatabaseAsync();
             UpdateTotals();
             LoadCartFromDatabase();
         }
@@ -43,6 +48,13 @@ namespace ClientApp
             dataGridViewCart.CurrentCellDirtyStateChanged += DataGridViewCart_CurrentCellDirtyStateChanged;
             dataGridViewCart.CellValueChanged += DataGridViewCart_CellValueChanged;
             _items.ListChanged += Items_ListChanged;
+
+            // 🌟 ซ่อนคอลัมน์ซ้ำอีกรอบ (เผื่อกรณีที่หน้า Design ของ Visual Studio บังคับสร้างคอลัมน์ค้างไว้)
+            if (dataGridViewCart.Columns["CartId"] != null)
+                dataGridViewCart.Columns["CartId"].Visible = false;
+
+            if (dataGridViewCart.Columns["ProductId"] != null)
+                dataGridViewCart.Columns["ProductId"].Visible = false;
         }
 
         private async void LoadCartFromDatabase()
@@ -72,38 +84,6 @@ namespace ClientApp
                 MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-
-        //private async Task LoadCartFromDatabaseAsync()
-
-        //{
-        //    try
-        //    {
-        //        using (HttpClient client = new HttpClient())
-        //        {
-        //            // เปลี่ยน URL ให้ตรงกับพอร์ต API ของคุณ
-        //            client.BaseAddress = new Uri("https://localhost:7241/");
-
-        //            // ยิง GET ไปที่ CartsController ที่เราเพิ่งสร้าง
-        //            var cartItemsFromApi = await client.GetFromJsonAsync<List<CartItem>>("api/Carts");
-
-        //            if (cartItemsFromApi != null)
-        //            {
-        //                _items.Clear();
-        //                foreach (var item in cartItemsFromApi)
-        //                {
-        //                    // ตั้งค่าเริ่มต้นให้ทุกชิ้นถูก Selected (ติ๊กถูก)
-        //                    item.Selected = true;
-        //                    _items.Add(item);
-        //                }
-        //                UpdateTotals();
-        //            }
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        MessageBox.Show($"Error loading cart: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-        //    }
-        //}
 
         private void DataGridViewCart_CurrentCellDirtyStateChanged(object sender, EventArgs e)
         {
@@ -151,7 +131,7 @@ namespace ClientApp
 
         private async void BtnRemove_Click(object sender, EventArgs e)
         {
-            // 🌟 1. ดึงรายการสินค้าทั้งหมดที่ถูก "ติ๊กถูก" (Selected == true) มาเก็บไว้ใน List
+            // ดึงรายการสินค้าทั้งหมดที่ถูก "ติ๊กถูก" (Selected == true) มาเก็บไว้ใน List
             var itemsToRemove = _items.Where(i => i.Selected).ToList();
 
             if (itemsToRemove.Count == 0)
@@ -168,7 +148,7 @@ namespace ClientApp
             {
                 int successCount = 0;
 
-                // 🌟 2. วนลูปทีละชิ้น เพื่อสั่ง API ให้ลบออกจาก Database
+                // วนลูปทีละชิ้น เพื่อสั่ง API ให้ลบออกจาก Database
                 foreach (var item in itemsToRemove)
                 {
                     try
@@ -190,7 +170,7 @@ namespace ClientApp
                     }
                 }
 
-                // 🌟 3. อัปเดตยอดเงินและสรุปผลหลังจากลบเสร็จสิ้น
+                // อัปเดตยอดเงินและสรุปผลหลังจากลบเสร็จสิ้น
                 UpdateTotals();
 
                 if (successCount > 0)
@@ -234,6 +214,5 @@ namespace ClientApp
             checkout.Show();
             this.Hide();
         }
-
     }
 }
