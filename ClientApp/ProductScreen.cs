@@ -254,5 +254,15 @@ namespace ClientApp
         {
             labelCartCount.Text = _cartCount.ToString();
         }
+
+        private void flowLayoutPanelProducts_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void ProductScreen_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }

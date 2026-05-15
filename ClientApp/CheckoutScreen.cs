@@ -59,13 +59,6 @@ namespace ClientApp
             comboBoxShipping.SelectedIndex = 0;
         }
 
-        //private void LoadSampleItems()
-        //{
-        //    // Sample data - replace with real cart items
-        //    _items.Add(new CheckoutItem { ProductId = 1, ProductName = "Blue T-Shirt", UnitPrice = 19.99m, Quantity = 2 });
-        //    _items.Add(new CheckoutItem { ProductId = 2, ProductName = "Red Mug", UnitPrice = 8.50m, Quantity = 1 });
-        //    _items.Add(new CheckoutItem { ProductId = 3, ProductName = "Notebook Set", UnitPrice = 12.75m, Quantity = 3 });
-        //}
 
         private void DataGridViewItems_CurrentCellDirtyStateChanged(object sender, EventArgs e)
         {
