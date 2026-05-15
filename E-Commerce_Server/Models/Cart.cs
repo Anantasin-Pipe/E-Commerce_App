@@ -13,6 +13,9 @@ namespace E_Commerce_Server.Models
 
         [Column("quantity")]
         public int Quantity { get; set; }
-        
+
+        [Column("session_id")]
+        public string? SessionId { get; set; }
+
     }
 }

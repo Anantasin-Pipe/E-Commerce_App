@@ -61,8 +61,9 @@ namespace ClientApp
         {
             try
             {
+                string currentSessionId = AppSession.SessionId;
                 // ดึงข้อมูลผ่าน API Service
-                var cartItemsFromApi = await _cartApiService.GetCartItemsAsync();
+                var cartItemsFromApi = await _cartApiService.GetCartItemsAsync(currentSessionId);
 
                 _items.Clear();
                 foreach (var dto in cartItemsFromApi)

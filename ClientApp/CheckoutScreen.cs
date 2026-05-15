@@ -1,9 +1,10 @@
-﻿using System;
+﻿using ClientApp.Services;
+using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows.Forms;
-using System.Collections.Generic;
-using ClientApp.Services;
+using static ClientApp.ReceiptScreen;
 
 namespace ClientApp
 {
@@ -149,15 +150,21 @@ namespace ClientApp
                 return;
             }
 
-            // ดึงชื่อวิธีชำระเงิน
+            // 🌟 1. ดึงข้อมูล PaymentMethod
             string paymentMethod = "Unknown";
+            int paymentId = 1;
+
             if (comboBoxPaymentMethod.SelectedItem is PaymentMethodDto selectedPayment)
+            {
                 paymentMethod = selectedPayment.Name;
+                paymentId = selectedPayment.Id;
+            }
 
             if (paymentMethod == "Bank Transfer")
             {
-                string selectedBank = comboBoxBank.SelectedItem?.ToString() ?? "";
-                paymentMethod = $"Bank Transfer ({selectedBank})";
+                // ดึงชื่อธนาคารมาโชว์ในกล่องข้อความยืนยัน
+                string selectedBankName = comboBoxBank.Text;
+                paymentMethod = $"Bank Transfer ({selectedBankName})";
             }
 
             var confirm = MessageBox.Show(
@@ -166,45 +173,53 @@ namespace ClientApp
 
             if (confirm != DialogResult.Yes) return;
 
-            // ✅ ปิดปุ่มไว้ก่อนเพื่อไม่ให้กดซ้ำ
             btnPay.Enabled = false;
 
             try
             {
-                // ✅ 1. ลบสินค้าที่ checkout ออกจาก Database ทีละชิ้น
-                foreach (var item in selected)
+                // ✅ 2. ดึง CartId ของทุกชิ้นที่ลูกค้าเลือก
+                List<int> cartIdsToCheckout = selected.Select(i => i.CartId).ToList();
+
+                // 🌟 3. ดึง BankId แบบ Dynamic
+                int bankId = 1; // ค่าเริ่มต้น
+
+                if (paymentMethod.StartsWith("Bank Transfer") && comboBoxBank.SelectedValue != null)
                 {
-                    try
-                    {
-                        await _cartApiService.RemoveFromCartAsync(item.CartId);
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine($"Failed to remove CartId {item.CartId}: {ex.Message}");
-                    }
+                    // ดึงค่า ValueMember (Id) ที่เราตั้งไว้ตอนโหลดข้อมูลมาใช้ได้เลย!
+                    bankId = (int)comboBoxBank.SelectedValue;
                 }
 
-                // ✅ 2. แปลงข้อมูลส่งไป ReceiptScreen
-                var receiptItems = selected.Select(i => new ReceiptScreen.ReceiptItem
+                // ✅ 4. ส่งข้อมูลไปให้ API บันทึกใบเสร็จ
+                bool isCheckoutSuccess = await _cartApiService.CheckoutAsync(cartIdsToCheckout, bankId, paymentId);
+
+                if (isCheckoutSuccess)
                 {
-                    ProductName = i.ProductName,
-                    UnitPrice = i.UnitPrice,
-                    Quantity = i.Quantity
-                }).ToList();
+                    // ✅ 5. แปลงข้อมูลส่งไปแสดงที่หน้า ReceiptScreen (ตัวที่หายไป เอามาใส่คืนแล้วครับ!)
+                    var receiptItems = selected.Select(i => new ReceiptScreen.ReceiptItem
+                    {
+                        ProductName = i.ProductName,
+                        UnitPrice = i.UnitPrice,
+                        Quantity = i.Quantity
+                    }).ToList();
 
-                decimal subtotal = selected.Sum(i => i.UnitPrice * i.Quantity);
-                decimal shippingCost = GetShippingCost();
+                    decimal subtotal = selected.Sum(i => i.UnitPrice * i.Quantity);
+                    decimal shippingCost = GetShippingCost();
 
-                // ✅ 3. เปิด ReceiptScreen
-                var receipt = new ReceiptScreen(receiptItems, subtotal, shippingCost, paymentMethod, DateTime.Now);
-                receipt.Show();
-                this.Hide();
+                    // 🌟 6. เปิดหน้าต่างใบเสร็จ
+                    var receipt = new ReceiptScreen(receiptItems, subtotal, shippingCost, paymentMethod, DateTime.Now);
+                    receipt.Show();
+                    this.Hide();
+                }
+                else
+                {
+                    // ถ้าไม่สำเร็จ ให้เปิดปุ่มคืน
+                    btnPay.Enabled = true;
+                }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Payment failed: {ex.Message}", "Error",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
-                btnPay.Enabled = true; // เปิดปุ่มคืนถ้า error
+                MessageBox.Show($"Payment failed: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                btnPay.Enabled = true;
             }
         }
 
@@ -215,7 +230,32 @@ namespace ClientApp
             this.Hide();
         }
 
-        private void comboBoxPaymentMethod_SelectedIndexChanged(object sender, EventArgs e)
+        private async Task LoadBanksAsync()
+        {
+            try
+            {
+                // เรียกใช้ Service ที่สร้างไว้เพื่อไปดึงข้อมูลจาก BanksController
+                var banks = await _cartApiService.GetBanksAsync();
+
+                if (banks != null && banks.Any())
+                {
+                    comboBoxBank.DataSource = banks;
+                    comboBoxBank.DisplayMember = "BankName"; // แสดงชื่อธนาคารใน ComboBox
+                    comboBoxBank.ValueMember = "Id";     // เก็บค่า Id ไว้เบื้องหลัง
+                }
+                else
+                {
+                    // 🌟 ถ้า API ดึงมาได้ แต่ข้อมูลเป็น 0 จะเด้งอันนี้
+                    MessageBox.Show("ตารางธนาคารใน Database ว่างเปล่าครับ ลองเพิ่มข้อมูลดูนะครับ", "No Data", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"เชื่อมต่อ API ธนาคารไม่สำเร็จ:\n{ex.Message}", "API Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+   
+        private async void comboBoxPaymentMethod_SelectedIndexChanged(object sender, EventArgs e)
         {
             var selectedPayment = comboBoxPaymentMethod.SelectedItem as PaymentMethodDto;
 
@@ -224,17 +264,10 @@ namespace ClientApp
                 labelBank.Visible = true;
                 comboBoxBank.Visible = true;
 
-                if (comboBoxBank.Items.Count == 0)
+                // ถ้ายังไม่มีข้อมูลใน ComboBox ให้ไปโหลดมาจาก Database
+                if (comboBoxBank.DataSource == null)
                 {
-                    comboBoxBank.Items.AddRange(new string[]
-                    {
-                        "Bangkok Bank",
-                        "Kasikornbank",
-                        "Krung Thai Bank",
-                        "TMRW (TMB)",
-                        "Siam Commercial Bank"
-                    });
-                    comboBoxBank.SelectedIndex = 0;
+                    await LoadBanksAsync();
                 }
             }
             else

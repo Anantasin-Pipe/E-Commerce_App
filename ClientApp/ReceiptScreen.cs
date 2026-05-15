@@ -72,24 +72,6 @@ namespace ClientApp
             dataGridViewItems.DataSource = _items;
         }
 
-        private void LoadSampleData()
-        {
-            // Sample data for display - remove when connecting real receipt data
-            _items.Add(new ReceiptItem { ProductName = "Blue T-Shirt", UnitPrice = 19.99m, Quantity = 2 });
-            _items.Add(new ReceiptItem { ProductName = "Red Mug", UnitPrice = 8.50m, Quantity = 1 });
-            _items.Add(new ReceiptItem { ProductName = "Notebook Set", UnitPrice = 12.75m, Quantity = 3 });
-
-            decimal subtotal = _items.Sum(i => i.UnitPrice * i.Quantity);
-            decimal shippingCost = 5.00m;
-            decimal tax = subtotal * TAX_RATE;
-            decimal total = subtotal + shippingCost + tax;
-
-            textBoxSubtotal.Text = subtotal.ToString("C2");
-            textBoxShipping.Text = shippingCost.ToString("C2");
-            textBoxTax.Text = tax.ToString("C2");
-            textBoxTotal.Text = total.ToString("C2");
-        }
-
         private string GenerateOrderNumber()
         {
             return new Random().Next(10000, 99999).ToString();
@@ -152,9 +134,14 @@ namespace ClientApp
         }
         private void BtnBack_Click(object sender, EventArgs e)
         {
-            ProductScreen product = new ProductScreen();
-            product.Show();
-            this.Hide();
+            AppSession.ResetSession();
+
+            // 2. เปิดหน้าเลือกสินค้า (หรือหน้าเริ่มต้น)
+            ProductScreen productScreen = new ProductScreen();
+            productScreen.Show();
+
+            // 3. ปิดหน้าใบเสร็จปัจจุบัน
+            this.Close();
         }
 
         private void dataGridViewItems_CellContentClick(object sender, DataGridViewCellEventArgs e)

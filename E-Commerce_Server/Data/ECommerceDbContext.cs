@@ -12,6 +12,7 @@ namespace E_Commerce_Server.Data
         public DbSet<Product> Products { get; set; } = null!;
         public DbSet<Cart> Carts { get; set; } = null!;
         public DbSet<Payment> Payments { get; set; } = null!;
+        public DbSet<Bank> Banks { get; set; } = null!;
         public DbSet<Receipt> Receipts { get; set; } = null!;
         public DbSet<Ship> Ships { get; set; } = null!;
         public DbSet<ShipInfo> ShipInfos { get; set; } = null!;

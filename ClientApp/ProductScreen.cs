@@ -204,7 +204,9 @@ namespace ClientApp
 
             try
             {
-                bool isSuccess = await _cartApiService.AddToCartAsync(_selectedProduct.Id, quantity);
+                string currentSessionId = AppSession.SessionId;
+
+                bool isSuccess = await _cartApiService.AddToCartAsync(_selectedProduct.Id, quantity, currentSessionId);
 
                 if (isSuccess)
                 {
@@ -236,7 +238,7 @@ namespace ClientApp
         {
             try
             {
-                var cartItems = await _cartApiService.GetCartItemsAsync();
+                var cartItems = await _cartApiService.GetCartItemsAsync(AppSession.SessionId);
 
                 // นับรวมจำนวนสินค้าทั้งหมดในตะกร้า
                 _cartCount = cartItems.Sum(item => item.Quantity);
