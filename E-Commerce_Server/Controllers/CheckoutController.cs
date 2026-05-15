@@ -20,7 +20,7 @@ namespace E_Commerce_Server.Controllers
         public class CheckoutRequest
         {
             public List<int> CartIds { get; set; } = new List<int>(); // รับรายการ cart_id มาเป็น List
-            public int BankId { get; set; }
+            public int? BankId { get; set; }
             public int PaymentId { get; set; }
         }
 
@@ -40,7 +40,6 @@ namespace E_Commerce_Server.Controllers
                         CartId = cartId,
                         BankId = request.BankId,
                         PaymentId = request.PaymentId,
-                        PaymentStatus = PaymentStatus.Success // เซ็ตว่าจ่ายสำเร็จ
                     };
 
                     _context.Receipts.Add(newReceipt);

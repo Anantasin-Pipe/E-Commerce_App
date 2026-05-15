@@ -100,7 +100,7 @@ namespace ClientApp.Services
         /// <summary>
         /// ส่งข้อมูลไปบันทึกใบเสร็จ (Checkout)
         /// </summary>
-        public async Task<bool> CheckoutAsync(List<int> cartIds, int bankId, int paymentId)
+        public async Task<bool> CheckoutAsync(List<int> cartIds, int? bankId, int paymentId)
         {
             try
             {

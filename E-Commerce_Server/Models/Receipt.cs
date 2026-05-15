@@ -19,12 +19,9 @@ namespace E_Commerce_Server.Models
         public int CartId { get; set; }
 
         [Column("bank_id")] 
-        public int BankId { get; set; }
+        public int? BankId { get; set; }
 
         [Column("payment_id")]
         public int PaymentId { get; set; }
-
-        [Column("payment_status")]
-        public PaymentStatus PaymentStatus { get; set; } = PaymentStatus.Pending;
     }
 }

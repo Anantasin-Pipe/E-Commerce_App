@@ -181,12 +181,20 @@ namespace ClientApp
                 List<int> cartIdsToCheckout = selected.Select(i => i.CartId).ToList();
 
                 // 🌟 3. ดึง BankId แบบ Dynamic
-                int bankId = 1; // ค่าเริ่มต้น
+                int? bankId = null;
 
                 if (paymentMethod.StartsWith("Bank Transfer") && comboBoxBank.SelectedValue != null)
                 {
-                    // ดึงค่า ValueMember (Id) ที่เราตั้งไว้ตอนโหลดข้อมูลมาใช้ได้เลย!
-                    bankId = (int)comboBoxBank.SelectedValue;
+                    // ถ้าเลือก Bank Transfer ต้องเอาค่าจาก ComboBox
+                    if (comboBoxBank.SelectedValue != null)
+                    {
+                        bankId = (int)comboBoxBank.SelectedValue;
+                    }
+                    else
+                    {
+                        // ถ้าเลือกโอนเงินแต่ไม่เลือกธนาคาร อาจจะค้างไว้ที่ 0 หรือแจ้งเตือน
+                        bankId = 0;
+                    }
                 }
 
                 // ✅ 4. ส่งข้อมูลไปให้ API บันทึกใบเสร็จ

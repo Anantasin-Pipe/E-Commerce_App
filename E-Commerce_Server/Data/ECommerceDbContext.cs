@@ -53,7 +53,6 @@ namespace E_Commerce_Server.Data
                 entity.Property(e => e.CartId).IsRequired();
                 entity.Property(e => e.BankId).IsRequired();
                 entity.Property(e => e.PaymentId).IsRequired();
-                entity.Property(e => e.PaymentStatus).IsRequired();
             });
 
             // Ship configuration
