@@ -21,12 +21,17 @@ namespace ClientApp
             public decimal SubTotal => UnitPrice * Quantity;
         }
 
-        public CheckoutScreen()
+        // เพิ่ม constructor ใหม่ที่รับ items เข้ามา
+        public CheckoutScreen(IEnumerable<CheckoutItem> items)
         {
             InitializeComponent();
             InitializeDataGrid();
             InitializePaymentMethods();
-            LoadSampleItems();
+
+            // โหลดของจริงแทน Sample
+            foreach (var item in items)
+                _items.Add(item);
+
             UpdateTotals();
         }
 
@@ -54,13 +59,6 @@ namespace ClientApp
             comboBoxShipping.SelectedIndex = 0;
         }
 
-        private void LoadSampleItems()
-        {
-            // Sample data - replace with real cart items
-            _items.Add(new CheckoutItem { ProductId = 1, ProductName = "Blue T-Shirt", UnitPrice = 19.99m, Quantity = 2 });
-            _items.Add(new CheckoutItem { ProductId = 2, ProductName = "Red Mug", UnitPrice = 8.50m, Quantity = 1 });
-            _items.Add(new CheckoutItem { ProductId = 3, ProductName = "Notebook Set", UnitPrice = 12.75m, Quantity = 3 });
-        }
 
         private void DataGridViewItems_CurrentCellDirtyStateChanged(object sender, EventArgs e)
         {
@@ -125,7 +123,8 @@ namespace ClientApp
             var selected = _items.Where(i => i.Selected).ToList();
             if (!selected.Any())
             {
-                MessageBox.Show("Please select at least one item to purchase.", "No items selected", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("Please select at least one item to purchase.",
+                                "No items selected", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
 
@@ -134,16 +133,25 @@ namespace ClientApp
 
             var confirm = MessageBox.Show(
                 $"Confirm payment of {total} using {paymentMethod}?\n\nThis action cannot be undone.",
-                "Confirm Payment",
-                MessageBoxButtons.YesNo,
-                MessageBoxIcon.Question);
+                "Confirm Payment", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
             if (confirm != DialogResult.Yes) return;
 
             try
             {
-                // TODO: Integrate with API call for payment processing
-                var receipt = new ReceiptScreen();
+                // แปลง CheckoutItem → ReceiptItem
+                var receiptItems = selected.Select(i => new ReceiptScreen.ReceiptItem
+                {
+                    ProductName = i.ProductName,
+                    UnitPrice = i.UnitPrice,
+                    Quantity = i.Quantity
+                }).ToList();
+
+                decimal subtotal = selected.Sum(i => i.UnitPrice * i.Quantity);
+                decimal shippingCost = GetShippingCost();
+
+                // ส่งข้อมูลทั้งหมดไป ReceiptScreen
+                var receipt = new ReceiptScreen(receiptItems, subtotal, shippingCost, paymentMethod, DateTime.Now);
                 receipt.Show();
                 this.Hide();
             }
@@ -165,5 +173,11 @@ namespace ClientApp
         {
 
         }
+
+        private void dataGridViewItems_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
+
     }
 }

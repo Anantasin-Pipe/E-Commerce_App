@@ -1,11 +1,16 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.14.37111.16 d17.14
+VisualStudioVersion = 17.14.37111.16
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "E-Commerce_Server", "E-Commerce_Server\E-Commerce_Server.csproj", "{F1BAB3BF-37C8-4FD0-832B-79BF1377674A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClientApp", "ClientApp\ClientApp.csproj", "{39C08658-E2FB-4E89-B721-38390AC21D92}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SellerApp", "SellerApp\SellerApp.csproj", "{34A94A1E-E101-4255-8EB6-23B9BEEE08DC}"
+	ProjectSection(ProjectDependencies) = postProject
+		{39C08658-E2FB-4E89-B721-38390AC21D92} = {39C08658-E2FB-4E89-B721-38390AC21D92}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +26,10 @@ Global
 		{39C08658-E2FB-4E89-B721-38390AC21D92}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{39C08658-E2FB-4E89-B721-38390AC21D92}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{39C08658-E2FB-4E89-B721-38390AC21D92}.Release|Any CPU.Build.0 = Release|Any CPU
+		{34A94A1E-E101-4255-8EB6-23B9BEEE08DC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{34A94A1E-E101-4255-8EB6-23B9BEEE08DC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{34A94A1E-E101-4255-8EB6-23B9BEEE08DC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{34A94A1E-E101-4255-8EB6-23B9BEEE08DC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
