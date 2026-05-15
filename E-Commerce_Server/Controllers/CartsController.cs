@@ -74,6 +74,5 @@ namespace E_Commerce_Server.Controllers
 
             return Ok(new { message = "Removed from cart successfully" });
         }
-
     }
 }

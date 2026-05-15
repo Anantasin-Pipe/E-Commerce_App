@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel; // 🌟 1. เพิ่มบรรทัดนี้เข้ามาเพื่อให้ใช้คำสั่งซ่อนคอลัมน์ได้
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
@@ -10,12 +9,8 @@ namespace ClientApp.Services
     // คลาสสำหรับรับข้อมูลที่รวมกันมาจาก API (Cart + Product)
     public class CartItemDto
     {
-        [Browsable(false)] // 🌟 2. สั่งซ่อนคอลัมน์ CartId
         public int CartId { get; set; }
-
-        [Browsable(false)] // 🌟 3. สั่งซ่อนคอลัมน์ ProductId
         public int ProductId { get; set; }
-
         public string ProductName { get; set; } = string.Empty;
         public decimal UnitPrice { get; set; }
         public int Quantity { get; set; }

@@ -85,6 +85,38 @@ namespace ClientApp
             }
         }
 
+        //private async Task LoadCartFromDatabaseAsync()
+
+        //{
+        //    try
+        //    {
+        //        using (HttpClient client = new HttpClient())
+        //        {
+        //            // เปลี่ยน URL ให้ตรงกับพอร์ต API ของคุณ
+        //            client.BaseAddress = new Uri("https://localhost:7241/");
+
+        //            // ยิง GET ไปที่ CartsController ที่เราเพิ่งสร้าง
+        //            var cartItemsFromApi = await client.GetFromJsonAsync<List<CartItem>>("api/Carts");
+
+        //            if (cartItemsFromApi != null)
+        //            {
+        //                _items.Clear();
+        //                foreach (var item in cartItemsFromApi)
+        //                {
+        //                    // ตั้งค่าเริ่มต้นให้ทุกชิ้นถูก Selected (ติ๊กถูก)
+        //                    item.Selected = true;
+        //                    _items.Add(item);
+        //                }
+        //                UpdateTotals();
+        //            }
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        MessageBox.Show($"Error loading cart: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        //    }
+        //}
+
         private void DataGridViewCart_CurrentCellDirtyStateChanged(object sender, EventArgs e)
         {
             if (dataGridViewCart.IsCurrentCellDirty)
@@ -131,6 +163,7 @@ namespace ClientApp
 
         private async void BtnRemove_Click(object sender, EventArgs e)
         {
+            // 🌟 1. ดึงรายการสินค้าทั้งหมดที่ถูก "ติ๊กถูก" (Selected == true) มาเก็บไว้ใน List
             // ดึงรายการสินค้าทั้งหมดที่ถูก "ติ๊กถูก" (Selected == true) มาเก็บไว้ใน List
             var itemsToRemove = _items.Where(i => i.Selected).ToList();
 
@@ -148,6 +181,7 @@ namespace ClientApp
             {
                 int successCount = 0;
 
+                // 🌟 2. วนลูปทีละชิ้น เพื่อสั่ง API ให้ลบออกจาก Database
                 // วนลูปทีละชิ้น เพื่อสั่ง API ให้ลบออกจาก Database
                 foreach (var item in itemsToRemove)
                 {
@@ -170,6 +204,7 @@ namespace ClientApp
                     }
                 }
 
+                // 🌟 3. อัปเดตยอดเงินและสรุปผลหลังจากลบเสร็จสิ้น
                 // อัปเดตยอดเงินและสรุปผลหลังจากลบเสร็จสิ้น
                 UpdateTotals();
 
@@ -204,6 +239,7 @@ namespace ClientApp
             // แปลง CartItem → CheckoutItem แล้วส่งไป
             var checkoutItems = selected.Select(i => new CheckoutScreen.CheckoutItem
             {
+                CartId = i.CartId,
                 ProductId = i.ProductId,
                 ProductName = i.ProductName,
                 UnitPrice = i.UnitPrice,

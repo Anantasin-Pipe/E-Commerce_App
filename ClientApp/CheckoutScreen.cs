@@ -3,16 +3,21 @@ using System.ComponentModel;
 using System.Linq;
 using System.Windows.Forms;
 using System.Collections.Generic;
+using ClientApp.Services;
 
 namespace ClientApp
 {
     public partial class CheckoutScreen : Form
     {
         private BindingList<CheckoutItem> _items = new BindingList<CheckoutItem>();
-        private const decimal TAX_RATE = 0.10m; // 10% tax
+        private const decimal TAX_RATE = 0.10m;
+        private readonly CartApiService _cartApiService;
 
         public class CheckoutItem
         {
+            [Browsable(false)]
+            public int CartId { get; set; } // ✅ เพิ่มเพื่อใช้ลบออกจาก Database
+
             [Browsable(false)]
             public bool Selected { get; set; } = true;
 
@@ -25,21 +30,19 @@ namespace ClientApp
             public decimal SubTotal => UnitPrice * Quantity;
         }
 
-        // 🌟 1. สร้างกล่องรับข้อมูล Payment ให้ตรงกับ Database
         public class PaymentMethodDto
         {
             public int Id { get; set; }
             public string Name { get; set; } = string.Empty;
         }
 
-        // เพิ่ม constructor ใหม่ที่รับ items เข้ามา
         public CheckoutScreen(IEnumerable<CheckoutItem> items)
         {
             InitializeComponent();
+            _cartApiService = new CartApiService();
             InitializeDataGrid();
             InitializePaymentMethods();
 
-            // โหลดของจริงแทน Sample
             foreach (var item in items)
                 _items.Add(item);
 
@@ -50,9 +53,7 @@ namespace ClientApp
         {
             _items.Clear();
             foreach (var item in items)
-            {
                 _items.Add(item);
-            }
             UpdateTotals();
         }
 
@@ -67,7 +68,6 @@ namespace ClientApp
 
         private void InitializePaymentMethods()
         {
-            // 🌟 2. จำลองข้อมูลที่ได้มาจาก Database
             var payments = new List<PaymentMethodDto>
             {
                 new PaymentMethodDto { Id = 1, Name = "Credit Card" },
@@ -77,24 +77,18 @@ namespace ClientApp
                 new PaymentMethodDto { Id = 5, Name = "Cash on Delivery" }
             };
 
-            // ผูกข้อมูลเข้ากับ ComboBox
             comboBoxPaymentMethod.DataSource = payments;
-            comboBoxPaymentMethod.DisplayMember = "Name"; // สั่งให้หน้าจอโชว์ชื่อ (เช่น "Credit Card")
-            comboBoxPaymentMethod.ValueMember = "Id";     // สั่งให้เบื้องหลังแอบจำ ID เอาไว้ (เช่น 1)
+            comboBoxPaymentMethod.DisplayMember = "Name";
+            comboBoxPaymentMethod.ValueMember = "Id";
 
             if (comboBoxShipping.Items.Count > 0)
-            {
                 comboBoxShipping.SelectedIndex = 0;
-            }
         }
-
 
         private void DataGridViewItems_CurrentCellDirtyStateChanged(object sender, EventArgs e)
         {
             if (dataGridViewItems.IsCurrentCellDirty)
-            {
                 dataGridViewItems.CommitEdit(DataGridViewDataErrorContexts.Commit);
-            }
         }
 
         private void DataGridViewItems_CellEndEdit(object sender, DataGridViewCellEventArgs e)
@@ -102,8 +96,6 @@ namespace ClientApp
             if (e.RowIndex < 0 || e.RowIndex >= _items.Count) return;
 
             var item = _items[e.RowIndex];
-
-            // Validate quantity
             if (item.Quantity < 1) item.Quantity = 1;
             if (item.Quantity > 999) item.Quantity = 999;
 
@@ -133,9 +125,9 @@ namespace ClientApp
         {
             return comboBoxShipping.SelectedIndex switch
             {
-                0 => 5.00m,      // Standard
-                1 => 15.00m,     // Express
-                2 => 25.00m,     // Overnight
+                0 => 5.00m,
+                1 => 15.00m,
+                2 => 25.00m,
                 _ => 5.00m
             };
         }
@@ -147,44 +139,52 @@ namespace ClientApp
             UpdateTotals();
         }
 
-        private void BtnPay_Click(object sender, EventArgs e)
+        private async void BtnPay_Click(object sender, EventArgs e)
         {
-            // 1. เช็กว่ามีของในตะกร้าไหม (ถึงซ่อน Checkbox ไว้ ค่ามันก็เป็น true อยู่เสมอ)
             var selected = _items.Where(i => i.Selected).ToList();
             if (!selected.Any())
             {
                 MessageBox.Show("Please select at least one item to purchase.",
-                                "No items selected", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    "No items selected", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
 
-            // 2. ดึงชื่อวิธีชำระเงิน
+            // ดึงชื่อวิธีชำระเงิน
             string paymentMethod = "Unknown";
             if (comboBoxPaymentMethod.SelectedItem is PaymentMethodDto selectedPayment)
-            {
-                paymentMethod = selectedPayment.Name; // ได้คำว่า "Credit Card", "Bank Transfer", ฯลฯ
-            }
+                paymentMethod = selectedPayment.Name;
 
-            // 3. ถ้าเป็นโอนเงิน ให้เอาชื่อธนาคารมาต่อท้าย
             if (paymentMethod == "Bank Transfer")
             {
                 string selectedBank = comboBoxBank.SelectedItem?.ToString() ?? "";
                 paymentMethod = $"Bank Transfer ({selectedBank})";
             }
 
-            var total = textBoxTotal.Text;
-
-            // 4. ถามยืนยันการจ่ายเงิน
             var confirm = MessageBox.Show(
-                $"Confirm payment of {total} using {paymentMethod}?\n\nThis action cannot be undone.",
+                $"Confirm payment of {textBoxTotal.Text} using {paymentMethod}?\n\nThis action cannot be undone.",
                 "Confirm Payment", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
             if (confirm != DialogResult.Yes) return;
 
-            // 5. ดำเนินการส่งข้อมูลไปหน้าใบเสร็จ
+            // ✅ ปิดปุ่มไว้ก่อนเพื่อไม่ให้กดซ้ำ
+            btnPay.Enabled = false;
+
             try
             {
-                // แปลง CheckoutItem → ReceiptItem
+                // ✅ 1. ลบสินค้าที่ checkout ออกจาก Database ทีละชิ้น
+                foreach (var item in selected)
+                {
+                    try
+                    {
+                        await _cartApiService.RemoveFromCartAsync(item.CartId);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Failed to remove CartId {item.CartId}: {ex.Message}");
+                    }
+                }
+
+                // ✅ 2. แปลงข้อมูลส่งไป ReceiptScreen
                 var receiptItems = selected.Select(i => new ReceiptScreen.ReceiptItem
                 {
                     ProductName = i.ProductName,
@@ -195,20 +195,21 @@ namespace ClientApp
                 decimal subtotal = selected.Sum(i => i.UnitPrice * i.Quantity);
                 decimal shippingCost = GetShippingCost();
 
-                // ส่งข้อมูลทั้งหมดไป ReceiptScreen
+                // ✅ 3. เปิด ReceiptScreen
                 var receipt = new ReceiptScreen(receiptItems, subtotal, shippingCost, paymentMethod, DateTime.Now);
                 receipt.Show();
                 this.Hide();
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Payment failed: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Payment failed: {ex.Message}", "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                btnPay.Enabled = true; // เปิดปุ่มคืนถ้า error
             }
         }
 
         private void BtnBack_Click(object sender, EventArgs e)
         {
-            // Navigate back to CartScreen instead of closing
             CartScreen cart = new CartScreen();
             cart.Show();
             this.Hide();
@@ -216,16 +217,13 @@ namespace ClientApp
 
         private void comboBoxPaymentMethod_SelectedIndexChanged(object sender, EventArgs e)
         {
-            // 🌟 3. ดึงข้อมูลตัวที่ถูกเลือกออกมาทั้งก้อน
             var selectedPayment = comboBoxPaymentMethod.SelectedItem as PaymentMethodDto;
 
-            // เช็กชื่อว่าตรงกับ "Bank Transfer" ไหม
             if (selectedPayment != null && selectedPayment.Name == "Bank Transfer")
             {
                 labelBank.Visible = true;
                 comboBoxBank.Visible = true;
 
-                // ตรวจสอบและใส่ข้อมูลธนาคาร
                 if (comboBoxBank.Items.Count == 0)
                 {
                     comboBoxBank.Items.AddRange(new string[]
@@ -246,24 +244,9 @@ namespace ClientApp
             }
         }
 
-        private void dataGridViewItems_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-
-        }
-
-        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label1_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void labelPaymentMethod_Click(object sender, EventArgs e)
-        {
-
-        }
+        private void dataGridViewItems_CellContentClick(object sender, DataGridViewCellEventArgs e) { }
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e) { }
+        private void label1_Click(object sender, EventArgs e) { }
+        private void labelPaymentMethod_Click(object sender, EventArgs e) { }
     }
 }
