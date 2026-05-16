@@ -134,8 +134,6 @@ namespace ClientApp
         }
         private void BtnBack_Click(object sender, EventArgs e)
         {
-            AppSession.ResetSession();
-
             // 2. เปิดหน้าเลือกสินค้า (หรือหน้าเริ่มต้น)
             ProductScreen productScreen = new ProductScreen();
             productScreen.Show();
@@ -145,6 +143,11 @@ namespace ClientApp
         }
 
         private void dataGridViewItems_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
+
+        private void labelTitle_Click(object sender, EventArgs e)
         {
 
         }

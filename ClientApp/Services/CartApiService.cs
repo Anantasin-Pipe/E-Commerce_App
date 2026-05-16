@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
+using System.Windows.Forms; // 🌟 เผื่อเรียกใช้ MessageBox
 
 namespace ClientApp.Services
 {
@@ -82,6 +83,7 @@ namespace ClientApp.Services
                 return false;
             }
         }
+
         /// <summary>
         /// ลบสินค้าออกจากตะกร้า (ใช้ตอนกดปุ่ม Remove ในหน้า CartScreen)
         /// </summary>
@@ -97,6 +99,7 @@ namespace ClientApp.Services
                 return false;
             }
         }
+
         /// <summary>
         /// ส่งข้อมูลไปบันทึกใบเสร็จ (Checkout)
         /// </summary>
@@ -130,6 +133,7 @@ namespace ClientApp.Services
                 return false;
             }
         }
+
         public async Task<List<BankDto>> GetBanksAsync()
         {
             try
@@ -145,6 +149,69 @@ namespace ClientApp.Services
                 // แอบดัก Error ไว้เผื่อ Server ปิดอยู่
                 Console.WriteLine($"Error fetching banks: {ex.Message}");
                 throw; // โยน Error กลับไปให้หน้าจอ Checkout โชว์
+            }
+        }
+
+        // 🌟 เพิ่มการรับค่า sessionId
+        public async Task<List<OrderStatusDto>> GetOrderStatusesAsync(string sessionId)
+        {
+            try
+            {
+                // 🌟 ส่ง sessionId ไปกับ URL
+                string url = $"https://localhost:7241/api/OrderStatus?sessionId={sessionId}";
+                var result = await _httpClient.GetFromJsonAsync<List<OrderStatusDto>>(url);
+                return result ?? new List<OrderStatusDto>();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+                return new List<OrderStatusDto>();
+            }
+        }
+
+        // ==========================================
+        // 🌟 โซนฟังก์ชันสำหรับฝั่ง SellerApp (เพิ่มเข้ามาใหม่)
+        // ==========================================
+
+        /// <summary>
+        /// Seller: ดึงออเดอร์ทั้งหมดของร้านค้า
+        /// </summary>
+        public async Task<List<OrderStatusDto>> GetAllOrdersForSellerAsync()
+        {
+            try
+            {
+                string url = "https://localhost:7241/api/OrderStatus/all";
+                var result = await _httpClient.GetFromJsonAsync<List<OrderStatusDto>>(url);
+                return result ?? new List<OrderStatusDto>();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error Fetching All Orders: {ex.Message}");
+                return new List<OrderStatusDto>();
+            }
+        }
+
+        /// <summary>
+        /// Seller: อัปเดตสถานะและเลขพัสดุ
+        /// </summary>
+        public async Task<bool> UpdateOrderStatusAsync(int receiptId, int newStatus, string trackingNumber)
+        {
+            try
+            {
+                string url = $"https://localhost:7241/api/OrderStatus/update/{receiptId}";
+                var requestData = new
+                {
+                    NewStatus = newStatus,
+                    TrackingNumber = trackingNumber
+                };
+
+                var response = await _httpClient.PutAsJsonAsync(url, requestData);
+                return response.IsSuccessStatusCode;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error Updating Order: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
             }
         }
     }

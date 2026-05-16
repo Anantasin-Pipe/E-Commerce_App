@@ -7,10 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "E-Commerce_Server", "E-Comm
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClientApp", "ClientApp\ClientApp.csproj", "{39C08658-E2FB-4E89-B721-38390AC21D92}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SellerApp", "SellerApp\SellerApp.csproj", "{34A94A1E-E101-4255-8EB6-23B9BEEE08DC}"
-	ProjectSection(ProjectDependencies) = postProject
-		{39C08658-E2FB-4E89-B721-38390AC21D92} = {39C08658-E2FB-4E89-B721-38390AC21D92}
-	EndProjectSection
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SellerApp", "SellerApp\SellerApp.csproj", "{1F9E9EB4-76E5-07A9-2D5B-F4D238DB15A4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -26,10 +23,10 @@ Global
 		{39C08658-E2FB-4E89-B721-38390AC21D92}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{39C08658-E2FB-4E89-B721-38390AC21D92}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{39C08658-E2FB-4E89-B721-38390AC21D92}.Release|Any CPU.Build.0 = Release|Any CPU
-		{34A94A1E-E101-4255-8EB6-23B9BEEE08DC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{34A94A1E-E101-4255-8EB6-23B9BEEE08DC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{34A94A1E-E101-4255-8EB6-23B9BEEE08DC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{34A94A1E-E101-4255-8EB6-23B9BEEE08DC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1F9E9EB4-76E5-07A9-2D5B-F4D238DB15A4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1F9E9EB4-76E5-07A9-2D5B-F4D238DB15A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1F9E9EB4-76E5-07A9-2D5B-F4D238DB15A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1F9E9EB4-76E5-07A9-2D5B-F4D238DB15A4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

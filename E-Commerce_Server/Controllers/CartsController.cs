@@ -27,33 +27,25 @@ namespace E_Commerce_Server.Controllers
 
             try
             {
-                // 2. ใช้ Query แยกออกมาเพื่อความอ่านง่ายและลดโอกาสพังตอน Join
-                var cartQuery = _context.Carts
-                    .Where(c => c.SessionId == sessionId)
-                    .Where(c => !_context.Receipts.Any(r => r.CartId == c.Id));
+                var cartItems = await (from c in _context.Carts
+                                       join p in _context.Products on c.ProductId equals p.Id
+                                       where c.SessionId == sessionId
+                                             && !_context.Receipts.Any(r => r.CartId == c.Id) // 🌟 กรองของที่จ่ายแล้วออก
+                                       select new
+                                       {
+                                           CartId = c.Id, 
+                                           ProductId = p.Id,
+                                           ProductName = p.Name,
+                                           UnitPrice = p.Price,
+                                           Quantity = c.Quantity,
+                                           SessionId = c.SessionId
+                                       }).ToListAsync();
 
-                // 3. ทำการ Join และเลือกเฉพาะข้อมูลที่จำเป็น
-                var cartData = await cartQuery
-                    .Join(_context.Products,
-                          cart => cart.ProductId,
-                          product => product.Id,
-                          (cart, product) => new
-                          {
-                              cartId = cart.Id,
-                              productId = cart.ProductId,
-                              productName = product.Name,
-                              unitPrice = product.Price,
-                              quantity = cart.Quantity,
-                              sessionId = cart.SessionId
-                          })
-                    .ToListAsync();
-
-                return Ok(cartData);
+                return Ok(cartItems);
             }
             catch (Exception ex)
             {
-                // 🌟 ถ้ายัง Error 500 อีก ให้ดูที่ Response ใน Postman หรือ Output ใน VS
-                // มันจะบอกเลยว่าพังที่ Database หรือพังที่ตัวแปรไหน
+                // 3. ถ้าพัง ให้แจ้งรายละเอียด Error กลับไปให้หน้าบ้านเห็นชัดๆ
                 return StatusCode(500, new
                 {
                     message = "Internal Server Error",

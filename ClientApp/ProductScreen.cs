@@ -267,5 +267,14 @@ namespace ClientApp
         {
 
         }
+
+        private void btnStatus_Click(object sender, EventArgs e)
+        {
+            StatusScreen statusForm = new StatusScreen();
+
+            statusForm.Show();
+
+            this.Hide();
+        }
     }
 }

@@ -47,6 +47,7 @@
             panelCartBadge = new Panel();
             btnAddToCart = new Button();
             panel1 = new Panel();
+            btnStatus = new Button();
             ((System.ComponentModel.ISupportInitialize)numericUpDownQty).BeginInit();
             panelCartBadge.SuspendLayout();
             panel1.SuspendLayout();
@@ -58,9 +59,9 @@
             labelTitle.AutoSize = true;
             labelTitle.Font = new Font("Segoe UI", 18F, FontStyle.Bold);
             labelTitle.ForeColor = Color.FromArgb(51, 51, 51);
-            labelTitle.Location = new Point(25, 15);
+            labelTitle.Location = new Point(22, 11);
             labelTitle.Name = "labelTitle";
-            labelTitle.Size = new Size(142, 41);
+            labelTitle.Size = new Size(116, 32);
             labelTitle.TabIndex = 0;
             labelTitle.Text = "Products";
             // 
@@ -70,9 +71,9 @@
             labelSubtitle.AutoSize = true;
             labelSubtitle.Font = new Font("Segoe UI", 10F);
             labelSubtitle.ForeColor = Color.FromArgb(100, 100, 100);
-            labelSubtitle.Location = new Point(25, 51);
+            labelSubtitle.Location = new Point(22, 38);
             labelSubtitle.Name = "labelSubtitle";
-            labelSubtitle.Size = new Size(231, 23);
+            labelSubtitle.Size = new Size(187, 19);
             labelSubtitle.TabIndex = 1;
             labelSubtitle.Text = "Browse and select your items";
             // 
@@ -81,9 +82,10 @@
             flowLayoutPanelProducts.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             flowLayoutPanelProducts.AutoScroll = true;
             flowLayoutPanelProducts.BackColor = Color.White;
-            flowLayoutPanelProducts.Location = new Point(25, 75);
+            flowLayoutPanelProducts.Location = new Point(22, 56);
+            flowLayoutPanelProducts.Margin = new Padding(3, 2, 3, 2);
             flowLayoutPanelProducts.Name = "flowLayoutPanelProducts";
-            flowLayoutPanelProducts.Size = new Size(847, 461);
+            flowLayoutPanelProducts.Size = new Size(741, 346);
             flowLayoutPanelProducts.TabIndex = 2;
             flowLayoutPanelProducts.Paint += flowLayoutPanelProducts_Paint;
             // 
@@ -92,10 +94,11 @@
             numericUpDownQty.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left;
             numericUpDownQty.BackColor = Color.White;
             numericUpDownQty.Font = new Font("Segoe UI", 10F);
-            numericUpDownQty.Location = new Point(86, 12);
+            numericUpDownQty.Location = new Point(75, 9);
+            numericUpDownQty.Margin = new Padding(3, 2, 3, 2);
             numericUpDownQty.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
             numericUpDownQty.Name = "numericUpDownQty";
-            numericUpDownQty.Size = new Size(80, 30);
+            numericUpDownQty.Size = new Size(70, 25);
             numericUpDownQty.TabIndex = 4;
             numericUpDownQty.Value = new decimal(new int[] { 1, 0, 0, 0 });
             // 
@@ -105,9 +108,9 @@
             labelQtyLabel.AutoSize = true;
             labelQtyLabel.Font = new Font("Segoe UI", 10F);
             labelQtyLabel.ForeColor = Color.FromArgb(51, 51, 51);
-            labelQtyLabel.Location = new Point(3, 15);
+            labelQtyLabel.Location = new Point(3, 11);
             labelQtyLabel.Name = "labelQtyLabel";
-            labelQtyLabel.Size = new Size(80, 23);
+            labelQtyLabel.Size = new Size(66, 19);
             labelQtyLabel.TabIndex = 3;
             labelQtyLabel.Text = "Quantity:";
             // 
@@ -118,9 +121,10 @@
             btnViewCart.FlatStyle = FlatStyle.Flat;
             btnViewCart.Font = new Font("Segoe UI", 10F);
             btnViewCart.ForeColor = Color.White;
-            btnViewCart.Location = new Point(691, 9);
+            btnViewCart.Location = new Point(605, 7);
+            btnViewCart.Margin = new Padding(3, 2, 3, 2);
             btnViewCart.Name = "btnViewCart";
-            btnViewCart.Size = new Size(152, 36);
+            btnViewCart.Size = new Size(133, 27);
             btnViewCart.TabIndex = 7;
             btnViewCart.Text = "\U0001f6d2 View Cart";
             btnViewCart.UseVisualStyleBackColor = false;
@@ -131,9 +135,9 @@
             labelCartCount.AutoSize = true;
             labelCartCount.Font = new Font("Segoe UI", 14F, FontStyle.Bold);
             labelCartCount.ForeColor = Color.White;
-            labelCartCount.Location = new Point(27, 5);
+            labelCartCount.Location = new Point(24, 4);
             labelCartCount.Name = "labelCartCount";
-            labelCartCount.Size = new Size(28, 32);
+            labelCartCount.Size = new Size(23, 25);
             labelCartCount.TabIndex = 0;
             labelCartCount.Text = "0";
             // 
@@ -142,9 +146,10 @@
             panelCartBadge.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             panelCartBadge.BackColor = Color.FromArgb(244, 67, 54);
             panelCartBadge.Controls.Add(labelCartCount);
-            panelCartBadge.Location = new Point(760, 9);
+            panelCartBadge.Location = new Point(665, 7);
+            panelCartBadge.Margin = new Padding(3, 2, 3, 2);
             panelCartBadge.Name = "panelCartBadge";
-            panelCartBadge.Size = new Size(112, 48);
+            panelCartBadge.Size = new Size(98, 36);
             panelCartBadge.TabIndex = 6;
             // 
             // btnAddToCart
@@ -154,9 +159,10 @@
             btnAddToCart.FlatStyle = FlatStyle.Flat;
             btnAddToCart.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
             btnAddToCart.ForeColor = Color.White;
-            btnAddToCart.Location = new Point(173, 9);
+            btnAddToCart.Location = new Point(151, 7);
+            btnAddToCart.Margin = new Padding(3, 2, 3, 2);
             btnAddToCart.Name = "btnAddToCart";
-            btnAddToCart.Size = new Size(150, 36);
+            btnAddToCart.Size = new Size(131, 27);
             btnAddToCart.TabIndex = 5;
             btnAddToCart.Text = "+ Add to Cart";
             btnAddToCart.UseVisualStyleBackColor = false;
@@ -165,27 +171,44 @@
             // panel1
             // 
             panel1.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            panel1.Controls.Add(btnStatus);
             panel1.Controls.Add(btnViewCart);
             panel1.Controls.Add(numericUpDownQty);
             panel1.Controls.Add(btnAddToCart);
             panel1.Controls.Add(labelQtyLabel);
-            panel1.Location = new Point(25, 543);
-            panel1.Margin = new Padding(3, 4, 3, 4);
+            panel1.Location = new Point(22, 407);
             panel1.Name = "panel1";
-            panel1.Size = new Size(847, 56);
+            panel1.Size = new Size(741, 42);
             panel1.TabIndex = 0;
+            // 
+            // btnStatus
+            // 
+            btnStatus.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
+            btnStatus.BackColor = Color.FromArgb(70, 130, 180);
+            btnStatus.FlatStyle = FlatStyle.Flat;
+            btnStatus.Font = new Font("Segoe UI", 10F);
+            btnStatus.ForeColor = Color.White;
+            btnStatus.Location = new Point(466, 7);
+            btnStatus.Margin = new Padding(3, 2, 3, 2);
+            btnStatus.Name = "btnStatus";
+            btnStatus.Size = new Size(133, 27);
+            btnStatus.TabIndex = 8;
+            btnStatus.Text = "View Status";
+            btnStatus.UseVisualStyleBackColor = false;
+            btnStatus.Click += btnStatus_Click;
             // 
             // ProductScreen
             // 
-            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(896, 615);
+            ClientSize = new Size(784, 461);
             Controls.Add(labelTitle);
             Controls.Add(panel1);
             Controls.Add(labelSubtitle);
             Controls.Add(flowLayoutPanelProducts);
             Controls.Add(panelCartBadge);
-            MinimumSize = new Size(912, 651);
+            Margin = new Padding(3, 2, 3, 2);
+            MinimumSize = new Size(800, 498);
             Name = "ProductScreen";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Products";
@@ -202,5 +225,6 @@
         #endregion
         private Button btnAddToCart;
         private Panel panel1;
+        private Button btnStatus;
     }
 }

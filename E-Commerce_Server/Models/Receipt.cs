@@ -23,5 +23,8 @@ namespace E_Commerce_Server.Models
 
         [Column("payment_id")]
         public int PaymentId { get; set; }
+
+        [Column("created_date")]
+        public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
     }
 }

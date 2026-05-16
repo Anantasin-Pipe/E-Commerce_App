@@ -32,20 +32,41 @@ namespace E_Commerce_Server.Controllers
                 if (request.CartIds == null || !request.CartIds.Any())
                     return BadRequest("No items to checkout.");
 
-                // 🌟 วนลูปตามจำนวนของในตะกร้า แล้วสร้างใบเสร็จทีละใบ
+                // ✅ 1. เตรียมสร้างใบเสร็จ (Receipt) ให้สินค้าทุกชิ้นในตะกร้า
+                List<Receipt> createdReceipts = new List<Receipt>();
+
                 foreach (var cartId in request.CartIds)
                 {
                     var newReceipt = new Receipt
                     {
                         CartId = cartId,
                         BankId = request.BankId,
-                        PaymentId = request.PaymentId,
+                        PaymentId = request.PaymentId
                     };
 
                     _context.Receipts.Add(newReceipt);
+                    createdReceipts.Add(newReceipt);
                 }
 
-                // สั่งบันทึกลง Database รวดเดียว
+                // ✅ 2. สั่ง Save ลง Database รอบที่ 1 (เพื่อให้ Database สร้างเลข Id ของ Receipt ให้เรา)
+                await _context.SaveChangesAsync();
+
+                // ✅ 3. เอาเลข Receipt Id ที่ได้มาใหม่ ไปสร้างใบจัดส่ง (ShipInfo) ต่อทันที
+                foreach (var receipt in createdReceipts)
+                {
+                    var newShipInfo = new ShipInfo
+                    {
+                        ReceiptId = receipt.Id,   // 🌟 ดึง ID ใบเสร็จที่เพิ่งสร้างเสร็จมาผูกไว้
+                        SellerId = 1,
+                        ShipId = 1,
+                        DeliveryStatus = DeliveryStatus.Preparing,
+                        TrackingNumber = null
+                    };
+
+                    _context.ShipInfos.Add(newShipInfo);
+                }
+
+                // ✅ 4. สั่ง Save ลง Database รอบที่ 2 (บันทึกใบจัดส่ง)
                 await _context.SaveChangesAsync();
 
                 return Ok(new { message = "Checkout successful!" });
