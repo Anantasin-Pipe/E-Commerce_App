@@ -1,4 +1,6 @@
-﻿using System;
+﻿using ClientApp;
+using ClientApp.Services;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -6,7 +8,6 @@ using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using ClientApp.Services;
 
 namespace SellerApp
 {
@@ -18,6 +19,8 @@ namespace SellerApp
         private readonly CartApiService _cartApiService;
         private int _selectedReceiptId = 0;
 
+        private BindingList<OrderStatusDto> _orderList = new BindingList<OrderStatusDto>();
+
         public SellerScreen()
         {
             InitializeComponent();
@@ -25,7 +28,8 @@ namespace SellerApp
             _productApiService = new ProductApiService();
             _cartApiService = new CartApiService();
 
-            // 🌟 ย้ายการเสียบสายไฟ Event มาคุมด้วยโค้ดผ่านฟังก์ชันโหลดตารางแทน เพื่อไม่ให้ทำงานชนกัน
+            // ป้องกันการผูก Event ซ้ำซ้อนของปุ่มกด
+            btnUpdateStatus.Click -= btnUpdateStatus_Click;
             btnUpdateStatus.Click += btnUpdateStatus_Click;
 
             InitOrderUI();
@@ -37,13 +41,12 @@ namespace SellerApp
 
         private void InitializeDataGrid()
         {
+            // คุมตารางสินค้าตามเดิม
             dataGridViewProducts.AutoGenerateColumns = false;
-
             if (dataGridViewProducts.Columns["colProductName"] != null)
             {
                 dataGridViewProducts.Columns["colProductName"].DataPropertyName = "Name";
             }
-
             dataGridViewProducts.DataSource = _products;
             dataGridViewProducts.CellEndEdit += DataGridViewProducts_CellEndEdit;
             _products.ListChanged += Products_ListChanged;
@@ -194,7 +197,10 @@ namespace SellerApp
         private void BtnRefresh_Click(object sender, EventArgs e)
         {
             LoadProductsFromDatabase();
-            MessageBox.Show("Product list refreshed from database.", "Refresh", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+            LoadOrdersAsync();
+
+            MessageBox.Show("อัปเดตข้อมูลสินค้าและรายการออเดอร์ล่าสุดเรียบร้อยแล้ว!", "รีเฟรชสำเร็จ", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void ClearInputFields()
@@ -215,8 +221,9 @@ namespace SellerApp
         private void label2_Click(object sender, EventArgs e) { }
         private void label3_Click(object sender, EventArgs e) { }
 
+
         // =======================================================
-        // 🌟 โซนระบบจัดการออเดอร์ (แก้ไขบักส์ระบบกะพริบรีเฟรชข้อมูล)
+        // 🌟 โซนระบบจัดการออเดอร์ (เวอร์ชันเสถียร ตารางขึ้น ข้อมูลดีดลื่นไหลแน่นอน)
         // =======================================================
 
         private void InitOrderUI()
@@ -234,48 +241,44 @@ namespace SellerApp
         {
             try
             {
-                var orders = await _cartApiService.GetAllOrdersForSellerAsync();
+                var ordersFromApi = await _cartApiService.GetAllOrdersForSellerAsync();
 
-                // 🌟 ไม้ตาย: ถอดสายไฟ Event คลิกตารางออกไปก่อนชั่วคราว เพื่อไม่ให้เงื่อนไขชนกันตอนโหลดข้อมูลใหม่
+                // 🌟 สเต็ปที่ 1: ถอดสายไฟ CellClick ออกก่อนทันทีเพื่อป้องกันอาการวนลูปรีเซ็ต State UI ข้างหลัง
                 dataGridViewOrders.CellClick -= dataGridViewOrders_CellClick;
 
+                // 🌟 สเต็ปที่ 2: บังคับเปิดระบบ AutoGenerate ให้อ่านจาก Dto เพราะหน้าดีไซน์ของคุณยังเป็นตารางเทาโล่งๆ
+                dataGridViewOrders.AutoGenerateColumns = true;
+
+                _orderList.Clear();
+                foreach (var order in ordersFromApi)
+                {
+                    _orderList.Add(order);
+                }
+
                 dataGridViewOrders.DataSource = null;
-                dataGridViewOrders.DataSource = orders;
+                dataGridViewOrders.DataSource = _orderList;
 
-                if (dataGridViewOrders.Columns["CartId"] != null)
-                    dataGridViewOrders.Columns["CartId"].Visible = false;
+                // ตั้งค่าฟอร์แมตหัวตารางและความชัดเจน
+                if (dataGridViewOrders.Columns["CartId"] != null) dataGridViewOrders.Columns["CartId"].Visible = false;
+                if (dataGridViewOrders.Columns["ReceiptId"] != null) dataGridViewOrders.Columns["ReceiptId"].Visible = false;
 
-                if (dataGridViewOrders.Columns["ReceiptId"] != null)
-                    dataGridViewOrders.Columns["ReceiptId"].Visible = false;
-
-                if (dataGridViewOrders.Columns["OrderDate"] != null)
-                    dataGridViewOrders.Columns["OrderDate"].HeaderText = "วันที่สั่งซื้อ";
-
-                if (dataGridViewOrders.Columns["ProductName"] != null)
-                    dataGridViewOrders.Columns["ProductName"].HeaderText = "สินค้า";
-
-                if (dataGridViewOrders.Columns["Quantity"] != null)
-                    dataGridViewOrders.Columns["Quantity"].HeaderText = "จำนวน";
-
-                if (dataGridViewOrders.Columns["Status"] != null)
-                    dataGridViewOrders.Columns["Status"].HeaderText = "สถานะ";
-
-                if (dataGridViewOrders.Columns["TrackingNumber"] != null)
-                    dataGridViewOrders.Columns["TrackingNumber"].HeaderText = "เลขพัสดุ";
-
-                // 🌟 เพิ่มการตั้งค่าแสดงผลของคอลัมน์เวลา พ.ศ. ไทย ในหน้าตารางหลังบ้าน
-                if (dataGridViewOrders.Columns["DeliveryTime"] != null)
-                    dataGridViewOrders.Columns["DeliveryTime"].HeaderText = "DeliveryTime";
+                if (dataGridViewOrders.Columns["OrderDate"] != null) dataGridViewOrders.Columns["OrderDate"].HeaderText = "วันที่สั่งซื้อ";
+                if (dataGridViewOrders.Columns["ProductName"] != null) dataGridViewOrders.Columns["ProductName"].HeaderText = "สินค้า";
+                if (dataGridViewOrders.Columns["Quantity"] != null) dataGridViewOrders.Columns["Quantity"].HeaderText = "จำนวน";
+                if (dataGridViewOrders.Columns["Status"] != null) dataGridViewOrders.Columns["Status"].HeaderText = "สถานะ";
+                if (dataGridViewOrders.Columns["TrackingNumber"] != null) dataGridViewOrders.Columns["TrackingNumber"].HeaderText = "เลขพัสดุ";
+                if (dataGridViewOrders.Columns["DeliveryTime"] != null) dataGridViewOrders.Columns["DeliveryTime"].HeaderText = "เวลาจัดส่ง";
 
                 dataGridViewOrders.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
 
-                // 🌟 เสียบสายไฟ Event คลิกตารางกลับคืนเข้าไปเมื่อระบบเซ็ตตารางใหม่เสร็จสมบูรณ์ 100%
+                // 🌟 สเต็ปที่ 3: เมื่อตารางวาดโครงสร้างเสร็จหมดแล้ว ค่อยเสียบสายไฟ Event กลับคืนเข้าไป
                 dataGridViewOrders.CellClick += dataGridViewOrders_CellClick;
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"โหลดออเดอร์ไม่สำเร็จ: {ex.Message}");
-                dataGridViewOrders.CellClick += dataGridViewOrders_CellClick; // ป้องกันบักกรณีพังแล้วลืมต่อคืน
+                dataGridViewOrders.CellClick -= dataGridViewOrders_CellClick;
+                dataGridViewOrders.CellClick += dataGridViewOrders_CellClick;
             }
         }
 
@@ -285,12 +288,15 @@ namespace SellerApp
             {
                 DataGridViewRow row = dataGridViewOrders.Rows[e.RowIndex];
 
-                _selectedReceiptId = Convert.ToInt32(row.Cells["ReceiptId"].Value);
+                if (row.Cells["ReceiptId"].Value != null)
+                {
+                    _selectedReceiptId = Convert.ToInt32(row.Cells["ReceiptId"].Value);
+                }
 
                 string currentTracking = row.Cells["TrackingNumber"].Value?.ToString() ?? "";
-                txtTracking.Text = currentTracking == "ยังไม่มีเลขพัสดุ" ? "" : currentTracking;
+                txtTracking.Text = (currentTracking == "ยังไม่มีเลขพัสดุ" || string.IsNullOrWhiteSpace(currentTracking)) ? "" : currentTracking;
 
-                string statusTxt = row.Cells["Status"].Value.ToString();
+                string statusTxt = row.Cells["Status"].Value?.ToString() ?? "";
                 if (statusTxt.Contains("Preparing")) cbStatus.SelectedIndex = 0;
                 else if (statusTxt.Contains("Shipping")) cbStatus.SelectedIndex = 1;
                 else if (statusTxt.Contains("Delivered")) cbStatus.SelectedIndex = 2;
@@ -308,26 +314,29 @@ namespace SellerApp
             int newStatus = cbStatus.SelectedIndex;
             string tracking = txtTracking.Text.Trim();
 
-            // ถ้าช่องเลขพัสดุว่างเปล่า และสถานะถูกเปลี่ยนเป็น Shipping (1) หรือ Delivered (2) สั่งระบบเจนให้ทันที
             if (string.IsNullOrWhiteSpace(tracking) && newStatus >= 1)
             {
                 tracking = GenerateTrackingNumber();
                 txtTracking.Text = tracking;
             }
 
-            bool success = await _cartApiService.UpdateOrderStatusAsync(_selectedReceiptId, newStatus, tracking);
+            dataGridViewOrders.CellClick -= dataGridViewOrders_CellClick;
 
-            if (success)
+            // 🌟 ยิง API และรับข้อความผลลัพธ์กลับมาตรงๆ
+            string result = await _cartApiService.UpdateOrderStatusAsync(_selectedReceiptId, newStatus, tracking);
+
+            if (result == "SUCCESS")
             {
                 MessageBox.Show("อัปเดตสถานะออเดอร์เรียบร้อยแล้ว!", "สำเร็จ", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-                // 🌟 สลับลำดับเคลียร์ค่า State หน้าจอให้หมดจดก่อนลื่นไหลไม่มีกระตุก
-                _selectedReceiptId = 0;
-                txtTracking.Text = "";
-                cbStatus.SelectedIndex = 0;
-
-                // สั่งโหลดหน้าตาข้อมูลเวอร์ชันล่าสุดมาวาดใหม่ปิดท้ายรายการ
                 LoadOrdersAsync();
+            }
+            else
+            {
+                // 🌟 ปล่อยไม้ตาย: เอาข้อความ Error จริงที่ส่งมาจากใจของ Server ขึ้นโชว์เลย จะได้รู้ทันทีว่าติดคอลัมน์ไหน!
+                MessageBox.Show($"Server แจ้งข้อผิดพลาดกลับมาดังนี้:\n\n{result}\n\n(ตรวจสอบค่า ID ที่ส่งไป: ReceiptId = {_selectedReceiptId})",
+                                "พบข้อผิดพลาดฝั่งหลังบ้าน", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                dataGridViewOrders.CellClick += dataGridViewOrders_CellClick;
             }
         }
 
@@ -336,7 +345,6 @@ namespace SellerApp
             Random random = new Random();
             string datePart = DateTime.Now.ToString("yyMMdd");
             string randomPart = random.Next(1000, 9999).ToString();
-
             return $"TH{datePart}{randomPart}";
         }
 

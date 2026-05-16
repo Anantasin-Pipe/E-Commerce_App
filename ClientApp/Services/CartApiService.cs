@@ -194,7 +194,7 @@ namespace ClientApp.Services
         /// <summary>
         /// Seller: อัปเดตสถานะและเลขพัสดุ
         /// </summary>
-        public async Task<bool> UpdateOrderStatusAsync(int receiptId, int newStatus, string trackingNumber)
+        public async Task<string> UpdateOrderStatusAsync(int receiptId, int newStatus, string trackingNumber)
         {
             try
             {
@@ -206,12 +206,21 @@ namespace ClientApp.Services
                 };
 
                 var response = await _httpClient.PutAsJsonAsync(url, requestData);
-                return response.IsSuccessStatusCode;
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return "SUCCESS";
+                }
+                else
+                {
+                    // 🌟 อ่านข้อความ Error จริงที่ Server บ่นออกมา
+                    string errorContent = await response.Content.ReadAsStringAsync();
+                    return errorContent;
+                }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error Updating Order: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return false;
+                return $"APP_ERROR: {ex.Message}";
             }
         }
     }

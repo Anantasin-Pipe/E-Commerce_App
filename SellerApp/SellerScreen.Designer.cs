@@ -322,7 +322,7 @@
             btnRefresh.FlatStyle = FlatStyle.Flat;
             btnRefresh.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
             btnRefresh.ForeColor = Color.White;
-            btnRefresh.Location = new Point(153, 372);
+            btnRefresh.Location = new Point(370, 683);
             btnRefresh.Margin = new Padding(3, 2, 3, 2);
             btnRefresh.Name = "btnRefresh";
             btnRefresh.Size = new Size(95, 28);
@@ -347,9 +347,9 @@
             // 
             dataGridViewOrders.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             dataGridViewOrders.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewOrders.Location = new Point(22, 438);
+            dataGridViewOrders.Location = new Point(22, 431);
             dataGridViewOrders.Name = "dataGridViewOrders";
-            dataGridViewOrders.Size = new Size(639, 184);
+            dataGridViewOrders.Size = new Size(639, 205);
             dataGridViewOrders.TabIndex = 14;
             // 
             // label1
@@ -358,7 +358,7 @@
             label1.AutoSize = true;
             label1.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
             label1.ForeColor = Color.FromArgb(51, 51, 51);
-            label1.Location = new Point(22, 414);
+            label1.Location = new Point(22, 407);
             label1.Name = "label1";
             label1.Size = new Size(159, 21);
             label1.TabIndex = 15;
@@ -387,13 +387,15 @@
             btnUpdateStatus.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             btnUpdateStatus.BackColor = Color.FromArgb(76, 175, 80);
             btnUpdateStatus.FlatStyle = FlatStyle.Flat;
+            btnUpdateStatus.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
             btnUpdateStatus.ForeColor = Color.White;
             btnUpdateStatus.Location = new Point(473, 679);
             btnUpdateStatus.Name = "btnUpdateStatus";
-            btnUpdateStatus.Size = new Size(181, 41);
+            btnUpdateStatus.Size = new Size(181, 32);
             btnUpdateStatus.TabIndex = 19;
             btnUpdateStatus.Text = "Update Status";
             btnUpdateStatus.UseVisualStyleBackColor = false;
+            btnUpdateStatus.Click += btnUpdateStatus_Click;
             // 
             // label3
             // 

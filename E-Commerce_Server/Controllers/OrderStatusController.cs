@@ -124,7 +124,7 @@ namespace E_Commerce_Server.Controllers
             public string TrackingNumber { get; set; } = string.Empty;
         }
 
-        // 2. อัปเดตสถานะและเลขพัสดุ
+        // 2. อัปเดตสถานะและเลขพัสดุ (เวอร์ชันเอาชนะใจ PostgreSQL ด้วย UTC)
         [HttpPut("update/{receiptId}")]
         public async Task<IActionResult> UpdateDeliveryStatus(int receiptId, [FromBody] UpdateStatusRequest request)
         {
@@ -134,38 +134,51 @@ namespace E_Commerce_Server.Controllers
 
                 if (shipInfo == null)
                 {
-                    return NotFound(new { message = "ไม่พบข้อมูลการจัดส่งของออเดอร์นี้" });
+                    return NotFound(new { message = $"ไม่พบข้อมูลการจัดส่งของ ReceiptId: {receiptId}" });
                 }
 
-                // 🌟 1. อัปเดตสถานะใหม่ตามที่ส่งมา
-                shipInfo.DeliveryStatus = (E_Commerce_Server.Models.DeliveryStatus)request.NewStatus;
-
-                // 🌟 2. ดักจัดการเคลียร์ข้อมูลตามเงื่อนไขสถานะให้เด็ดขาด
-                if (request.NewStatus == 0) // ถ้าปรับกลับมาเป็น Preparing (กำลังเตรียมของ)
+                // 🌟 ปรับปรุงการจัดการสถานะและเวลาตามเงื่อนไขของ PostgreSQL
+                if (request.NewStatus == 0) // Preparing
                 {
+                    shipInfo.DeliveryStatus = E_Commerce_Server.Models.DeliveryStatus.Preparing;
                     shipInfo.DeliveryTime = null;
                     shipInfo.TrackingNumber = null;
                 }
-                else if (request.NewStatus == 1 || request.NewStatus == 2) // ถ้าเป็น Shipping หรือ Delivered
+                else if (request.NewStatus == 1) // Shipping
                 {
-                    shipInfo.DeliveryTime = DateTime.Now; // แสตมป์เวลาไทยปัจจุบัน
+                    shipInfo.DeliveryStatus = E_Commerce_Server.Models.DeliveryStatus.Shipping;
 
-                    // อัปเดตเลขพัสดุใหม่ (ถ้าฝั่งหน้าบ้านมีการส่งเลขพัสดุที่ไม่ใช่ค่าว่างมา)
+                    // 🌟 ไม้ตาย: เปลี่ยนเป็น UtcNow เพื่อให้ PostgreSQL ยอมให้บันทึกผ่านฉลุยชัวร์ๆ
+                    shipInfo.DeliveryTime = DateTime.UtcNow;
+
+                    if (!string.IsNullOrWhiteSpace(request.TrackingNumber))
+                    {
+                        shipInfo.TrackingNumber = request.TrackingNumber;
+                    }
+                }
+                else if (request.NewStatus == 2) // Delivered
+                {
+                    shipInfo.DeliveryStatus = E_Commerce_Server.Models.DeliveryStatus.Delivered;
+
+                    // 🌟 ไม้ตาย: เปลี่ยนเป็น UtcNow เพื่อให้ PostgreSQL ยอมให้บันทึกผ่านฉลุยชัวร์ๆ
+                    shipInfo.DeliveryTime = DateTime.UtcNow;
+
                     if (!string.IsNullOrWhiteSpace(request.TrackingNumber))
                     {
                         shipInfo.TrackingNumber = request.TrackingNumber;
                     }
                 }
 
-                // 🌟 ไม้ตายเด็ดขาด: สั่งแจ้งให้ Context แทร็กและบังคับอัปเดตข้อมูลก้อนนี้ลงเบสชัวร์ๆ
-                _context.ShipInfos.Update(shipInfo);
+                // บังคับเปลี่ยน State แจ้งข้อมูลอัปเดต
+                _context.Entry(shipInfo).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
 
                 return Ok(new { message = "อัปเดตสถานะสำเร็จ!" });
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new { error = ex.Message });
+                var realError = ex.InnerException != null ? ex.InnerException.Message : ex.Message;
+                return StatusCode(500, new { error = realError });
             }
         }
     }
