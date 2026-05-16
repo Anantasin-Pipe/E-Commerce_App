@@ -318,14 +318,15 @@
             // 
             // btnRefresh
             // 
+            btnRefresh.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             btnRefresh.BackColor = Color.FromArgb(70, 130, 180);
             btnRefresh.FlatStyle = FlatStyle.Flat;
             btnRefresh.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
             btnRefresh.ForeColor = Color.White;
-            btnRefresh.Location = new Point(370, 683);
+            btnRefresh.Location = new Point(370, 679);
             btnRefresh.Margin = new Padding(3, 2, 3, 2);
             btnRefresh.Name = "btnRefresh";
-            btnRefresh.Size = new Size(95, 28);
+            btnRefresh.Size = new Size(95, 32);
             btnRefresh.TabIndex = 13;
             btnRefresh.Text = "🔄 Refresh";
             btnRefresh.UseVisualStyleBackColor = false;
@@ -438,7 +439,7 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(684, 723);
+            ClientSize = new Size(684, 729);
             Controls.Add(label5);
             Controls.Add(btnUpdateStatus);
             Controls.Add(label4);
