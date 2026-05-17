@@ -43,7 +43,7 @@
             btnBack.FlatStyle = FlatStyle.Flat;
             btnBack.Font = new Font("Segoe UI", 10F);
             btnBack.ForeColor = Color.White;
-            btnBack.Location = new Point(770, 552);
+            btnBack.Location = new Point(921, 550);
             btnBack.Name = "btnBack";
             btnBack.Size = new Size(104, 41);
             btnBack.TabIndex = 13;
@@ -84,7 +84,7 @@
             dataGridViewStatus.Margin = new Padding(3, 4, 3, 4);
             dataGridViewStatus.Name = "dataGridViewStatus";
             dataGridViewStatus.RowHeadersWidth = 51;
-            dataGridViewStatus.Size = new Size(847, 460);
+            dataGridViewStatus.Size = new Size(1000, 460);
             dataGridViewStatus.TabIndex = 16;
             // 
             // btnStatusRefresh
@@ -94,7 +94,7 @@
             btnStatusRefresh.FlatStyle = FlatStyle.Flat;
             btnStatusRefresh.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
             btnStatusRefresh.ForeColor = Color.White;
-            btnStatusRefresh.Location = new Point(655, 550);
+            btnStatusRefresh.Location = new Point(793, 550);
             btnStatusRefresh.Name = "btnStatusRefresh";
             btnStatusRefresh.Size = new Size(109, 43);
             btnStatusRefresh.TabIndex = 17;
@@ -106,7 +106,7 @@
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(914, 615);
+            ClientSize = new Size(1052, 615);
             Controls.Add(btnStatusRefresh);
             Controls.Add(dataGridViewStatus);
             Controls.Add(labelTitle);
@@ -116,6 +116,7 @@
             MinimumSize = new Size(912, 651);
             Name = "StatusScreen";
             Text = "StatusScreen";
+            Activated += StatusScreen_Activated;
             Load += StatusScreen_Load;
             ((System.ComponentModel.ISupportInitialize)dataGridViewStatus).EndInit();
             ResumeLayout(false);

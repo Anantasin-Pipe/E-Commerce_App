@@ -27,28 +27,66 @@ namespace ClientApp
         {
             await LoadDataAsync();
         }
-
+        private async void StatusScreen_Activated(object sender, EventArgs e)
+        {
+            // ทุกครั้งที่หน้าจอนี้ถูกสลับกลับมาแสดงผล (โฟกัส) มันจะแอบรีเฟรชตัวเองให้อัตโนมัติแบบเรียลไทม์เลยครับ!
+            await LoadDataAsync();
+        }
         private async Task LoadDataAsync()
         {
             try
             {
-                // ดึงข้อมูลจาก API
-                var statuses = await _apiService.GetOrderStatusesAsync(AppSession.SessionId);
+                // 1. ดึงข้อมูลดิบจาก API (ที่อาจจะมีหลายชิ้นในบิลเดียวกัน)
+                var rawStatuses = await _apiService.GetOrderStatusesAsync(AppSession.SessionId);
 
-                dataGridViewStatus.DataSource = statuses;
+                if (rawStatuses == null || !rawStatuses.Any())
+                {
+                    dataGridViewStatus.DataSource = null;
+                    return;
+                }
 
-                // ตกแต่งหัวตาราง
+                // 2. ทำการ GroupBy ด้วย ReceiptId เพื่อยุบรวมให้เหลือ 1 บิลต่อ 1 แถวเหมือนหน้า Seller
+                var groupedStatuses = rawStatuses
+                    .Where(o => !string.IsNullOrEmpty(o.ReceiptId))
+                    .GroupBy(o => o.ReceiptId)
+                    .Select(g =>
+                    {
+                        var firstItem = g.First();
+
+                        // 🌟 ค้นหาไอเท็มในกลุ่มที่มีการอัปเดตสถานะไปไกลที่สุด (ป้องกันอาการเจอ Preparing บังตัวอื่น)
+                        var activeItem = g.FirstOrDefault(x => !string.IsNullOrEmpty(x.TrackingNumber) && x.TrackingNumber != "ยังไม่มีเลขพัสดุ") ?? firstItem;
+
+                        return new OrderStatusDto
+                        {
+                            ReceiptId = firstItem.ReceiptId,
+                            OrderDate = firstItem.OrderDate,
+                            // รวมชื่อสินค้าทุกชิ้นในบิลมาต่อกัน เช่น "Cotton T-Shirt (x1), Laptop Dell (x1)"
+                            ProductName = string.Join(", ", g.Select(x => $"{x.ProductName} (x{x.Quantity})")),
+                            Quantity = g.Sum(x => x.Quantity),
+                            Status = activeItem.Status,
+                            TrackingNumber = activeItem.TrackingNumber,
+                            DeliveryTime = activeItem.DeliveryTime
+                        };
+                    })
+                    .OrderByDescending(o => o.OrderDate) // เรียงลำดับเอาออเดอร์ใหม่ขึ้นก่อน
+                    .ToList();
+
+                // 3. ผูกข้อมูลที่จัดกลุ่มแล้วเข้าตาราง
+                dataGridViewStatus.DataSource = groupedStatuses;
+
+                // 4. ตกแต่งหัวตาราง (เหมือนเดิมของคุณ แต่เช็คความปลอดภัย)
                 if (dataGridViewStatus.Columns.Count > 0)
                 {
                     dataGridViewStatus.Columns["OrderDate"].HeaderText = "Date";
                     dataGridViewStatus.Columns["OrderDate"].DefaultCellStyle.Format = "dd/MM/yyyy HH:mm";
 
-                    dataGridViewStatus.Columns["CartId"].Visible = false;
-                    dataGridViewStatus.Columns["ReceiptId"].Visible = false; // ปิด ReceiptId ไว้ด้วยจะได้สวยๆ
+                    // ซ่อนคอลัมน์ที่ไม่จำเป็นต้องแสดงบน UI เพื่อความสวยงาม
+                    if (dataGridViewStatus.Columns["CartId"] != null) dataGridViewStatus.Columns["CartId"].Visible = false;
+                    if (dataGridViewStatus.Columns["ReceiptId"] != null) dataGridViewStatus.Columns["ReceiptId"].Visible = true;
+                    dataGridViewStatus.Columns["ReceiptId"].HeaderText = "Receipt ID";
 
                     dataGridViewStatus.Columns["ProductName"].HeaderText = "Item";
                     dataGridViewStatus.Columns["Quantity"].HeaderText = "Quantity";
-
                     dataGridViewStatus.Columns["Status"].HeaderText = "Status";
                     dataGridViewStatus.Columns["TrackingNumber"].HeaderText = "Tracking Number";
                     dataGridViewStatus.Columns["DeliveryTime"].HeaderText = "Delivery Time";
@@ -87,16 +125,6 @@ namespace ClientApp
         }
     }
 
-    // 🌟 คลาส Dto 
-    public class OrderStatusDto
-    {
-        public DateTime OrderDate { get; set; }
-        public int ReceiptId { get; set; }
-        public int CartId { get; set; }
-        public string ProductName { get; set; } = string.Empty;
-        public int Quantity { get; set; }
-        public string Status { get; set; } = string.Empty;
-        public string TrackingNumber { get; set; } = string.Empty;
-        public string DeliveryTime { get; set; } = string.Empty;
-    }
+  
+    
 }

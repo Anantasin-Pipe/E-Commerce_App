@@ -11,6 +11,9 @@ namespace E_Commerce_Server.Models
         [Column("product_id")]
         public int ProductId { get; set; }
 
+        [Column("receipt_id")]
+        public string? ReceiptId { get; set; }
+
         [Column("quantity")]
         public int Quantity { get; set; }
 

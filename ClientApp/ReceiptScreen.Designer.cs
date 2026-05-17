@@ -72,9 +72,9 @@
             btnPrint = new Button();
             btnDownload = new Button();
             panel1 = new Panel();
+            label1 = new Label();
             btnBack = new Button();
             btnClose = new Button();
-            label1 = new Label();
             ((System.ComponentModel.ISupportInitialize)dataGridViewItems).BeginInit();
             panelPaymentInfo.SuspendLayout();
             panel1.SuspendLayout();
@@ -104,6 +104,7 @@
             labelReceiptNumber.Size = new Size(276, 23);
             labelReceiptNumber.TabIndex = 1;
             labelReceiptNumber.Text = "Order #12345 | Invoice ID: INV-001";
+            labelReceiptNumber.Click += labelReceiptNumber_Click;
             // 
             // labelReceiptDate
             // 
@@ -373,6 +374,17 @@
             panel1.Size = new Size(265, 149);
             panel1.TabIndex = 11;
             // 
+            // label1
+            // 
+            label1.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            label1.AutoSize = true;
+            label1.Font = new Font("Segoe UI", 9F);
+            label1.Location = new Point(4, 6);
+            label1.Name = "label1";
+            label1.Size = new Size(68, 20);
+            label1.TabIndex = 8;
+            label1.Text = "Subtotal:";
+            // 
             // btnBack
             // 
             btnBack.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
@@ -395,17 +407,6 @@
             btnClose.Name = "btnClose";
             btnClose.Size = new Size(86, 31);
             btnClose.TabIndex = 13;
-            // 
-            // label1
-            // 
-            label1.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            label1.AutoSize = true;
-            label1.Font = new Font("Segoe UI", 9F);
-            label1.Location = new Point(4, 6);
-            label1.Name = "label1";
-            label1.Size = new Size(68, 20);
-            label1.TabIndex = 8;
-            label1.Text = "Subtotal:";
             // 
             // ReceiptScreen
             // 

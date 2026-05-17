@@ -9,7 +9,6 @@ namespace ClientApp
     public partial class ReceiptScreen : Form
     {
         private BindingList<ReceiptItem> _items = new BindingList<ReceiptItem>();
-        // 🌟 แก้ให้ภาษีเป็น 7% (0.07) เพื่อให้คำนวณยอดตรงกับหน้า Checkout
         private const decimal TAX_RATE = 0.07m;
 
         public class ReceiptItem
@@ -20,8 +19,8 @@ namespace ClientApp
             public decimal SubTotal => UnitPrice * Quantity;
         }
 
-        // Constructor ใหม่รับข้อมูลจริงจาก CheckoutScreen
-        public ReceiptScreen(List<ReceiptItem> items, decimal subtotal,
+        // 🌟 1. เพิ่ม string receiptId มารับค่าตรงนี้
+        public ReceiptScreen(string receiptId, List<ReceiptItem> items, decimal subtotal,
                              decimal shippingCost, string paymentMethod, DateTime paidDate)
         {
             InitializeComponent();
@@ -34,7 +33,6 @@ namespace ClientApp
             decimal tax = subtotal * TAX_RATE;
             decimal total = subtotal + shippingCost + tax;
 
-            // 🌟 แก้ตรงนี้ให้เป็น ฿ ทั้งหมด (ของเดิมตรงนี้ยังเป็น .ToString("C2") อยู่)
             textBoxSubtotal.Text = $"฿{subtotal:N2}";
             textBoxShipping.Text = $"฿{shippingCost:N2}";
             textBoxTax.Text = $"฿{tax:N2}";
@@ -43,11 +41,13 @@ namespace ClientApp
             textBoxPaymentMethod.Text = paymentMethod;
             textBoxPaidDate.Text = paidDate.ToString("MMMM dd, yyyy - h:mm tt");
 
-            labelReceiptNumber.Text = $"Order #{GenerateOrderNumber()} | Invoice ID: INV-{GenerateInvoiceNumber()}";
+            // 🌟 2. นำเลข ReceiptId ของจริงมาแสดงผล
+            labelReceiptNumber.Text = $"Receipt ID: {receiptId}";
             labelReceiptDate.Text = paidDate.ToString("MMMM dd, yyyy - h:mm tt");
         }
 
-        public void SetReceiptData(List<ReceiptItem> items, decimal subtotal, decimal shippingCost, string paymentMethod, DateTime paidDate)
+        // 🌟 อัปเดตฟังก์ชันนี้เผื่อคุณมีการเรียกใช้ที่อื่น
+        public void SetReceiptData(string receiptId, List<ReceiptItem> items, decimal subtotal, decimal shippingCost, string paymentMethod, DateTime paidDate)
         {
             _items.Clear();
             foreach (var item in items)
@@ -66,24 +66,13 @@ namespace ClientApp
             textBoxPaymentMethod.Text = paymentMethod;
             textBoxPaidDate.Text = paidDate.ToString("MMMM dd, yyyy - h:mm tt");
 
-            // Generate receipt number
-            labelReceiptNumber.Text = $"Order #{GenerateOrderNumber()} | Invoice ID: INV-{GenerateInvoiceNumber()}";
+            labelReceiptNumber.Text = $"Receipt ID: {receiptId}";
             labelReceiptDate.Text = paidDate.ToString("MMMM dd, yyyy - h:mm tt");
         }
 
         private void InitializeDataGrid()
         {
             dataGridViewItems.DataSource = _items;
-        }
-
-        private string GenerateOrderNumber()
-        {
-            return new Random().Next(10000, 99999).ToString();
-        }
-
-        private string GenerateInvoiceNumber()
-        {
-            return new Random().Next(100, 999).ToString();
         }
 
         private void BtnPrint_Click(object sender, EventArgs e)
@@ -132,5 +121,6 @@ namespace ClientApp
         private void dataGridViewItems_CellContentClick(object sender, DataGridViewCellEventArgs e) { }
         private void labelTitle_Click(object sender, EventArgs e) { }
         private void textBoxSubtotal_TextChanged(object sender, EventArgs e) { }
+        private void labelReceiptNumber_Click(object sender, EventArgs e) { }
     }
 }

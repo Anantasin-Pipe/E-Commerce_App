@@ -16,6 +16,7 @@ namespace ClientApp.Services
         public decimal UnitPrice { get; set; }
         public int Quantity { get; set; }
 
+        public string receiptId { get; set; }
         public string SessionId { get; set; }
     }
 
@@ -62,6 +63,7 @@ namespace ClientApp.Services
                     ProductId = productId,
                     Quantity = quantity,
                     SessionId = sessionId
+                    // 🌟 แก้ไข: เอา ReceiptId ออกจากตรงนี้ เพราะตอนหยิบลงตะกร้ายังไม่เกิดใบเสร็จ
                 };
 
                 var response = await _httpClient.PostAsJsonAsync(BaseUrl, requestData);
@@ -103,7 +105,8 @@ namespace ClientApp.Services
         /// <summary>
         /// ส่งข้อมูลไปบันทึกใบเสร็จ (Checkout)
         /// </summary>
-        public async Task<bool> CheckoutAsync(List<int> cartIds, int? bankId, int paymentId)
+        // 🌟 แก้ไข: เพิ่ม string receiptId เข้ามาในฟังก์ชันนี้
+        public async Task<bool> CheckoutAsync(List<int> cartIds, int? bankId, int paymentId, string receiptId)
         {
             try
             {
@@ -111,7 +114,8 @@ namespace ClientApp.Services
                 {
                     CartIds = cartIds,
                     BankId = bankId,
-                    PaymentId = paymentId
+                    PaymentId = paymentId,
+                    ReceiptId = receiptId // 🌟 แก้ไข: แพ็ค ReceiptId ส่งไปให้ API ด้วย
                 };
 
                 // ส่งไปที่ CheckoutController
@@ -194,7 +198,7 @@ namespace ClientApp.Services
         /// <summary>
         /// Seller: อัปเดตสถานะและเลขพัสดุ
         /// </summary>
-        public async Task<string> UpdateOrderStatusAsync(int receiptId, int newStatus, string trackingNumber)
+        public async Task<string> UpdateOrderStatusAsync(string receiptId, int newStatus, string trackingNumber)
         {
             try
             {

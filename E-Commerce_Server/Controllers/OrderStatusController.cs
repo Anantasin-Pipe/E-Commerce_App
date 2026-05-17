@@ -2,6 +2,10 @@
 using E_Commerce_Server.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace E_Commerce_Server.Controllers
 {
@@ -36,7 +40,8 @@ namespace E_Commerce_Server.Controllers
                                          {
                                              OrderDate = r.CreatedDate,
                                              CartId = r.CartId,
-                                             ReceiptId = r.Id,
+                                             // 🔴 จุดแก้ที่ 1: เปลี่ยนจาก r.Id เป็น r.ReceiptId เพื่อเอา "REC-..."
+                                             ReceiptId = r.ReceiptId,
                                              ProductName = p.Name,
                                              Quantity = c.Quantity,
                                              DeliveryStatus = s.DeliveryStatus,
@@ -44,12 +49,11 @@ namespace E_Commerce_Server.Controllers
                                              RawDeliveryTime = s.DeliveryTime
                                          }).ToListAsync();
 
-                // สเต็ปที่ 2: 🌟 ปรับปรุงตรงนี้ให้ใช้ Format พ.ศ. ไทย ตรงกันกับฝั่งร้านค้า
                 var statuses = rawStatuses.Select(s => new
                 {
                     OrderDate = s.OrderDate,
                     CartId = s.CartId,
-                    ReceiptId = s.ReceiptId,
+                    ReceiptId = s.ReceiptId, // ตอนนี้ s.ReceiptId จะมีค่า "REC-..." แล้ว
                     ProductName = s.ProductName,
                     Quantity = s.Quantity,
                     Status = s.DeliveryStatus.ToString(),
@@ -71,7 +75,6 @@ namespace E_Commerce_Server.Controllers
         // 🌟 โซน API สำหรับฝั่ง "ร้านค้า" (SellerApp)
         // ==========================================
 
-        // 1. ดึงออเดอร์ทั้งหมดของร้าน
         [HttpGet("all")]
         public async Task<IActionResult> GetAllOrdersForSeller()
         {
@@ -86,20 +89,21 @@ namespace E_Commerce_Server.Controllers
                                        {
                                            OrderDate = r.CreatedDate,
                                            CartId = r.CartId,
-                                           ReceiptId = r.Id,
+                                           ReceiptDbId = r.Id,
                                            ProductName = p.Name,
                                            Quantity = c.Quantity,
                                            DeliveryStatus = s.DeliveryStatus,
                                            TrackingNumber = s.TrackingNumber,
-                                           RawDeliveryTime = s.DeliveryTime
+                                           RawDeliveryTime = s.DeliveryTime,
+                                           // 🔴 จุดแก้ที่ 2: ดึงคอลัมน์ ReceiptId ตรงๆ จากตาราง r เลย
+                                           ReceiptId = r.ReceiptId
                                        }).ToListAsync();
 
-                // สเต็ปที่ 2: ฟอร์แมตเวลาฝั่งร้านค้า 16/5/2569 22:43 
                 var orders = rawOrders.Select(s => new
                 {
                     OrderDate = s.OrderDate,
                     CartId = s.CartId,
-                    ReceiptId = s.ReceiptId,
+                    ReceiptId = s.ReceiptId, // ค่า "REC-..." จะถูกส่งไปให้แอป
                     ProductName = s.ProductName,
                     Quantity = s.Quantity,
                     Status = s.DeliveryStatus.ToString(),
@@ -117,27 +121,44 @@ namespace E_Commerce_Server.Controllers
             }
         }
 
-        // คลาสรับค่าอัปเดต
+        // คลาสรับค่าอัปเดต (ไม่ได้แก้)
         public class UpdateStatusRequest
         {
             public int NewStatus { get; set; }
             public string TrackingNumber { get; set; } = string.Empty;
         }
 
-        // 2. อัปเดตสถานะและเลขพัสดุ (เวอร์ชันเอาชนะใจ PostgreSQL ด้วย UTC)
+        // อัปเดตสถานะและเลขพัสดุ (ไม่ได้แก้)
         [HttpPut("update/{receiptId}")]
-        public async Task<IActionResult> UpdateDeliveryStatus(int receiptId, [FromBody] UpdateStatusRequest request)
+        public async Task<IActionResult> UpdateDeliveryStatus(string receiptId, [FromBody] UpdateStatusRequest request)
         {
             try
             {
-                var shipInfo = await _context.ShipInfos.FirstOrDefaultAsync(s => s.ReceiptId == receiptId);
+                // ❌ ของเดิม: var receipt = await _context.Receipts.FirstOrDefaultAsync(...);
+                // ❌ และใช้ var shipInfo = await _context.ShipInfos.FirstOrDefaultAsync(s => s.ReceiptId == receipt.Id);
+
+                // =======================================================
+                // ✅ ของใหม่ (แก้เป็นแบบนี้): ดึงเฉพาะเจาะจงมาแค่ "Id" ตัวเลขตรงๆ เลย
+                // =======================================================
+                var receiptDbId = await _context.Receipts
+                    .Where(r => r.ReceiptId == receiptId)
+                    .Select(r => r.Id) // เอามาแค่ตัวเลข ID หลักของตาราง ไม่ดึง bank_id มาให้พัง
+                    .FirstOrDefaultAsync();
+
+                if (receiptDbId == 0) // ถ้าหาไม่เจอ ค่าเริ่มต้นจะเป็น 0
+                {
+                    return NotFound(new { message = $"ไม่พบใบเสร็จรหัส: {receiptId}" });
+                }
+
+                // เอาตัวเลข ID ที่ได้ ไปหาข้อมูลการจัดส่งในตาราง ShipInfo ต่อได้เลยชิลๆ
+                var shipInfo = await _context.ShipInfos.FirstOrDefaultAsync(s => s.ReceiptId == receiptDbId);
 
                 if (shipInfo == null)
                 {
-                    return NotFound(new { message = $"ไม่พบข้อมูลการจัดส่งของ ReceiptId: {receiptId}" });
+                    return NotFound(new { message = $"ไม่พบข้อมูลการจัดส่งของรหัส: {receiptId}" });
                 }
 
-                // 🌟 ปรับปรุงการจัดการสถานะและเวลาตามเงื่อนไขของ PostgreSQL
+                // 🌟 โซนจัดการสถานะ (เหมือนเดิม ไม่ต้องแก้)
                 if (request.NewStatus == 0) // Preparing
                 {
                     shipInfo.DeliveryStatus = E_Commerce_Server.Models.DeliveryStatus.Preparing;
@@ -147,10 +168,7 @@ namespace E_Commerce_Server.Controllers
                 else if (request.NewStatus == 1) // Shipping
                 {
                     shipInfo.DeliveryStatus = E_Commerce_Server.Models.DeliveryStatus.Shipping;
-
-                    // 🌟 ไม้ตาย: เปลี่ยนเป็น UtcNow เพื่อให้ PostgreSQL ยอมให้บันทึกผ่านฉลุยชัวร์ๆ
                     shipInfo.DeliveryTime = DateTime.UtcNow;
-
                     if (!string.IsNullOrWhiteSpace(request.TrackingNumber))
                     {
                         shipInfo.TrackingNumber = request.TrackingNumber;
@@ -159,17 +177,13 @@ namespace E_Commerce_Server.Controllers
                 else if (request.NewStatus == 2) // Delivered
                 {
                     shipInfo.DeliveryStatus = E_Commerce_Server.Models.DeliveryStatus.Delivered;
-
-                    // 🌟 ไม้ตาย: เปลี่ยนเป็น UtcNow เพื่อให้ PostgreSQL ยอมให้บันทึกผ่านฉลุยชัวร์ๆ
                     shipInfo.DeliveryTime = DateTime.UtcNow;
-
                     if (!string.IsNullOrWhiteSpace(request.TrackingNumber))
                     {
                         shipInfo.TrackingNumber = request.TrackingNumber;
                     }
                 }
 
-                // บังคับเปลี่ยน State แจ้งข้อมูลอัปเดต
                 _context.Entry(shipInfo).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
 

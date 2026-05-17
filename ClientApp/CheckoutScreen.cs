@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using static ClientApp.ReceiptScreen;
 
@@ -155,7 +156,7 @@ namespace ClientApp
                 return;
             }
 
-            // 🌟 1. ดึงข้อมูล PaymentMethod
+            // 1. ดึงข้อมูล PaymentMethod
             string paymentMethod = "Unknown";
             int paymentId = 1;
 
@@ -167,7 +168,6 @@ namespace ClientApp
 
             if (paymentMethod == "Bank Transfer")
             {
-                // ดึงชื่อธนาคารมาโชว์ในกล่องข้อความยืนยัน
                 string selectedBankName = comboBoxBank.Text;
                 paymentMethod = $"Bank Transfer ({selectedBankName})";
             }
@@ -182,32 +182,30 @@ namespace ClientApp
 
             try
             {
-                // ✅ 2. ดึง CartId ของทุกชิ้นที่ลูกค้าเลือก
+                // 2. ดึง CartId ของทุกชิ้นที่ลูกค้าเลือก
                 List<int> cartIdsToCheckout = selected.Select(i => i.CartId).ToList();
 
-                // 🌟 3. ดึง BankId แบบ Dynamic
+                // 3. ดึง BankId
                 int? bankId = null;
-
                 if (paymentMethod.StartsWith("Bank Transfer") && comboBoxBank.SelectedValue != null)
                 {
-                    // ถ้าเลือก Bank Transfer ต้องเอาค่าจาก ComboBox
-                    if (comboBoxBank.SelectedValue != null)
-                    {
-                        bankId = (int)comboBoxBank.SelectedValue;
-                    }
-                    else
-                    {
-                        // ถ้าเลือกโอนเงินแต่ไม่เลือกธนาคาร อาจจะค้างไว้ที่ 0 หรือแจ้งเตือน
-                        bankId = 0;
-                    }
+                    bankId = (int)comboBoxBank.SelectedValue;
+                }
+                else if (paymentMethod.StartsWith("Bank Transfer"))
+                {
+                    bankId = 0;
                 }
 
-                // ✅ 4. ส่งข้อมูลไปให้ API บันทึกใบเสร็จ
-                bool isCheckoutSuccess = await _cartApiService.CheckoutAsync(cartIdsToCheckout, bankId, paymentId);
+                // 🌟 4. สร้างรหัสใบเสร็จ (Receipt ID) ให้เป็นกลุ่มเดียวกัน
+                // รูปแบบ: REC-ปีเดือนวันชั่วโมงนาทีวินาที-สุ่มตัวอักษร4ตัว (เช่น REC-20260517153012-A1B2)
+                string receiptId = $"REC-{DateTime.Now:yyyyMMddHHmmss}-{Guid.NewGuid().ToString().Substring(0, 4).ToUpper()}";
+
+                // 🌟 5. ส่งข้อมูลไปให้ API (คุณต้องไปเพิ่ม Parameter 'receiptId' ในฝั่ง CartApiService และ Backend API ด้วยนะ)
+                bool isCheckoutSuccess = await _cartApiService.CheckoutAsync(cartIdsToCheckout, bankId, paymentId, receiptId);
 
                 if (isCheckoutSuccess)
                 {
-                    // ✅ 5. แปลงข้อมูลส่งไปแสดงที่หน้า ReceiptScreen (ตัวที่หายไป เอามาใส่คืนแล้วครับ!)
+                    // ส่งข้อมูลไปหน้าจอใบเสร็จ
                     var receiptItems = selected.Select(i => new ReceiptScreen.ReceiptItem
                     {
                         ProductName = i.ProductName,
@@ -218,14 +216,13 @@ namespace ClientApp
                     decimal subtotal = selected.Sum(i => i.UnitPrice * i.Quantity);
                     decimal shippingCost = GetShippingCost();
 
-                    // 🌟 6. เปิดหน้าต่างใบเสร็จ
-                    var receipt = new ReceiptScreen(receiptItems, subtotal, shippingCost, paymentMethod, DateTime.Now);
+                    // เปิดหน้าต่างใบเสร็จ
+                    var receipt = new ReceiptScreen(receiptId, receiptItems, subtotal, shippingCost, paymentMethod, DateTime.Now);
                     receipt.Show();
                     this.Hide();
                 }
                 else
                 {
-                    // ถ้าไม่สำเร็จ ให้เปิดปุ่มคืน
                     btnPay.Enabled = true;
                 }
             }
@@ -247,18 +244,16 @@ namespace ClientApp
         {
             try
             {
-                // เรียกใช้ Service ที่สร้างไว้เพื่อไปดึงข้อมูลจาก BanksController
                 var banks = await _cartApiService.GetBanksAsync();
 
                 if (banks != null && banks.Any())
                 {
                     comboBoxBank.DataSource = banks;
-                    comboBoxBank.DisplayMember = "BankName"; // แสดงชื่อธนาคารใน ComboBox
-                    comboBoxBank.ValueMember = "Id";     // เก็บค่า Id ไว้เบื้องหลัง
+                    comboBoxBank.DisplayMember = "BankName";
+                    comboBoxBank.ValueMember = "Id";
                 }
                 else
                 {
-                    // 🌟 ถ้า API ดึงมาได้ แต่ข้อมูลเป็น 0 จะเด้งอันนี้
                     MessageBox.Show("ตารางธนาคารใน Database ว่างเปล่าครับ ลองเพิ่มข้อมูลดูนะครับ", "No Data", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
             }
@@ -277,7 +272,6 @@ namespace ClientApp
                 labelBank.Visible = true;
                 comboBoxBank.Visible = true;
 
-                // ถ้ายังไม่มีข้อมูลใน ComboBox ให้ไปโหลดมาจาก Database
                 if (comboBoxBank.DataSource == null)
                 {
                     await LoadBanksAsync();
@@ -294,10 +288,6 @@ namespace ClientApp
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e) { }
         private void label1_Click(object sender, EventArgs e) { }
         private void labelPaymentMethod_Click(object sender, EventArgs e) { }
-
-        private void textBoxShippingCost_TextChanged(object sender, EventArgs e)
-        {
-
-        }
+        private void textBoxShippingCost_TextChanged(object sender, EventArgs e) { }
     }
 }

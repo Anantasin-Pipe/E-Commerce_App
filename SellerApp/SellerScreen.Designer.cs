@@ -92,9 +92,9 @@
             labelTitle.AutoSize = true;
             labelTitle.Font = new Font("Segoe UI", 18F, FontStyle.Bold);
             labelTitle.ForeColor = Color.FromArgb(51, 51, 51);
-            labelTitle.Location = new Point(22, 11);
+            labelTitle.Location = new Point(25, 15);
             labelTitle.Name = "labelTitle";
-            labelTitle.Size = new Size(208, 32);
+            labelTitle.Size = new Size(258, 41);
             labelTitle.TabIndex = 0;
             labelTitle.Text = "Seller Dashboard";
             // 
@@ -104,9 +104,9 @@
             labelSubtitle.AutoSize = true;
             labelSubtitle.Font = new Font("Segoe UI", 10F);
             labelSubtitle.ForeColor = Color.FromArgb(100, 100, 100);
-            labelSubtitle.Location = new Point(22, 38);
+            labelSubtitle.Location = new Point(25, 51);
             labelSubtitle.Name = "labelSubtitle";
-            labelSubtitle.Size = new Size(238, 19);
+            labelSubtitle.Size = new Size(293, 23);
             labelSubtitle.TabIndex = 1;
             labelSubtitle.Text = "Manage your products and inventory";
             // 
@@ -124,10 +124,9 @@
             panelAddProduct.Controls.Add(labelImageUrl);
             panelAddProduct.Controls.Add(textBoxImageUrl);
             panelAddProduct.Controls.Add(btnAddProduct);
-            panelAddProduct.Location = new Point(22, 56);
-            panelAddProduct.Margin = new Padding(3, 2, 3, 2);
+            panelAddProduct.Location = new Point(25, 75);
             panelAddProduct.Name = "panelAddProduct";
-            panelAddProduct.Size = new Size(639, 129);
+            panelAddProduct.Size = new Size(730, 171);
             panelAddProduct.TabIndex = 2;
             // 
             // labelProductName
@@ -135,9 +134,9 @@
             labelProductName.AutoSize = true;
             labelProductName.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
             labelProductName.ForeColor = Color.FromArgb(51, 51, 51);
-            labelProductName.Location = new Point(9, 8);
+            labelProductName.Location = new Point(10, 11);
             labelProductName.Name = "labelProductName";
-            labelProductName.Size = new Size(110, 19);
+            labelProductName.Size = new Size(130, 23);
             labelProductName.TabIndex = 0;
             labelProductName.Text = "Product Name:";
             // 
@@ -145,10 +144,9 @@
             // 
             textBoxProductName.BackColor = Color.White;
             textBoxProductName.Font = new Font("Segoe UI", 10F);
-            textBoxProductName.Location = new Point(122, 6);
-            textBoxProductName.Margin = new Padding(3, 2, 3, 2);
+            textBoxProductName.Location = new Point(139, 8);
             textBoxProductName.Name = "textBoxProductName";
-            textBoxProductName.Size = new Size(176, 25);
+            textBoxProductName.Size = new Size(201, 30);
             textBoxProductName.TabIndex = 1;
             // 
             // labelPrice
@@ -156,9 +154,9 @@
             labelPrice.AutoSize = true;
             labelPrice.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
             labelPrice.ForeColor = Color.FromArgb(51, 51, 51);
-            labelPrice.Location = new Point(306, 8);
+            labelPrice.Location = new Point(350, 11);
             labelPrice.Name = "labelPrice";
-            labelPrice.Size = new Size(47, 19);
+            labelPrice.Size = new Size(54, 23);
             labelPrice.TabIndex = 2;
             labelPrice.Text = "Price:";
             // 
@@ -166,10 +164,9 @@
             // 
             textBoxPrice.BackColor = Color.White;
             textBoxPrice.Font = new Font("Segoe UI", 10F);
-            textBoxPrice.Location = new Point(359, 6);
-            textBoxPrice.Margin = new Padding(3, 2, 3, 2);
+            textBoxPrice.Location = new Point(410, 8);
             textBoxPrice.Name = "textBoxPrice";
-            textBoxPrice.Size = new Size(106, 25);
+            textBoxPrice.Size = new Size(121, 30);
             textBoxPrice.TabIndex = 3;
             // 
             // labelDescription
@@ -177,9 +174,9 @@
             labelDescription.AutoSize = true;
             labelDescription.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
             labelDescription.ForeColor = Color.FromArgb(51, 51, 51);
-            labelDescription.Location = new Point(9, 34);
+            labelDescription.Location = new Point(10, 45);
             labelDescription.Name = "labelDescription";
-            labelDescription.Size = new Size(89, 19);
+            labelDescription.Size = new Size(107, 23);
             labelDescription.TabIndex = 4;
             labelDescription.Text = "Description:";
             // 
@@ -187,11 +184,10 @@
             // 
             textBoxDescription.BackColor = Color.White;
             textBoxDescription.Font = new Font("Segoe UI", 10F);
-            textBoxDescription.Location = new Point(122, 32);
-            textBoxDescription.Margin = new Padding(3, 2, 3, 2);
+            textBoxDescription.Location = new Point(139, 43);
             textBoxDescription.Multiline = true;
             textBoxDescription.Name = "textBoxDescription";
-            textBoxDescription.Size = new Size(342, 38);
+            textBoxDescription.Size = new Size(390, 49);
             textBoxDescription.TabIndex = 5;
             // 
             // labelImageUrl
@@ -199,9 +195,9 @@
             labelImageUrl.AutoSize = true;
             labelImageUrl.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
             labelImageUrl.ForeColor = Color.FromArgb(51, 51, 51);
-            labelImageUrl.Location = new Point(9, 79);
+            labelImageUrl.Location = new Point(10, 105);
             labelImageUrl.Name = "labelImageUrl";
-            labelImageUrl.Size = new Size(85, 19);
+            labelImageUrl.Size = new Size(102, 23);
             labelImageUrl.TabIndex = 6;
             labelImageUrl.Text = "Image URL:";
             // 
@@ -209,10 +205,9 @@
             // 
             textBoxImageUrl.BackColor = Color.White;
             textBoxImageUrl.Font = new Font("Segoe UI", 10F);
-            textBoxImageUrl.Location = new Point(122, 77);
-            textBoxImageUrl.Margin = new Padding(3, 2, 3, 2);
+            textBoxImageUrl.Location = new Point(139, 103);
             textBoxImageUrl.Name = "textBoxImageUrl";
-            textBoxImageUrl.Size = new Size(342, 25);
+            textBoxImageUrl.Size = new Size(390, 30);
             textBoxImageUrl.TabIndex = 7;
             // 
             // btnAddProduct
@@ -221,10 +216,9 @@
             btnAddProduct.FlatStyle = FlatStyle.Flat;
             btnAddProduct.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
             btnAddProduct.ForeColor = Color.White;
-            btnAddProduct.Location = new Point(472, 34);
-            btnAddProduct.Margin = new Padding(3, 2, 3, 2);
+            btnAddProduct.Location = new Point(539, 45);
             btnAddProduct.Name = "btnAddProduct";
-            btnAddProduct.Size = new Size(158, 68);
+            btnAddProduct.Size = new Size(181, 91);
             btnAddProduct.TabIndex = 8;
             btnAddProduct.Text = "+ Add Product";
             btnAddProduct.UseVisualStyleBackColor = false;
@@ -236,9 +230,9 @@
             labelProductList.AutoSize = true;
             labelProductList.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
             labelProductList.ForeColor = Color.FromArgb(51, 51, 51);
-            labelProductList.Location = new Point(22, 198);
+            labelProductList.Location = new Point(25, 264);
             labelProductList.Name = "labelProductList";
-            labelProductList.Size = new Size(149, 21);
+            labelProductList.Size = new Size(184, 28);
             labelProductList.TabIndex = 9;
             labelProductList.Text = "Product Inventory";
             // 
@@ -250,13 +244,13 @@
             dataGridViewProducts.BackgroundColor = Color.White;
             dataGridViewProducts.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dataGridViewProducts.Columns.AddRange(new DataGridViewColumn[] { colSelect, colProductName, colPrice, colDescription, colImageUrl });
-            dataGridViewProducts.Location = new Point(22, 221);
-            dataGridViewProducts.Margin = new Padding(3, 2, 3, 2);
+            dataGridViewProducts.Location = new Point(25, 295);
             dataGridViewProducts.Name = "dataGridViewProducts";
             dataGridViewProducts.RowHeadersVisible = false;
             dataGridViewProducts.RowHeadersWidth = 51;
-            dataGridViewProducts.Size = new Size(639, 142);
+            dataGridViewProducts.Size = new Size(730, 189);
             dataGridViewProducts.TabIndex = 11;
+            dataGridViewProducts.CellContentClick += dataGridViewProducts_CellContentClick;
             // 
             // colSelect
             // 
@@ -307,10 +301,9 @@
             btnRemoveProduct.FlatStyle = FlatStyle.Flat;
             btnRemoveProduct.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
             btnRemoveProduct.ForeColor = Color.White;
-            btnRemoveProduct.Location = new Point(22, 372);
-            btnRemoveProduct.Margin = new Padding(3, 2, 3, 2);
+            btnRemoveProduct.Location = new Point(25, 496);
             btnRemoveProduct.Name = "btnRemoveProduct";
-            btnRemoveProduct.Size = new Size(129, 28);
+            btnRemoveProduct.Size = new Size(147, 37);
             btnRemoveProduct.TabIndex = 12;
             btnRemoveProduct.Text = "🗑 Remove Selected";
             btnRemoveProduct.UseVisualStyleBackColor = false;
@@ -323,10 +316,9 @@
             btnRefresh.FlatStyle = FlatStyle.Flat;
             btnRefresh.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
             btnRefresh.ForeColor = Color.White;
-            btnRefresh.Location = new Point(370, 679);
-            btnRefresh.Margin = new Padding(3, 2, 3, 2);
+            btnRefresh.Location = new Point(423, 905);
             btnRefresh.Name = "btnRefresh";
-            btnRefresh.Size = new Size(95, 32);
+            btnRefresh.Size = new Size(109, 43);
             btnRefresh.TabIndex = 13;
             btnRefresh.Text = "🔄 Refresh";
             btnRefresh.UseVisualStyleBackColor = false;
@@ -338,9 +330,9 @@
             labelProductCount.AutoSize = true;
             labelProductCount.Font = new Font("Segoe UI", 10F);
             labelProductCount.ForeColor = Color.FromArgb(100, 100, 100);
-            labelProductCount.Location = new Point(542, 198);
+            labelProductCount.Location = new Point(619, 264);
             labelProductCount.Name = "labelProductCount";
-            labelProductCount.Size = new Size(111, 19);
+            labelProductCount.Size = new Size(136, 23);
             labelProductCount.TabIndex = 10;
             labelProductCount.Text = "Total: 0 products";
             // 
@@ -348,9 +340,11 @@
             // 
             dataGridViewOrders.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             dataGridViewOrders.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewOrders.Location = new Point(22, 431);
+            dataGridViewOrders.Location = new Point(25, 575);
+            dataGridViewOrders.Margin = new Padding(3, 4, 3, 4);
             dataGridViewOrders.Name = "dataGridViewOrders";
-            dataGridViewOrders.Size = new Size(639, 205);
+            dataGridViewOrders.RowHeadersWidth = 51;
+            dataGridViewOrders.Size = new Size(730, 273);
             dataGridViewOrders.TabIndex = 14;
             // 
             // label1
@@ -359,18 +353,19 @@
             label1.AutoSize = true;
             label1.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
             label1.ForeColor = Color.FromArgb(51, 51, 51);
-            label1.Location = new Point(22, 407);
+            label1.Location = new Point(25, 543);
             label1.Name = "label1";
-            label1.Size = new Size(159, 21);
+            label1.Size = new Size(197, 28);
             label1.TabIndex = 15;
             label1.Text = "Order Management";
             // 
             // txtTracking
             // 
             txtTracking.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left;
-            txtTracking.Location = new Point(98, 649);
+            txtTracking.Location = new Point(112, 865);
+            txtTracking.Margin = new Padding(3, 4, 3, 4);
             txtTracking.Name = "txtTracking";
-            txtTracking.Size = new Size(308, 23);
+            txtTracking.Size = new Size(351, 27);
             txtTracking.TabIndex = 17;
             // 
             // cbStatus
@@ -378,9 +373,10 @@
             cbStatus.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
             cbStatus.DropDownStyle = ComboBoxStyle.DropDownList;
             cbStatus.FormattingEnabled = true;
-            cbStatus.Location = new Point(473, 651);
+            cbStatus.Location = new Point(541, 868);
+            cbStatus.Margin = new Padding(3, 4, 3, 4);
             cbStatus.Name = "cbStatus";
-            cbStatus.Size = new Size(181, 23);
+            cbStatus.Size = new Size(206, 28);
             cbStatus.TabIndex = 18;
             // 
             // btnUpdateStatus
@@ -390,9 +386,10 @@
             btnUpdateStatus.FlatStyle = FlatStyle.Flat;
             btnUpdateStatus.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
             btnUpdateStatus.ForeColor = Color.White;
-            btnUpdateStatus.Location = new Point(473, 679);
+            btnUpdateStatus.Location = new Point(541, 905);
+            btnUpdateStatus.Margin = new Padding(3, 4, 3, 4);
             btnUpdateStatus.Name = "btnUpdateStatus";
-            btnUpdateStatus.Size = new Size(181, 32);
+            btnUpdateStatus.Size = new Size(207, 43);
             btnUpdateStatus.TabIndex = 19;
             btnUpdateStatus.Text = "Update Status";
             btnUpdateStatus.UseVisualStyleBackColor = false;
@@ -404,9 +401,9 @@
             label3.AutoSize = true;
             label3.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
             label3.ForeColor = Color.FromArgb(51, 51, 51);
-            label3.Location = new Point(22, 649);
+            label3.Location = new Point(25, 865);
             label3.Name = "label3";
-            label3.Size = new Size(70, 19);
+            label3.Size = new Size(84, 23);
             label3.TabIndex = 10;
             label3.Text = "Tracking:";
             label3.Click += label3_Click;
@@ -416,9 +413,9 @@
             label4.AutoSize = true;
             label4.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
             label4.ForeColor = Color.FromArgb(51, 51, 51);
-            label4.Location = new Point(404, 687);
+            label4.Location = new Point(462, 916);
             label4.Name = "label4";
-            label4.Size = new Size(0, 19);
+            label4.Size = new Size(0, 23);
             label4.TabIndex = 10;
             label4.Click += label3_Click;
             // 
@@ -428,18 +425,18 @@
             label5.AutoSize = true;
             label5.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
             label5.ForeColor = Color.FromArgb(51, 51, 51);
-            label5.Location = new Point(412, 651);
+            label5.Location = new Point(471, 868);
             label5.Name = "label5";
-            label5.Size = new Size(53, 19);
+            label5.Size = new Size(65, 23);
             label5.TabIndex = 9;
             label5.Text = "Status:";
             label5.Click += label2_Click;
             // 
             // SellerScreen
             // 
-            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(684, 729);
+            ClientSize = new Size(782, 972);
             Controls.Add(label5);
             Controls.Add(btnUpdateStatus);
             Controls.Add(label4);
@@ -456,8 +453,7 @@
             Controls.Add(dataGridViewProducts);
             Controls.Add(btnRemoveProduct);
             Controls.Add(btnRefresh);
-            Margin = new Padding(3, 2, 3, 2);
-            MinimumSize = new Size(700, 465);
+            MinimumSize = new Size(797, 604);
             Name = "SellerScreen";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Seller Dashboard";
