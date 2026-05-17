@@ -19,14 +19,14 @@ namespace ClientApp
             public decimal SubTotal => UnitPrice * Quantity;
         }
 
-        // 🌟 1. เพิ่ม string receiptId มารับค่าตรงนี้
+        // เพิ่ม string receiptId มารับค่าตรงนี้
         public ReceiptScreen(string receiptId, List<ReceiptItem> items, decimal subtotal,
                              decimal shippingCost, string paymentMethod, DateTime paidDate)
         {
             InitializeComponent();
             InitializeDataGrid();
 
-            // โหลดข้อมูลจริงแทน Sample
+            // โหลดข้อมูล
             foreach (var item in items)
                 _items.Add(item);
 
@@ -41,12 +41,12 @@ namespace ClientApp
             textBoxPaymentMethod.Text = paymentMethod;
             textBoxPaidDate.Text = paidDate.ToString("MMMM dd, yyyy - h:mm tt");
 
-            // 🌟 2. นำเลข ReceiptId ของจริงมาแสดงผล
+            //นำ ReceiptId มาแสดง
             labelReceiptNumber.Text = $"Receipt ID: {receiptId}";
             labelReceiptDate.Text = paidDate.ToString("MMMM dd, yyyy - h:mm tt");
         }
 
-        // 🌟 อัปเดตฟังก์ชันนี้เผื่อคุณมีการเรียกใช้ที่อื่น
+        // 
         public void SetReceiptData(string receiptId, List<ReceiptItem> items, decimal subtotal, decimal shippingCost, string paymentMethod, DateTime paidDate)
         {
             _items.Clear();
@@ -110,11 +110,9 @@ namespace ClientApp
 
         private void BtnBack_Click(object sender, EventArgs e)
         {
-            // 2. เปิดหน้าเลือกสินค้า (หรือหน้าเริ่มต้น)
             ProductScreen productScreen = new ProductScreen();
             productScreen.Show();
 
-            // 3. ปิดหน้าใบเสร็จปัจจุบัน
             this.Close();
         }
 
@@ -122,5 +120,10 @@ namespace ClientApp
         private void labelTitle_Click(object sender, EventArgs e) { }
         private void textBoxSubtotal_TextChanged(object sender, EventArgs e) { }
         private void labelReceiptNumber_Click(object sender, EventArgs e) { }
+
+        private void textBoxTotal_TextChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 }

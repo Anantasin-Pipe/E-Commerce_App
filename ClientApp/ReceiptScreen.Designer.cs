@@ -266,6 +266,7 @@
             textBoxTotal.Size = new Size(196, 34);
             textBoxTotal.TabIndex = 7;
             textBoxTotal.TextAlign = HorizontalAlignment.Right;
+            textBoxTotal.TextChanged += textBoxTotal_TextChanged;
             // 
             // panelPaymentInfo
             // 

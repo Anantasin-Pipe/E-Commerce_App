@@ -17,12 +17,9 @@ namespace ClientApp
 
         public StatusScreen()
         {
-            // 🌟 แก้จุดที่ 1: ลบ await LoadDataAsync() ออกจากตรงนี้
             InitializeComponent();
             _apiService = new CartApiService();
         }
-
-        // 🌟 แก้จุดที่ 2: ตอนเปิดหน้าจอ ให้เรียกใช้ฟังก์ชัน LoadDataAsync ได้เลย ไม่ต้องเขียนโค้ดซ้ำ
         private async void StatusScreen_Load(object sender, EventArgs e)
         {
             await LoadDataAsync();
@@ -36,7 +33,7 @@ namespace ClientApp
         {
             try
             {
-                // 1. ดึงข้อมูลดิบจาก API (ที่อาจจะมีหลายชิ้นในบิลเดียวกัน)
+                // ดึงข้อมูลจาก API 
                 var rawStatuses = await _apiService.GetOrderStatusesAsync(AppSession.SessionId);
 
                 if (rawStatuses == null || !rawStatuses.Any())
@@ -45,7 +42,7 @@ namespace ClientApp
                     return;
                 }
 
-                // 2. ทำการ GroupBy ด้วย ReceiptId เพื่อยุบรวมให้เหลือ 1 บิลต่อ 1 แถวเหมือนหน้า Seller
+                // ทำการ GroupBy ด้วย ReceiptId เพื่อยุบรวมให้เหลือ 1 บิลต่อ 1 แถว
                 var groupedStatuses = rawStatuses
                     .Where(o => !string.IsNullOrEmpty(o.ReceiptId))
                     .GroupBy(o => o.ReceiptId)
@@ -53,14 +50,14 @@ namespace ClientApp
                     {
                         var firstItem = g.First();
 
-                        // 🌟 ค้นหาไอเท็มในกลุ่มที่มีการอัปเดตสถานะไปไกลที่สุด (ป้องกันอาการเจอ Preparing บังตัวอื่น)
+                        // ค้นหาไอเท็มในกลุ่มที่มีการอัปเดตสถานะไปไกลที่สุด
                         var activeItem = g.FirstOrDefault(x => !string.IsNullOrEmpty(x.TrackingNumber) && x.TrackingNumber != "ยังไม่มีเลขพัสดุ") ?? firstItem;
 
                         return new OrderStatusDto
                         {
                             ReceiptId = firstItem.ReceiptId,
                             OrderDate = firstItem.OrderDate,
-                            // รวมชื่อสินค้าทุกชิ้นในบิลมาต่อกัน เช่น "Cotton T-Shirt (x1), Laptop Dell (x1)"
+                            // รวมชื่อสินค้าทุกชิ้นในบิลมาต่อกัน
                             ProductName = string.Join(", ", g.Select(x => $"{x.ProductName} (x{x.Quantity})")),
                             Quantity = g.Sum(x => x.Quantity),
                             Status = activeItem.Status,
@@ -68,13 +65,11 @@ namespace ClientApp
                             DeliveryTime = activeItem.DeliveryTime
                         };
                     })
-                    .OrderByDescending(o => o.OrderDate) // เรียงลำดับเอาออเดอร์ใหม่ขึ้นก่อน
+                    .OrderByDescending(o => o.OrderDate) 
                     .ToList();
 
-                // 3. ผูกข้อมูลที่จัดกลุ่มแล้วเข้าตาราง
                 dataGridViewStatus.DataSource = groupedStatuses;
 
-                // 4. ตกแต่งหัวตาราง (เหมือนเดิมของคุณ แต่เช็คความปลอดภัย)
                 if (dataGridViewStatus.Columns.Count > 0)
                 {
                     dataGridViewStatus.Columns["OrderDate"].HeaderText = "Date";
@@ -117,7 +112,6 @@ namespace ClientApp
 
         }
 
-        // 🌟 แก้จุดที่ 3: เติมคำว่า async เข้าไปตรงนี้
         private async void btnStatusRefresh_Click(object sender, EventArgs e)
         {
             await LoadDataAsync();

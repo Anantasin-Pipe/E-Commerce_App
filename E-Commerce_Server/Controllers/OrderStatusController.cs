@@ -20,9 +20,7 @@ namespace E_Commerce_Server.Controllers
             _context = context;
         }
 
-        // ==========================================
-        // 🌟 โซน API สำหรับฝั่ง "ลูกค้า" (ClientApp)
-        // ==========================================
+        //  API สำหรับฝั่ง ClientApp
         [HttpGet]
         public async Task<IActionResult> GetStatuses([FromQuery] string sessionId)
         {
@@ -40,7 +38,6 @@ namespace E_Commerce_Server.Controllers
                                          {
                                              OrderDate = r.CreatedDate,
                                              CartId = r.CartId,
-                                             // 🔴 จุดแก้ที่ 1: เปลี่ยนจาก r.Id เป็น r.ReceiptId เพื่อเอา "REC-..."
                                              ReceiptId = r.ReceiptId,
                                              ProductName = p.Name,
                                              Quantity = c.Quantity,
@@ -53,7 +50,7 @@ namespace E_Commerce_Server.Controllers
                 {
                     OrderDate = s.OrderDate,
                     CartId = s.CartId,
-                    ReceiptId = s.ReceiptId, // ตอนนี้ s.ReceiptId จะมีค่า "REC-..." แล้ว
+                    ReceiptId = s.ReceiptId, 
                     ProductName = s.ProductName,
                     Quantity = s.Quantity,
                     Status = s.DeliveryStatus.ToString(),
@@ -71,9 +68,7 @@ namespace E_Commerce_Server.Controllers
             }
         }
 
-        // ==========================================
-        // 🌟 โซน API สำหรับฝั่ง "ร้านค้า" (SellerApp)
-        // ==========================================
+        // API สำหรับ Seller
 
         [HttpGet("all")]
         public async Task<IActionResult> GetAllOrdersForSeller()
@@ -95,7 +90,6 @@ namespace E_Commerce_Server.Controllers
                                            DeliveryStatus = s.DeliveryStatus,
                                            TrackingNumber = s.TrackingNumber,
                                            RawDeliveryTime = s.DeliveryTime,
-                                           // 🔴 จุดแก้ที่ 2: ดึงคอลัมน์ ReceiptId ตรงๆ จากตาราง r เลย
                                            ReceiptId = r.ReceiptId
                                        }).ToListAsync();
 
@@ -103,7 +97,7 @@ namespace E_Commerce_Server.Controllers
                 {
                     OrderDate = s.OrderDate,
                     CartId = s.CartId,
-                    ReceiptId = s.ReceiptId, // ค่า "REC-..." จะถูกส่งไปให้แอป
+                    ReceiptId = s.ReceiptId, 
                     ProductName = s.ProductName,
                     Quantity = s.Quantity,
                     Status = s.DeliveryStatus.ToString(),
@@ -121,36 +115,30 @@ namespace E_Commerce_Server.Controllers
             }
         }
 
-        // คลาสรับค่าอัปเดต (ไม่ได้แก้)
+        // คลาสรับค่าอัปเดต
         public class UpdateStatusRequest
         {
             public int NewStatus { get; set; }
             public string TrackingNumber { get; set; } = string.Empty;
         }
 
-        // อัปเดตสถานะและเลขพัสดุ (ไม่ได้แก้)
+        // อัปเดตสถานะและเลขพัสดุ
         [HttpPut("update/{receiptId}")]
         public async Task<IActionResult> UpdateDeliveryStatus(string receiptId, [FromBody] UpdateStatusRequest request)
         {
             try
             {
-                // ❌ ของเดิม: var receipt = await _context.Receipts.FirstOrDefaultAsync(...);
-                // ❌ และใช้ var shipInfo = await _context.ShipInfos.FirstOrDefaultAsync(s => s.ReceiptId == receipt.Id);
-
-                // =======================================================
-                // ✅ ของใหม่ (แก้เป็นแบบนี้): ดึงเฉพาะเจาะจงมาแค่ "Id" ตัวเลขตรงๆ เลย
-                // =======================================================
+                
                 var receiptDbId = await _context.Receipts
                     .Where(r => r.ReceiptId == receiptId)
-                    .Select(r => r.Id) // เอามาแค่ตัวเลข ID หลักของตาราง ไม่ดึง bank_id มาให้พัง
+                    .Select(r => r.Id) 
                     .FirstOrDefaultAsync();
 
-                if (receiptDbId == 0) // ถ้าหาไม่เจอ ค่าเริ่มต้นจะเป็น 0
+                if (receiptDbId == 0) 
                 {
                     return NotFound(new { message = $"ไม่พบใบเสร็จรหัส: {receiptId}" });
                 }
 
-                // เอาตัวเลข ID ที่ได้ ไปหาข้อมูลการจัดส่งในตาราง ShipInfo ต่อได้เลยชิลๆ
                 var shipInfo = await _context.ShipInfos.FirstOrDefaultAsync(s => s.ReceiptId == receiptDbId);
 
                 if (shipInfo == null)
@@ -158,14 +146,13 @@ namespace E_Commerce_Server.Controllers
                     return NotFound(new { message = $"ไม่พบข้อมูลการจัดส่งของรหัส: {receiptId}" });
                 }
 
-                // 🌟 โซนจัดการสถานะ (เหมือนเดิม ไม่ต้องแก้)
-                if (request.NewStatus == 0) // Preparing
+                if (request.NewStatus == 0) 
                 {
                     shipInfo.DeliveryStatus = E_Commerce_Server.Models.DeliveryStatus.Preparing;
                     shipInfo.DeliveryTime = null;
                     shipInfo.TrackingNumber = null;
                 }
-                else if (request.NewStatus == 1) // Shipping
+                else if (request.NewStatus == 1) 
                 {
                     shipInfo.DeliveryStatus = E_Commerce_Server.Models.DeliveryStatus.Shipping;
                     shipInfo.DeliveryTime = DateTime.UtcNow;
@@ -174,7 +161,7 @@ namespace E_Commerce_Server.Controllers
                         shipInfo.TrackingNumber = request.TrackingNumber;
                     }
                 }
-                else if (request.NewStatus == 2) // Delivered
+                else if (request.NewStatus == 2) 
                 {
                     shipInfo.DeliveryStatus = E_Commerce_Server.Models.DeliveryStatus.Delivered;
                     shipInfo.DeliveryTime = DateTime.UtcNow;

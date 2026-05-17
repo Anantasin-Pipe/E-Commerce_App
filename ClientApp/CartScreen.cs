@@ -14,15 +14,15 @@ namespace ClientApp
         private BindingList<CartItem> _items = new BindingList<CartItem>();
         private readonly CartApiService _cartApiService;
 
-        // 🌟 นี่คือคลาสที่ DataGridView เอาไปสร้างตาราง ต้องมาซ่อนตรงนี้ครับ
+        //นี่คือคลาสที่ DataGridView เอาไปสร้างตาราง
         public class CartItem
         {
-            [Browsable(false)] // 🌟 สั่งซ่อน CartId
+            [Browsable(false)] //สั่งซ่อน CartId
             public int CartId { get; set; }
 
             public bool Selected { get; set; } = true;
 
-            [Browsable(false)] // 🌟 สั่งซ่อน ProductId
+            [Browsable(false)] //สั่งซ่อน ProductId
             public int ProductId { get; set; }
 
             public string ProductName { get; set; } = string.Empty;
@@ -50,12 +50,12 @@ namespace ClientApp
             dataGridViewCart.CellValueChanged += DataGridViewCart_CellValueChanged;
             _items.ListChanged += Items_ListChanged;
 
-            // 🌟 ซ่อนคอลัมน์ซ้ำอีกรอบ (เผื่อกรณีที่หน้า Design ของ Visual Studio บังคับสร้างคอลัมน์ค้างไว้)
-            if (dataGridViewCart.Columns["CartId"] != null)
-                dataGridViewCart.Columns["CartId"].Visible = false;
+            //ซ่อนคอลัมน์ซ้ำอีกรอบ
+            //if (dataGridViewCart.Columns["CartId"] != null)
+            //    dataGridViewCart.Columns["CartId"].Visible = false;
 
-            if (dataGridViewCart.Columns["ProductId"] != null)
-                dataGridViewCart.Columns["ProductId"].Visible = false;
+            //if (dataGridViewCart.Columns["ProductId"] != null)
+            //    dataGridViewCart.Columns["ProductId"].Visible = false;
         }
 
         private async void LoadCartFromDatabase()
@@ -100,7 +100,7 @@ namespace ClientApp
             // เช็กว่าไม่ใช่การคลิกที่หัวตาราง
             if (e.RowIndex >= 0)
             {
-                // เมื่อมีการติ๊ก CheckBox หรือแก้ตัวเลข ให้คำนวณยอดเงินใหม่ทันที
+                // เมื่อมีการติ๊ก CheckBox หรือแก้ตัวเลขให้คำนวณยอดเงินใหม่ทันที
                 UpdateTotals();
             }
         }
@@ -126,16 +126,16 @@ namespace ClientApp
         {
             var selectedItems = _items.Where(i => i.Selected).ToList();
 
-            // เปลี่ยนชื่อตัวแปรเป็น total เพื่อความเมคเซนส์ครับ
+            //เปลี่ยนชื่อตัวแปรเป็น total เพื่อความเมคเซนส์ครับ
             decimal total = selectedItems.Sum(i => i.UnitPrice * i.Quantity);
 
-            // ลบโค้ด textBoxSubtotal ออกไปแล้ว เหลือแค่ Update ยอด Total อย่างเดียว
+            //Update ยอด Total 
             textBoxTotal.Text = $"฿{total:N2}";
         }
 
         private async void BtnRemove_Click(object sender, EventArgs e)
         {
-            // ดึงรายการสินค้าทั้งหมดที่ถูก "ติ๊กถูก" (Selected == true) มาเก็บไว้ใน List
+            // ดึงรายการสินค้าทั้งหมดที่ถูก ติ๊กถูก มาเก็บไว้ใน List
             var itemsToRemove = _items.Where(i => i.Selected).ToList();
 
             if (itemsToRemove.Count == 0)
@@ -144,7 +144,7 @@ namespace ClientApp
                 return;
             }
 
-            // ถามเพื่อความแน่ใจก่อนลบ (บอกจำนวนชิ้นที่จะลบด้วย)
+            //ถามเพื่อความแน่ใจก่อนลบ
             var confirmResult = MessageBox.Show($"Are you sure you want to remove {itemsToRemove.Count} selected item(s)?",
                                                 "Confirm Delete", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
@@ -152,12 +152,11 @@ namespace ClientApp
             {
                 int successCount = 0;
 
-                // วนลูปทีละชิ้น เพื่อสั่ง API ให้ลบออกจาก Database
+                // วนลูปทีละชิ้นเพื่อสั่ง API ให้ลบออกจาก Database
                 foreach (var item in itemsToRemove)
                 {
                     try
                     {
-                        // สั่ง API ลบข้อมูล
                         bool isSuccess = await _cartApiService.RemoveFromCartAsync(item.CartId);
 
                         if (isSuccess)
@@ -205,7 +204,7 @@ namespace ClientApp
                 return;
             }
 
-            // แปลง CartItem → CheckoutItem แล้วส่งไป
+            // แปลง CartItem เป็น CheckoutItem แล้วส่งไป
             var checkoutItems = selected.Select(i => new CheckoutScreen.CheckoutItem
             {
                 CartId = i.CartId,

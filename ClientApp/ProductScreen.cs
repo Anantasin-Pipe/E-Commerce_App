@@ -10,7 +10,7 @@ namespace ClientApp
     public partial class ProductScreen : Form
     {
         private int _cartCount = 0;
-        private ProductDto? _selectedProduct = null;
+        private ProductDto? _selectedProduct;
         private List<ProductDto> _products = new List<ProductDto>();
         private readonly IProductApiService _productApiService;
 
@@ -83,13 +83,13 @@ namespace ClientApp
                 }
                 catch
                 {
-                    // 🌟 ถ้าโหลด URL ไม่สำเร็จ ให้ใช้รูป Placeholder ของคุณแทน
+                    // ถ้าโหลด URL ไม่สำเร็จให้ใช้รูป Placeholder แทน
                     pictureBox.Image = GetPlaceholderImage();
                 }
             }
             else
             {
-                // 🌟 ถ้าไม่มี URL เลย ก็ให้ใช้รูป Placeholder ของคุณเช่นกัน
+                // ถ้าไม่มี URL เลย ก็ให้ใช้รูป Placeholder 
                 pictureBox.Image = GetPlaceholderImage();
             }
 
@@ -216,7 +216,7 @@ namespace ClientApp
             this.Hide();
         }
 
-        // 🌟 เพิ่มฟังก์ชันนี้เข้าไป เพื่อให้ Constructor เรียกใช้งานได้
+        // เพิ่มฟังก์ชันนี้เข้าไป เพื่อให้ Constructor เรียกใช้งานได้
         private async void LoadInitialCartCount()
         {
             try

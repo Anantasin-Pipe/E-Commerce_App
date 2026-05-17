@@ -19,10 +19,10 @@ namespace E_Commerce_Server.Controllers
         [HttpGet]
         public async Task<IActionResult> GetCartItems([FromQuery] string? sessionId)
         {
-            // 1. ป้องกัน sessionId เป็น null หรือค่าว่างจากหน้าบ้าน
+            // ป้องกัน sessionId เป็น null 
             if (string.IsNullOrWhiteSpace(sessionId))
             {
-                return Ok(new List<object>()); // คืนค่าลิสต์ว่างแบบสวยงาม ไม่ Error
+                return Ok(new List<object>());
             }
 
             try
@@ -45,7 +45,6 @@ namespace E_Commerce_Server.Controllers
             }
             catch (Exception ex)
             {
-                // 3. ถ้าพัง ให้แจ้งรายละเอียด Error กลับไปให้หน้าบ้านเห็นชัดๆ
                 return StatusCode(500, new
                 {
                     message = "Internal Server Error",
@@ -61,11 +60,11 @@ namespace E_Commerce_Server.Controllers
             public string SessionId { get; set; } = string.Empty;
         }
 
-        // 🌟 2. API สำหรับเพิ่มสินค้าลงตะกร้า (ถ้ามีอยู่แล้วให้บวกจำนวนเพิ่ม)
+        // API สำหรับเพิ่มสินค้าลงตะกร้า 
         [HttpPost]
         public async Task<IActionResult> AddToCart([FromBody] CartRequest request)
         {
-            // ค้นหาของเดิม: ต้องเป็น Product เดียวกัน + เครื่องเดียวกัน + ยังไม่จ่ายเงิน
+            // ค้นหาของเดิมต้องเป็น Product เดียวกัน + เครื่องเดียวกัน + ยังไม่จ่ายเงิน
             var existingItem = await _context.Carts
                 .FirstOrDefaultAsync(c => c.ProductId == request.ProductId &&
                                           c.SessionId == request.SessionId &&
@@ -81,7 +80,7 @@ namespace E_Commerce_Server.Controllers
                 {
                     ProductId = request.ProductId,
                     Quantity = request.Quantity,
-                    SessionId = request.SessionId // 🌟 บันทึกลงคอลัมน์ใหม่
+                    SessionId = request.SessionId
                 });
             }
 
@@ -89,7 +88,6 @@ namespace E_Commerce_Server.Controllers
             return Ok(new { message = "Added to cart successfully" });
         }
 
-        // 🌟 3. API สำหรับลบสินค้าออกจากตะกร้า
         [HttpDelete("{id}")]
         public async Task<IActionResult> RemoveFromCart(int id)
         {

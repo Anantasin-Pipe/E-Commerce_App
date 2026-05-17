@@ -4,9 +4,9 @@ namespace E_Commerce_Server.Models
 {
     public enum DeliveryStatus
     {
-        Preparing = 0, // กำลังเตรียมจัดส่ง
-        Shipping = 1,  // กำลังจัดส่ง
-        Delivered = 2  // ส่งสำเร็จแล้ว
+        Preparing = 0, 
+        Shipping = 1, 
+        Delivered = 2  
     }
 
     [Table("ship_info")] // 🌟 แมปชื่อตาราง

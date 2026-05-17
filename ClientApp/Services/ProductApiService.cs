@@ -10,10 +10,10 @@ namespace ClientApp.Services
     public class ProductDto
     {
         public int Id { get; set; }
-        public string Name { get; set; } = string.Empty;
-        public string ImageUrl { get; set; } = string.Empty;
+        public string? Name { get; set; }
+        public string? ImageUrl { get; set; }
         public int Price { get; set; }
-        public string Description { get; set; } = string.Empty;
+        public string? Description { get; set; }
     }
 
     public interface IProductApiService
@@ -55,12 +55,12 @@ namespace ClientApp.Services
             }
         }
 
-        // 🌟 2. เพิ่มฟังก์ชันนี้เพื่อยิง API สั่งลบข้อมูล
+        //2. เพิ่มฟังก์ชันนี้เพื่อลบข้อมูล
         public async Task<bool> DeleteProductAsync(int id)
         {
             try
             {
-                // ส่งคำสั่งลบ ไปที่ URL: api/products/{id}
+                // ส่งคำสั่งลบไปที่ URL: api/products/{id}
                 var response = await _httpClient.DeleteAsync($"{ApiBaseUrl}/{id}");
 
                 return response.IsSuccessStatusCode;
@@ -94,7 +94,6 @@ namespace ClientApp.Services
                 // ส่งข้อมูล Object product ไปที่ API แบบ POST
                 var response = await _httpClient.PostAsJsonAsync(ApiBaseUrl, product);
 
-                // คืนค่า true ถ้า API ตอบกลับมาว่าบันทึกสำเร็จ (Status Code 200-299)
                 return response.IsSuccessStatusCode;
             }
             catch (Exception ex)

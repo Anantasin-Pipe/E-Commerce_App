@@ -32,12 +32,6 @@ namespace ClientApp
             public decimal SubTotal => UnitPrice * Quantity;
         }
 
-        public class PaymentMethodDto
-        {
-            public int Id { get; set; }
-            public string Name { get; set; } = string.Empty;
-        }
-
         public CheckoutScreen(IEnumerable<CheckoutItem> items)
         {
             InitializeComponent();
@@ -156,7 +150,7 @@ namespace ClientApp
                 return;
             }
 
-            // 1. ดึงข้อมูล PaymentMethod
+            //ดึงข้อมูล PaymentMethod
             string paymentMethod = "Unknown";
             int paymentId = 1;
 
@@ -182,10 +176,10 @@ namespace ClientApp
 
             try
             {
-                // 2. ดึง CartId ของทุกชิ้นที่ลูกค้าเลือก
+                //ดึง CartId ของทุกชิ้นที่ลูกค้าเลือก
                 List<int> cartIdsToCheckout = selected.Select(i => i.CartId).ToList();
 
-                // 3. ดึง BankId
+                //ดึง BankId
                 int? bankId = null;
                 if (paymentMethod.StartsWith("Bank Transfer") && comboBoxBank.SelectedValue != null)
                 {
@@ -196,11 +190,10 @@ namespace ClientApp
                     bankId = 0;
                 }
 
-                // 🌟 4. สร้างรหัสใบเสร็จ (Receipt ID) ให้เป็นกลุ่มเดียวกัน
-                // รูปแบบ: REC-ปีเดือนวันชั่วโมงนาทีวินาที-สุ่มตัวอักษร4ตัว (เช่น REC-20260517153012-A1B2)
+                // สร้าง Receipt ID ให้เป็น format เดียวกัน
                 string receiptId = $"REC-{DateTime.Now:yyyyMMddHHmmss}-{Guid.NewGuid().ToString().Substring(0, 4).ToUpper()}";
 
-                // 🌟 5. ส่งข้อมูลไปให้ API (คุณต้องไปเพิ่ม Parameter 'receiptId' ในฝั่ง CartApiService และ Backend API ด้วยนะ)
+                // ส่งข้อมูลไปให้ API 
                 bool isCheckoutSuccess = await _cartApiService.CheckoutAsync(cartIdsToCheckout, bankId, paymentId, receiptId);
 
                 if (isCheckoutSuccess)
