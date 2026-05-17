@@ -8,9 +8,6 @@ namespace E_Commerce_Server.Models
         [Column("id")]
         public int Id { get; set; }
 
-        [Column("seller_id")]
-        public int SellerId { get; set; }
-
         [Column("image_url")]
         public string ImageUrl { get; set; } = string.Empty;
 

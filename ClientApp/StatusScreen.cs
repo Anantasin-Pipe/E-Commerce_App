@@ -17,17 +17,22 @@ namespace ClientApp
 
         public StatusScreen()
         {
+            // 🌟 แก้จุดที่ 1: ลบ await LoadDataAsync() ออกจากตรงนี้
             InitializeComponent();
             _apiService = new CartApiService();
         }
 
-        // โหลดข้อมูลทันทีที่เปิดหน้านี้ขึ้นมา
+        // 🌟 แก้จุดที่ 2: ตอนเปิดหน้าจอ ให้เรียกใช้ฟังก์ชัน LoadDataAsync ได้เลย ไม่ต้องเขียนโค้ดซ้ำ
         private async void StatusScreen_Load(object sender, EventArgs e)
+        {
+            await LoadDataAsync();
+        }
+
+        private async Task LoadDataAsync()
         {
             try
             {
-                MessageBox.Show($"กำลังดึงข้อมูลสำหรับ Session: {AppSession.SessionId}", "Debug Check");
-                // ดึงข้อมูลจาก API (ต้องมีฟังก์ชัน GetOrderStatusesAsync ใน CartApiService ก่อนนะ)
+                // ดึงข้อมูลจาก API
                 var statuses = await _apiService.GetOrderStatusesAsync(AppSession.SessionId);
 
                 dataGridViewStatus.DataSource = statuses;
@@ -39,6 +44,7 @@ namespace ClientApp
                     dataGridViewStatus.Columns["OrderDate"].DefaultCellStyle.Format = "dd/MM/yyyy HH:mm";
 
                     dataGridViewStatus.Columns["CartId"].Visible = false;
+                    dataGridViewStatus.Columns["ReceiptId"].Visible = false; // ปิด ReceiptId ไว้ด้วยจะได้สวยๆ
 
                     dataGridViewStatus.Columns["ProductName"].HeaderText = "Item";
                     dataGridViewStatus.Columns["Quantity"].HeaderText = "Quantity";
@@ -72,9 +78,16 @@ namespace ClientApp
         {
 
         }
+
+        // 🌟 แก้จุดที่ 3: เติมคำว่า async เข้าไปตรงนี้
+        private async void btnStatusRefresh_Click(object sender, EventArgs e)
+        {
+            await LoadDataAsync();
+            MessageBox.Show("อัปเดตข้อมูลสถานะสินค้าล่าสุดเรียบร้อยแล้ว!", "รีเฟรชสำเร็จ", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
     }
 
-    // 🌟 เอาคลาส Dto มาแปะไว้ท้ายไฟล์แบบนี้ได้เลย สะดวกดีครับ
+    // 🌟 คลาส Dto 
     public class OrderStatusDto
     {
         public DateTime OrderDate { get; set; }

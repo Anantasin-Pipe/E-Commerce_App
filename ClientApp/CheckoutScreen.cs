@@ -11,13 +11,13 @@ namespace ClientApp
     public partial class CheckoutScreen : Form
     {
         private BindingList<CheckoutItem> _items = new BindingList<CheckoutItem>();
-        private const decimal TAX_RATE = 0.10m;
+        private const decimal TAX_RATE = 0.07m;
         private readonly CartApiService _cartApiService;
 
         public class CheckoutItem
         {
             [Browsable(false)]
-            public int CartId { get; set; } // ✅ เพิ่มเพื่อใช้ลบออกจาก Database
+            public int CartId { get; set; }
 
             [Browsable(false)]
             public bool Selected { get; set; } = true;
@@ -82,6 +82,11 @@ namespace ClientApp
             comboBoxPaymentMethod.DisplayMember = "Name";
             comboBoxPaymentMethod.ValueMember = "Id";
 
+            comboBoxShipping.Items.Clear();
+            comboBoxShipping.Items.Add("Standard (฿5.00)");
+            comboBoxShipping.Items.Add("Express (฿15.00)");
+            comboBoxShipping.Items.Add("Overnight (฿25.00)");
+
             if (comboBoxShipping.Items.Count > 0)
                 comboBoxShipping.SelectedIndex = 0;
         }
@@ -117,9 +122,9 @@ namespace ClientApp
             decimal tax = subtotal * TAX_RATE;
             decimal total = subtotal + tax + shippingCost;
 
-            textBoxSubtotal.Text = subtotal.ToString("C2");
-            textBoxTax.Text = tax.ToString("C2");
-            textBoxTotal.Text = total.ToString("C2");
+            textBoxSubtotal.Text = $"฿{subtotal:N2}";
+            textBoxTax.Text = $"฿{tax:N2}";
+            textBoxTotal.Text = $"฿{total:N2}";
         }
 
         private decimal GetShippingCost()
@@ -136,7 +141,7 @@ namespace ClientApp
         private void ComboBoxShipping_SelectedIndexChanged(object sender, EventArgs e)
         {
             decimal cost = GetShippingCost();
-            textBoxShippingCost.Text = cost.ToString("C2");
+            textBoxShippingCost.Text = $"฿{cost:N2}";
             UpdateTotals();
         }
 
@@ -262,7 +267,7 @@ namespace ClientApp
                 MessageBox.Show($"เชื่อมต่อ API ธนาคารไม่สำเร็จ:\n{ex.Message}", "API Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-   
+
         private async void comboBoxPaymentMethod_SelectedIndexChanged(object sender, EventArgs e)
         {
             var selectedPayment = comboBoxPaymentMethod.SelectedItem as PaymentMethodDto;
@@ -289,5 +294,10 @@ namespace ClientApp
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e) { }
         private void label1_Click(object sender, EventArgs e) { }
         private void labelPaymentMethod_Click(object sender, EventArgs e) { }
+
+        private void textBoxShippingCost_TextChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 }

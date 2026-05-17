@@ -14,7 +14,6 @@ namespace E_Commerce_Server.Data
         public DbSet<Payment> Payments { get; set; } = null!;
         public DbSet<Bank> Banks { get; set; } = null!;
         public DbSet<Receipt> Receipts { get; set; } = null!;
-        public DbSet<Ship> Ships { get; set; } = null!;
         public DbSet<ShipInfo> ShipInfos { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -28,7 +27,6 @@ namespace E_Commerce_Server.Data
                 entity.Property(e => e.Name).HasMaxLength(255).IsRequired();
                 entity.Property(e => e.Description).HasMaxLength(1000);
                 entity.Property(e => e.Price).IsRequired();
-                entity.Property(e => e.SellerId).IsRequired();
             });
 
             // Cart configuration
@@ -55,20 +53,11 @@ namespace E_Commerce_Server.Data
                 entity.Property(e => e.PaymentId).IsRequired();
             });
 
-            // Ship configuration
-            modelBuilder.Entity<Ship>(entity =>
-            {
-                entity.HasKey(e => e.Id);
-                entity.Property(e => e.Name).HasMaxLength(255).IsRequired();
-            });
-
             // ShipInfo configuration
             modelBuilder.Entity<ShipInfo>(entity =>
             {
                 entity.HasKey(e => e.Id);
                 entity.Property(e => e.ReceiptId).IsRequired();
-                entity.Property(e => e.SellerId).IsRequired();
-                entity.Property(e => e.ShipId).IsRequired();
                 entity.Property(e => e.DeliveryStatus).IsRequired();
                 entity.Property(e => e.TrackingNumber).HasMaxLength(100);
             });

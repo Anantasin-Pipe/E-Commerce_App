@@ -9,7 +9,8 @@ namespace ClientApp
     public partial class ReceiptScreen : Form
     {
         private BindingList<ReceiptItem> _items = new BindingList<ReceiptItem>();
-        private const decimal TAX_RATE = 0.10m;
+        // 🌟 แก้ให้ภาษีเป็น 7% (0.07) เพื่อให้คำนวณยอดตรงกับหน้า Checkout
+        private const decimal TAX_RATE = 0.07m;
 
         public class ReceiptItem
         {
@@ -33,10 +34,12 @@ namespace ClientApp
             decimal tax = subtotal * TAX_RATE;
             decimal total = subtotal + shippingCost + tax;
 
-            textBoxSubtotal.Text = subtotal.ToString("C2");
-            textBoxShipping.Text = shippingCost.ToString("C2");
-            textBoxTax.Text = tax.ToString("C2");
-            textBoxTotal.Text = total.ToString("C2");
+            // 🌟 แก้ตรงนี้ให้เป็น ฿ ทั้งหมด (ของเดิมตรงนี้ยังเป็น .ToString("C2") อยู่)
+            textBoxSubtotal.Text = $"฿{subtotal:N2}";
+            textBoxShipping.Text = $"฿{shippingCost:N2}";
+            textBoxTax.Text = $"฿{tax:N2}";
+            textBoxTotal.Text = $"฿{total:N2}";
+
             textBoxPaymentMethod.Text = paymentMethod;
             textBoxPaidDate.Text = paidDate.ToString("MMMM dd, yyyy - h:mm tt");
 
@@ -55,10 +58,11 @@ namespace ClientApp
             decimal tax = subtotal * TAX_RATE;
             decimal total = subtotal + shippingCost + tax;
 
-            textBoxSubtotal.Text = subtotal.ToString("C2");
-            textBoxShipping.Text = shippingCost.ToString("C2");
-            textBoxTax.Text = tax.ToString("C2");
-            textBoxTotal.Text = total.ToString("C2");
+            textBoxSubtotal.Text = $"฿{subtotal:N2}";
+            textBoxShipping.Text = $"฿{shippingCost:N2}";
+            textBoxTax.Text = $"฿{tax:N2}";
+            textBoxTotal.Text = $"฿{total:N2}";
+
             textBoxPaymentMethod.Text = paymentMethod;
             textBoxPaidDate.Text = paidDate.ToString("MMMM dd, yyyy - h:mm tt");
 
@@ -88,14 +92,6 @@ namespace ClientApp
             {
                 MessageBox.Show("Print functionality will integrate with PrintDocument.\nThis is a placeholder for the print receipt action.",
                     "Print Receipt", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-                // TODO: Implement actual print functionality
-                // using (PrintDocument pd = new PrintDocument())
-                // {
-                //     pd.PrintPage += PrintPage_PrintPage;
-                //     PrintPreviewDialog ppd = new PrintPreviewDialog { Document = pd };
-                //     ppd.ShowDialog();
-                // }
             }
             catch (Exception ex)
             {
@@ -109,13 +105,6 @@ namespace ClientApp
             {
                 MessageBox.Show("Download PDF functionality will generate and save receipt as PDF.\nThis is a placeholder for the download action.",
                     "Download PDF", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-                // TODO: Implement PDF generation (use iTextSharp, PdfSharp, or similar)
-                // SaveFileDialog sfd = new SaveFileDialog { Filter = "PDF Files|*.pdf", DefaultExt = "pdf" };
-                // if (sfd.ShowDialog() == DialogResult.OK)
-                // {
-                //     // Generate and save PDF
-                // }
             }
             catch (Exception ex)
             {
@@ -128,10 +117,8 @@ namespace ClientApp
             this.Close();
         }
 
-        private void labelShippingText_Click(object sender, EventArgs e)
-        {
+        private void labelShippingText_Click(object sender, EventArgs e) { }
 
-        }
         private void BtnBack_Click(object sender, EventArgs e)
         {
             // 2. เปิดหน้าเลือกสินค้า (หรือหน้าเริ่มต้น)
@@ -142,14 +129,8 @@ namespace ClientApp
             this.Close();
         }
 
-        private void dataGridViewItems_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-
-        }
-
-        private void labelTitle_Click(object sender, EventArgs e)
-        {
-
-        }
+        private void dataGridViewItems_CellContentClick(object sender, DataGridViewCellEventArgs e) { }
+        private void labelTitle_Click(object sender, EventArgs e) { }
+        private void textBoxSubtotal_TextChanged(object sender, EventArgs e) { }
     }
 }

@@ -39,27 +39,10 @@ namespace ClientApp
             {
                 MessageBox.Show($"Error loading products: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 // Fallback to sample products if database is unavailable
-                LoadSampleProducts();
             }
         }
 
-        /// <summary>
-        /// Load sample products as fallback
-        /// </summary>
-        private void LoadSampleProducts()
-        {
-            _products = new List<ProductDto>
-            {
-                new ProductDto { Id = 1, SellerId = 1, Name = "Blue T-Shirt", Description = "Premium cotton blue shirt", Price = 1999 },
-                new ProductDto { Id = 2, SellerId = 1, Name = "Red Mug", Description = "Ceramic coffee mug", Price = 850 },
-                new ProductDto { Id = 3, SellerId = 2, Name = "Notebook Set", Description = "3-pack lined notebooks", Price = 1275 },
-                new ProductDto { Id = 4, SellerId = 2, Name = "Laptop Bag", Description = "Professional 15-inch laptop bag", Price = 4500 },
-                new ProductDto { Id = 5, SellerId = 3, Name = "Wireless Mouse", Description = "Bluetooth mouse with USB adapter", Price = 2499 }
-            };
-
-            DisplayProductCards();
-        }
-
+     
         private void DisplayProductCards()
         {
             flowLayoutPanelProducts.Controls.Clear();

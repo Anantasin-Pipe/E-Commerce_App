@@ -8,6 +8,7 @@ using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Globalization;
 
 namespace SellerApp
 {
@@ -114,7 +115,6 @@ namespace SellerApp
 
                 var newProduct = new ProductDto
                 {
-                    SellerId = _currentSellerId,
                     Name = textBoxProductName.Text.Trim(),
                     Price = (int)price,
                     Description = textBoxDescription.Text.Trim(),
@@ -262,7 +262,13 @@ namespace SellerApp
                 if (dataGridViewOrders.Columns["CartId"] != null) dataGridViewOrders.Columns["CartId"].Visible = false;
                 if (dataGridViewOrders.Columns["ReceiptId"] != null) dataGridViewOrders.Columns["ReceiptId"].Visible = false;
 
-                if (dataGridViewOrders.Columns["OrderDate"] != null) dataGridViewOrders.Columns["OrderDate"].HeaderText = "วันที่สั่งซื้อ";
+                if (dataGridViewOrders.Columns["OrderDate"] != null)
+                {
+                    dataGridViewOrders.Columns["OrderDate"].HeaderText = "วันที่สั่งซื้อ";
+                    // 🌟 บังคับ Format ให้เป็นแบบ วัน/เดือน/ปี(พ.ศ.) ชั่วโมง:นาที
+                    dataGridViewOrders.Columns["OrderDate"].DefaultCellStyle.Format = "dd/MM/yyyy HH:mm";
+                    dataGridViewOrders.Columns["OrderDate"].DefaultCellStyle.FormatProvider = new CultureInfo("th-TH");
+                }
                 if (dataGridViewOrders.Columns["ProductName"] != null) dataGridViewOrders.Columns["ProductName"].HeaderText = "สินค้า";
                 if (dataGridViewOrders.Columns["Quantity"] != null) dataGridViewOrders.Columns["Quantity"].HeaderText = "จำนวน";
                 if (dataGridViewOrders.Columns["Status"] != null) dataGridViewOrders.Columns["Status"].HeaderText = "สถานะ";

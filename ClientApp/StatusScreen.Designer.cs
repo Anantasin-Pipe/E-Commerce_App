@@ -32,6 +32,7 @@
             labelTitle = new Label();
             labelSubtitle = new Label();
             dataGridViewStatus = new DataGridView();
+            btnStatusRefresh = new Button();
             ((System.ComponentModel.ISupportInitialize)dataGridViewStatus).BeginInit();
             SuspendLayout();
             // 
@@ -42,10 +43,9 @@
             btnBack.FlatStyle = FlatStyle.Flat;
             btnBack.Font = new Font("Segoe UI", 10F);
             btnBack.ForeColor = Color.White;
-            btnBack.Location = new Point(674, 414);
-            btnBack.Margin = new Padding(3, 2, 3, 2);
+            btnBack.Location = new Point(770, 552);
             btnBack.Name = "btnBack";
-            btnBack.Size = new Size(91, 31);
+            btnBack.Size = new Size(104, 41);
             btnBack.TabIndex = 13;
             btnBack.Text = "← Back";
             btnBack.UseVisualStyleBackColor = false;
@@ -57,9 +57,9 @@
             labelTitle.AutoSize = true;
             labelTitle.Font = new Font("Segoe UI", 18F, FontStyle.Bold);
             labelTitle.ForeColor = Color.FromArgb(51, 51, 51);
-            labelTitle.Location = new Point(22, 9);
+            labelTitle.Location = new Point(25, 12);
             labelTitle.Name = "labelTitle";
-            labelTitle.Size = new Size(83, 32);
+            labelTitle.Size = new Size(105, 41);
             labelTitle.TabIndex = 14;
             labelTitle.Text = "Status";
             // 
@@ -69,9 +69,9 @@
             labelSubtitle.AutoSize = true;
             labelSubtitle.Font = new Font("Segoe UI", 10F);
             labelSubtitle.ForeColor = Color.FromArgb(100, 100, 100);
-            labelSubtitle.Location = new Point(22, 36);
+            labelSubtitle.Location = new Point(25, 48);
             labelSubtitle.Name = "labelSubtitle";
-            labelSubtitle.Size = new Size(166, 19);
+            labelSubtitle.Size = new Size(203, 23);
             labelSubtitle.TabIndex = 15;
             labelSubtitle.Text = "Show your delivery status";
             labelSubtitle.Click += labelSubtitle_Click;
@@ -80,21 +80,40 @@
             // 
             dataGridViewStatus.BackgroundColor = Color.White;
             dataGridViewStatus.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewStatus.Location = new Point(22, 58);
+            dataGridViewStatus.Location = new Point(25, 77);
+            dataGridViewStatus.Margin = new Padding(3, 4, 3, 4);
             dataGridViewStatus.Name = "dataGridViewStatus";
-            dataGridViewStatus.Size = new Size(741, 345);
+            dataGridViewStatus.RowHeadersWidth = 51;
+            dataGridViewStatus.Size = new Size(847, 460);
             dataGridViewStatus.TabIndex = 16;
+            // 
+            // btnStatusRefresh
+            // 
+            btnStatusRefresh.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            btnStatusRefresh.BackColor = Color.FromArgb(70, 130, 180);
+            btnStatusRefresh.FlatStyle = FlatStyle.Flat;
+            btnStatusRefresh.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            btnStatusRefresh.ForeColor = Color.White;
+            btnStatusRefresh.Location = new Point(655, 550);
+            btnStatusRefresh.Name = "btnStatusRefresh";
+            btnStatusRefresh.Size = new Size(109, 43);
+            btnStatusRefresh.TabIndex = 17;
+            btnStatusRefresh.Text = "🔄 Refresh";
+            btnStatusRefresh.UseVisualStyleBackColor = false;
+            btnStatusRefresh.Click += btnStatusRefresh_Click;
             // 
             // StatusScreen
             // 
-            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(800, 461);
+            ClientSize = new Size(914, 615);
+            Controls.Add(btnStatusRefresh);
             Controls.Add(dataGridViewStatus);
             Controls.Add(labelTitle);
             Controls.Add(labelSubtitle);
             Controls.Add(btnBack);
-            MinimumSize = new Size(800, 500);
+            Margin = new Padding(3, 4, 3, 4);
+            MinimumSize = new Size(912, 651);
             Name = "StatusScreen";
             Text = "StatusScreen";
             Load += StatusScreen_Load;
@@ -108,5 +127,6 @@
         private Label labelTitle;
         private Label labelSubtitle;
         private DataGridView dataGridViewStatus;
+        private Button btnStatusRefresh;
     }
 }

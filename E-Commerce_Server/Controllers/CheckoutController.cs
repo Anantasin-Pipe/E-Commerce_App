@@ -57,8 +57,6 @@ namespace E_Commerce_Server.Controllers
                     var newShipInfo = new ShipInfo
                     {
                         ReceiptId = receipt.Id,   // 🌟 ดึง ID ใบเสร็จที่เพิ่งสร้างเสร็จมาผูกไว้
-                        SellerId = 1,
-                        ShipId = 1,
                         DeliveryStatus = DeliveryStatus.Preparing,
                         TrackingNumber = null
                     };

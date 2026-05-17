@@ -18,12 +18,6 @@ namespace E_Commerce_Server.Models
         [Column("receipt_id")]
         public int ReceiptId { get; set; }
 
-        [Column("seller_id")]
-        public int SellerId { get; set; }
-
-        [Column("ship_id")]
-        public int ShipId { get; set; }
-
         [Column("delivery_status")]
         public DeliveryStatus DeliveryStatus { get; set; } = DeliveryStatus.Preparing;
 

@@ -1,10 +1,11 @@
-﻿using System;
+﻿using ClientApp.Services;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Net.Http.Json;
 using System.Windows.Forms;
-using ClientApp.Services;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace ClientApp
 {
@@ -86,38 +87,6 @@ namespace ClientApp
             }
         }
 
-        //private async Task LoadCartFromDatabaseAsync()
-
-        //{
-        //    try
-        //    {
-        //        using (HttpClient client = new HttpClient())
-        //        {
-        //            // เปลี่ยน URL ให้ตรงกับพอร์ต API ของคุณ
-        //            client.BaseAddress = new Uri("https://localhost:7241/");
-
-        //            // ยิง GET ไปที่ CartsController ที่เราเพิ่งสร้าง
-        //            var cartItemsFromApi = await client.GetFromJsonAsync<List<CartItem>>("api/Carts");
-
-        //            if (cartItemsFromApi != null)
-        //            {
-        //                _items.Clear();
-        //                foreach (var item in cartItemsFromApi)
-        //                {
-        //                    // ตั้งค่าเริ่มต้นให้ทุกชิ้นถูก Selected (ติ๊กถูก)
-        //                    item.Selected = true;
-        //                    _items.Add(item);
-        //                }
-        //                UpdateTotals();
-        //            }
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        MessageBox.Show($"Error loading cart: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-        //    }
-        //}
-
         private void DataGridViewCart_CurrentCellDirtyStateChanged(object sender, EventArgs e)
         {
             if (dataGridViewCart.IsCurrentCellDirty)
@@ -156,15 +125,16 @@ namespace ClientApp
         private void UpdateTotals()
         {
             var selectedItems = _items.Where(i => i.Selected).ToList();
-            decimal subtotal = selectedItems.Sum(i => i.UnitPrice * i.Quantity);
 
-            textBoxSubtotal.Text = subtotal.ToString("C2");
-            textBoxTotal.Text = subtotal.ToString("C2");
+            // เปลี่ยนชื่อตัวแปรเป็น total เพื่อความเมคเซนส์ครับ
+            decimal total = selectedItems.Sum(i => i.UnitPrice * i.Quantity);
+
+            // ลบโค้ด textBoxSubtotal ออกไปแล้ว เหลือแค่ Update ยอด Total อย่างเดียว
+            textBoxTotal.Text = $"฿{total:N2}";
         }
 
         private async void BtnRemove_Click(object sender, EventArgs e)
         {
-            // 🌟 1. ดึงรายการสินค้าทั้งหมดที่ถูก "ติ๊กถูก" (Selected == true) มาเก็บไว้ใน List
             // ดึงรายการสินค้าทั้งหมดที่ถูก "ติ๊กถูก" (Selected == true) มาเก็บไว้ใน List
             var itemsToRemove = _items.Where(i => i.Selected).ToList();
 
@@ -182,7 +152,6 @@ namespace ClientApp
             {
                 int successCount = 0;
 
-                // 🌟 2. วนลูปทีละชิ้น เพื่อสั่ง API ให้ลบออกจาก Database
                 // วนลูปทีละชิ้น เพื่อสั่ง API ให้ลบออกจาก Database
                 foreach (var item in itemsToRemove)
                 {
@@ -205,7 +174,6 @@ namespace ClientApp
                     }
                 }
 
-                // 🌟 3. อัปเดตยอดเงินและสรุปผลหลังจากลบเสร็จสิ้น
                 // อัปเดตยอดเงินและสรุปผลหลังจากลบเสร็จสิ้น
                 UpdateTotals();
 
@@ -250,6 +218,26 @@ namespace ClientApp
             CheckoutScreen checkout = new CheckoutScreen(checkoutItems); // ส่งผ่าน constructor
             checkout.Show();
             this.Hide();
+        }
+
+        private void panelCartSummary_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void textBoxSubtotal_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void labelTotalText_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void dataGridViewCart_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
         }
     }
 }
