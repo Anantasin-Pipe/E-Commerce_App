@@ -158,53 +158,5 @@ namespace ClientApp.Services
                 return new List<OrderStatusDto>();
             }
         }
-
-       
-        // ฟังก์ชันสำหรับฝั่ง SellerApp
-        /// Seller: ดึงออเดอร์ทั้งหมดของร้านค้า
-        public async Task<List<OrderStatusDto>> GetAllOrdersForSellerAsync()
-        {
-            try
-            {
-                string url = "https://localhost:7241/api/OrderStatus/all";
-                var result = await _httpClient.GetFromJsonAsync<List<OrderStatusDto>>(url);
-                return result ?? new List<OrderStatusDto>();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error Fetching All Orders: {ex.Message}");
-                return new List<OrderStatusDto>();
-            }
-        }
-
-        /// Seller: อัปเดตสถานะและเลขพัสดุ
-        public async Task<string> UpdateOrderStatusAsync(string receiptId, int newStatus, string trackingNumber)
-        {
-            try
-            {
-                string url = $"https://localhost:7241/api/OrderStatus/update/{receiptId}";
-                var requestData = new
-                {
-                    NewStatus = newStatus,
-                    TrackingNumber = trackingNumber
-                };
-
-                var response = await _httpClient.PutAsJsonAsync(url, requestData);
-
-                if (response.IsSuccessStatusCode)
-                {
-                    return "SUCCESS";
-                }
-                else
-                {
-                    string errorContent = await response.Content.ReadAsStringAsync();
-                    return errorContent;
-                }
-            }
-            catch (Exception ex)
-            {
-                return $"APP_ERROR: {ex.Message}";
-            }
         }
     }
-}

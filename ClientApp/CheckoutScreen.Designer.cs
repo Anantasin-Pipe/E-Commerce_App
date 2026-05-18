@@ -109,7 +109,7 @@
             dataGridViewItems.Name = "dataGridViewItems";
             dataGridViewItems.RowHeadersVisible = false;
             dataGridViewItems.RowHeadersWidth = 51;
-            dataGridViewItems.Size = new Size(848, 375);
+            dataGridViewItems.Size = new Size(846, 364);
             dataGridViewItems.TabIndex = 2;
             dataGridViewItems.CellContentClick += dataGridViewItems_CellContentClick;
             // 
@@ -153,7 +153,7 @@
             labelShippingCost.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
             labelShippingCost.Font = new Font("Segoe UI", 10F);
             labelShippingCost.ForeColor = Color.FromArgb(51, 51, 51);
-            labelShippingCost.Location = new Point(25, 464);
+            labelShippingCost.Location = new Point(25, 453);
             labelShippingCost.Name = "labelShippingCost";
             labelShippingCost.Size = new Size(136, 23);
             labelShippingCost.TabIndex = 3;
@@ -165,7 +165,7 @@
             comboBoxShipping.DropDownStyle = ComboBoxStyle.DropDownList;
             comboBoxShipping.FormattingEnabled = true;
             comboBoxShipping.Items.AddRange(new object[] { "Standard ($5.00)", "Express ($15.00)", "Overnight ($25.00)" });
-            comboBoxShipping.Location = new Point(160, 461);
+            comboBoxShipping.Location = new Point(160, 450);
             comboBoxShipping.Name = "comboBoxShipping";
             comboBoxShipping.Size = new Size(206, 28);
             comboBoxShipping.TabIndex = 4;
@@ -176,7 +176,7 @@
             textBoxShippingCost.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
             textBoxShippingCost.BackColor = Color.FromArgb(240, 240, 240);
             textBoxShippingCost.Font = new Font("Segoe UI", 10F);
-            textBoxShippingCost.Location = new Point(375, 461);
+            textBoxShippingCost.Location = new Point(375, 450);
             textBoxShippingCost.Name = "textBoxShippingCost";
             textBoxShippingCost.ReadOnly = true;
             textBoxShippingCost.Size = new Size(85, 30);
@@ -190,7 +190,7 @@
             labelPaymentMethod.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
             labelPaymentMethod.Font = new Font("Segoe UI", 10F);
             labelPaymentMethod.ForeColor = Color.FromArgb(51, 51, 51);
-            labelPaymentMethod.Location = new Point(25, 500);
+            labelPaymentMethod.Location = new Point(25, 489);
             labelPaymentMethod.Name = "labelPaymentMethod";
             labelPaymentMethod.Size = new Size(136, 23);
             labelPaymentMethod.TabIndex = 6;
@@ -203,7 +203,7 @@
             comboBoxPaymentMethod.DropDownStyle = ComboBoxStyle.DropDownList;
             comboBoxPaymentMethod.FormattingEnabled = true;
             comboBoxPaymentMethod.Items.AddRange(new object[] { "Credit Card", "Debit Card", "Bank Transfer", "Cash on Delivery" });
-            comboBoxPaymentMethod.Location = new Point(160, 496);
+            comboBoxPaymentMethod.Location = new Point(160, 485);
             comboBoxPaymentMethod.Name = "comboBoxPaymentMethod";
             comboBoxPaymentMethod.Size = new Size(206, 28);
             comboBoxPaymentMethod.TabIndex = 7;
@@ -283,7 +283,7 @@
             btnBack.FlatStyle = FlatStyle.Flat;
             btnBack.Font = new Font("Segoe UI", 10F);
             btnBack.ForeColor = Color.White;
-            btnBack.Location = new Point(25, 560);
+            btnBack.Location = new Point(25, 549);
             btnBack.Name = "btnBack";
             btnBack.Size = new Size(130, 40);
             btnBack.TabIndex = 9;
@@ -298,7 +298,7 @@
             btnPay.FlatStyle = FlatStyle.Flat;
             btnPay.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
             btnPay.ForeColor = Color.White;
-            btnPay.Location = new Point(773, 565);
+            btnPay.Location = new Point(771, 554);
             btnPay.Name = "btnPay";
             btnPay.Size = new Size(101, 40);
             btnPay.TabIndex = 10;
@@ -317,17 +317,18 @@
             panelOrderSummary.Controls.Add(textBoxTax);
             panelOrderSummary.Controls.Add(labelTotal);
             panelOrderSummary.Controls.Add(textBoxTotal);
-            panelOrderSummary.Location = new Point(690, 455);
+            panelOrderSummary.Location = new Point(688, 444);
             panelOrderSummary.Name = "panelOrderSummary";
             panelOrderSummary.Size = new Size(183, 105);
             panelOrderSummary.TabIndex = 8;
             // 
             // labelBank
             // 
+            labelBank.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
             labelBank.AutoSize = true;
             labelBank.Font = new Font("Segoe UI", 10F);
             labelBank.ForeColor = Color.FromArgb(51, 51, 51);
-            labelBank.Location = new Point(375, 503);
+            labelBank.Location = new Point(373, 492);
             labelBank.Name = "labelBank";
             labelBank.Size = new Size(97, 23);
             labelBank.TabIndex = 11;
@@ -337,9 +338,10 @@
             // 
             // comboBoxBank
             // 
+            comboBoxBank.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
             comboBoxBank.DropDownStyle = ComboBoxStyle.DropDownList;
             comboBoxBank.FormattingEnabled = true;
-            comboBoxBank.Location = new Point(471, 499);
+            comboBoxBank.Location = new Point(469, 488);
             comboBoxBank.Margin = new Padding(3, 4, 3, 4);
             comboBoxBank.Name = "comboBoxBank";
             comboBoxBank.Size = new Size(138, 28);
@@ -350,7 +352,7 @@
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(896, 615);
+            ClientSize = new Size(894, 604);
             Controls.Add(comboBoxBank);
             Controls.Add(labelBank);
             Controls.Add(labelTitle);

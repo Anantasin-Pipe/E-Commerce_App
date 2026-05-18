@@ -40,7 +40,7 @@ namespace ClientApp.Services
         {
             try
             {
-                var url = $"{BaseUrl}/update/{receiptId}"; // 🌟 สั้นและกระชับขึ้น
+                var url = $"{BaseUrl}/update/{receiptId}";
                 var requestData = new
                 {
                     NewStatus = newStatus,

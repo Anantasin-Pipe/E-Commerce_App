@@ -68,7 +68,7 @@ namespace E_Commerce_Server.Controllers
             }
         }
 
-        // API สำหรับ Seller
+        //// API สำหรับ Seller
 
         [HttpGet("all")]
         public async Task<IActionResult> GetAllOrdersForSeller()
@@ -97,7 +97,7 @@ namespace E_Commerce_Server.Controllers
                 {
                     OrderDate = s.OrderDate,
                     CartId = s.CartId,
-                    ReceiptId = s.ReceiptId, 
+                    ReceiptId = s.ReceiptId,
                     ProductName = s.ProductName,
                     Quantity = s.Quantity,
                     Status = s.DeliveryStatus.ToString(),

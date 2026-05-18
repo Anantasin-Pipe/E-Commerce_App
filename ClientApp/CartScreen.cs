@@ -126,7 +126,6 @@ namespace ClientApp
         {
             var selectedItems = _items.Where(i => i.Selected).ToList();
 
-            //เปลี่ยนชื่อตัวแปรเป็น total เพื่อความเมคเซนส์ครับ
             decimal total = selectedItems.Sum(i => i.UnitPrice * i.Quantity);
 
             //Update ยอด Total 
